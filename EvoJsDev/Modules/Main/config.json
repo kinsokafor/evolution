@@ -1,0 +1,52 @@
+{
+    "mainMenu": [
+        {
+            "link": "/",
+            "label": "Home",
+            "access": "",
+            "iconClass": "fas fa-home",
+            "isRouter": false,
+            "submenu": [
+                {
+                    "link": "/#/",
+                    "label": "Personal Dashboard",
+                    "access": ""
+                },
+                {
+                    "link": "/#/profile",
+                    "label": "Profile",
+                    "access": ""
+                },
+                {
+                    "link": "/#/change-password",
+                    "label": "Change Password",
+                    "access": ""
+                }
+            ]
+        },
+        {
+            "link": "/admin",
+            "label": "Admin Settings",
+            "access": [1,2,3,4,5],
+            "iconClass": "fa-sliders",
+            "isRouter": false,
+            "submenu": [
+                {
+                    "link": "/admin/#/",
+                    "label": "Admin Dashboard",
+                    "access": ""
+                },
+                {
+                    "link": "/admin/#/users",
+                    "label": "Users",
+                    "access": ""
+                },
+                {
+                    "link": "/admin/#/options",
+                    "label": "Options",
+                    "access": "1"
+                }
+            ]
+        }
+    ]
+}

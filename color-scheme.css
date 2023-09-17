@@ -1,0 +1,26 @@
+:root {
+    --shadow1: #222020;
+    --shadow2: #615959;
+    --shadow3: #949494;
+    --highlight1: #fff;
+    --highlight2: #dbdbdb;
+    --highlight3: #bdbdbd;
+    --color1: linear-gradient(180deg,#4e73df 10%,#224abe 100%); /* lighter color from the theme */
+    --color2: #2e51b6; /* darker color from the theme */
+    --yellow: #d1d126;
+    --blue: #63b3e9;
+    --green: #64bb64;
+    --red: #db2a2a;
+    --purple: #e547a1;
+    --muted: #d1d1d1;
+    --color3: #4e73df;
+}
+
+body.dark-theme {
+    --shadow1: #fff;
+    --shadow2: #dbdbdb;
+    --shadow3: #bdbdbd;
+    --highlight1: #222020;
+    --highlight2: #292525;
+    --highlight3: #323133;
+}

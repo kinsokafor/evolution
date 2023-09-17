@@ -1,0 +1,9 @@
+{
+    "path": "Public/Modules/Main/",
+    "entry": [
+      "Accounts/index",
+      "Main/index",
+      "Admin/index"
+    ],
+    "active": true
+}

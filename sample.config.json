@@ -1,0 +1,87 @@
+{
+    "root": "http://localhost:3000",
+    "devRoot": "http://localhost:3000",
+    "salt": "ed094bf5e4438e841f17d6328f25adb845c32a90",
+    "Auth": {
+      "tokenLifetime": "86400",
+      "roles": {
+        "software_engineer": {
+          "name": "Software Engineer",
+          "capacity": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        "super_admin": {
+          "name": "Chief Admin",
+          "capacity": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "admin": {
+          "name": "Operation Admin",
+          "capacity": [
+            4,
+            5
+          ]
+        },
+        "member": {
+          "name": "Users",
+          "capacity": [
+            6,
+            7,
+            8
+          ]
+        },
+        "pending": {
+          "name": "Pending Users",
+          "capacity": [
+            10
+          ]
+        },
+        "unverified": {
+          "name": "Users Pending Verification",
+          "capacity": [
+            9
+          ]
+        }
+      },
+      "defaultRole": "member",
+      "clients": [
+        {
+          "client_id": "123456",
+          "secret": "123456",
+          "domain": "localhost:3000",
+          "protocol": "http"
+        }
+      ]
+    },
+    "site_name": "Evolution",
+    "loginLink": "/accounts",
+    "currentTheme": "Default",
+    "modules": {
+      "Main": {
+        "path": "Public/Modules/Main/",
+        "entry": [
+          "Accounts/index",
+          "Main/index",
+          "Admin/index"
+        ],
+        "active": true
+      }
+    }
+  }

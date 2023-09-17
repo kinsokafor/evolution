@@ -1,0 +1,22 @@
+{
+    "users": {
+       "label": "Users",
+       "link": "users",
+       "access": [5,6],
+       "router": true,
+       "submenu": {
+            "add-user": {
+                "label": "Add New User",
+                "link": "add-user",
+                "router": true,
+                "access": [5,6]
+            }
+       }
+    },
+    "logout": {
+        "label": "Logout",
+       "link": "logout",
+       "access": [1,2,3,4,5,6,7,8,9],
+       "router": false
+    }
+}
