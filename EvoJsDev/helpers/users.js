@@ -39,8 +39,9 @@ export class Users {
         });
     } 
 
-    async new(data = {}) {
-        return await axios.post(process.env.EVO_API_URL + '/api/user/', data, {
+    async new(data = {}, endpoint = null) {
+        const url = endpoint == null ? process.env.EVO_API_URL + '/api/user/' : endpoint;
+        return await axios.post(url, data, {
             withCredentials: true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 

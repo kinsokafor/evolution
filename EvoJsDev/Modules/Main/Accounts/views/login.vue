@@ -2,17 +2,17 @@
   <Form @submit="handleSubmit" v-slot="{ values }" :class="appData().loginFormClass ?? ''">
     <div v-show="loginStore.ismail">
       <h2>Welcome Back!</h2>
-    <Field name="email" type="email" placeholder="Email" :rules="isRequired" :class="appData().loginInputClass ?? ''" />
+    <Field name="email" type="email" placeholder="Email" :rules="isRequired" class="animate__animated animate__fadeInLeft" :class="appData().loginInputClass ?? ''" />
     <ErrorMessage name="email"></ErrorMessage><br>
-    <Button @click.prevent="loginStore.switchTab" class="" :class="appData().loginButtonClass ?? ''" >Next</Button>
+    <Button @click.prevent="loginStore.switchTab" class="animate__animated animate__fadeInLeft animate__delay-1s" :class="appData().loginButtonClass ?? ''" >Next</Button>
     </div>
     <div v-show="!loginStore.ismail">
     <h2>{{values.email}}</h2>
-    <Field name="password" placeholder="Password" type="password" :class="appData().loginInputClass ?? ''" />
+    <Field name="password" placeholder="Password" type="password" class="animate__animated animate__fadeInLeft" :class="appData().loginInputClass ?? ''" />
     <ErrorMessage name="password"></ErrorMessage><br>
     <div class="flex">
-      <Button @click.prevent="loginStore.switchTab" class="btn-back" :class="appData().loginButtonClass ?? ''">Back</Button>
-      <Button type="submit" class="btn-submit btn-outline" :processing="loginStore.submitting" :class="appData().loginButtonClass ?? ''">Submit</Button>
+      <Button @click.prevent="loginStore.switchTab" class="btn-back animate__animated animate__fadeInLeft animate__delay-1s" :class="appData().loginButtonClass ?? ''">Back</Button>
+      <Button type="submit" class="btn-submit btn-outline animate__animated animate__fadeInLeft animate__delay-2s" :processing="loginStore.submitting" :class="appData().loginButtonClass ?? ''">Submit</Button>
     </div>
     </div>
   </Form>
@@ -25,6 +25,7 @@ import { useLoginStore } from '@/Modules/Main/store/login'
 import { useAuthStore } from '@/store/auth'
 import { isRequired, appData } from '@/helpers'
 import Button from '@/components/Button.vue'
+import 'animate.css'
 
 const loginStore = useLoginStore();
 const authStore = useAuthStore();

@@ -45,14 +45,15 @@ const mergeConfig = (config) => {
     let file = editJsonFile("./config.json");
     for(var data in config) {
         const oldValue = file.get(data);
-        // var val = config[data];
-        // if(typeof(oldValue) == "object") {
-        //     val = {...oldValue, ...val}
-        // }
-        // if(typeof(oldValue) == "array") {
-        //     val = [...oldValue, ...val]
-        // }
-        file.set(data, mergeDeep(oldValue, config[data]));
+        if(oldValue == undefined) {
+            file.set(data, config[data]);
+        } else {
+            if(isObject(oldValue)) {
+                file.set(data, mergeDeep(oldValue, config[data]));
+            } else {
+                file.set(data, config[data]);
+            }
+        }  
     }
     file.save();
 }
