@@ -34,7 +34,7 @@
             if(values[item.name] != undefined && values[item.name] != initialValues.value[item.name]) {
                 noChanges = false;
                 options.update(item.name, values[item.name]).then(response => {
-                    // initialValues.value[item.name] = response.data
+                    initialValues.value[item.name] = response.data
                     alertStore.add("Done")
                     processing.value = false;
                 }).catch(error => {
