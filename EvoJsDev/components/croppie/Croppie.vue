@@ -122,7 +122,7 @@
     })
 
     onMounted(() => {
-        defaultImage.value = props.default !== "" ? props.default : config.root+img;
+        defaultImage.value = props.default !== "" ? props.default : process.env.EVO_API_URL+img;
     })
 
     const { value, errorMessage } = useField(props.name, props.required ? isRequired : true)

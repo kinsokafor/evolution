@@ -4,9 +4,9 @@
         <div v-if="!authStore.getAccess" class="no-access">
             <slot name="message">
                 <div class="security-check">
-                    <img :src="config.root+jpg" alt="" class="animate__animated animate__pulse animate__infinite">
+                    <img :src="root+jpg" alt="" class="animate__animated animate__pulse animate__infinite">
                     <em v-if="authStore.failedTest">Please wait: security check</em>
-                    <em v-if="!authStore.failedTest">Security check failed. Go to <a :href="appData().root">Dashboard</a> or <a :href="appData().root+appData().loginLink">Login</a> again</em>
+                    <em v-if="!authStore.failedTest">Security check failed. Go to <a :href="root">Dashboard</a> or <a :href="root+appData().loginLink">Login</a> again</em>
                 </div>
             </slot>
         </div>
@@ -15,12 +15,13 @@
 
 <script setup>
     import { useAuthStore } from '@/store/auth';
-    import { onBeforeMount } from 'vue';
+    import { onBeforeMount, ref } from 'vue';
     import jpg from './images/undraw_security_on_re_e491.svg'
     import {useConfigStore} from '@/store/config'
     import {appData} from '@/helpers'
     import 'animate.css'
 
+    const root = ref(process.env.EVO_API_URL)
     const config = useConfigStore()
     const authStore = useAuthStore();
     const props = defineProps({

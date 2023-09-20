@@ -1,5 +1,4 @@
 <template>
-    
     <Form @submit="onSubmit" :initial-values="initialValues" v-slot="{values, isSubmitting}">
         <loading :active="isSubmitting || processing" 
             :can-cancel="true" 

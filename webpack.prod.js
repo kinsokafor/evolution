@@ -7,8 +7,8 @@ module.exports = merge(common, {
   plugins: [
     new webpack.EnvironmentPlugin({
         EVO_API_URL: config.root,
-        "__VUE_PROD_DEVTOOLS__": true,
-        "__VUE_OPTIONS_API__": true
+        __VUE_PROD_DEVTOOLS__: true,
+        __VUE_OPTIONS_API__: true
     })
   ].filter(Boolean),
 });

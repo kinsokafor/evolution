@@ -42,7 +42,7 @@ class Files {
             $this->fs->mkdir(Path::canonicalize($path));
             $path = Path::canonicalize($path ."/". $saveAs . "." . $this->mimeToExtension($type));
             file_put_contents($path, $data);
-            return $this->config->root."/".$path;
+            return ($this->config->mode == "development" ? $this->config->devRoot : $this->config->root)."/".$path;
         } else return false;
     }
 

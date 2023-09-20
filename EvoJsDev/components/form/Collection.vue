@@ -32,7 +32,6 @@
     import { useCreateFormStore } from '@/store/createForm';
     import { computed, ref } from 'vue'
 
-    const init = ref(false)
     const initRows = ref(0)
     const store = useCreateFormStore()
     const props = defineProps({

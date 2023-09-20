@@ -1,6 +1,7 @@
 {
     "root": "http://localhost:3000",
     "devRoot": "http://localhost:3000",
+    "mode": "development",
     "salt": "ed094bf5e4438e841f17d6328f25adb845c32a90",
     "Auth": {
       "tokenLifetime": "86400",

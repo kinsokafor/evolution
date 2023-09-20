@@ -114,19 +114,17 @@ export const dragElement = (elmnt, handle = false) => {
 }
 
 export const currencyConverter = async (currency, base = "USD", amount = 1) => {
-    var ret = 0;
-    await axios.get("https://api.exchangerate.host/latest").then(response => {
+    return await axios.get("https://api.exchangerate.host/latest").then(response => {
         if(response.status == 200) {
             if(response.data.rates.hasOwnProperty(base) && response.data.rates.hasOwnProperty(currency)) {
                 var fetchedBase = response.data.base;
                 var rateToBase = response.data.rates[base];
                 var rateToCurrency = response.data.rates[currency];
-                ret = (rateToCurrency/rateToBase) * amount;
-                ret = Math.round((ret + Number.EPSILON) * 100) / 100
-            }
-        }
+                const ret = (rateToCurrency/rateToBase) * amount;
+                return ((ret + Number.EPSILON) * 100).toFixed(6) / 100
+            } else return "NA"
+        } else return "failed"
     })
-    return ret;
 }
 
 export const isEmpty = (obj) => {
@@ -196,4 +194,12 @@ export const imageExists = (imageSrc, good, bad) => {
 export const findByDottedIndex = (i, obj) => {
 	const arr = i.split('.')
     return arr.reduce((a, b) => a[b], obj)
+}
+
+export const clickToCopyText = (textElementId) => {
+    return new Promise((resolve, reject) => {
+        var text = document.getElementById(textElementId).innerHTML;
+        navigator.clipboard.writeText(text);
+        resolve("Copied")
+    })
 }

@@ -110,6 +110,7 @@
         left: 50%;
         transform: translate(-50%);
         border-radius: 30px;
+        background: var(--color1);
     }
     .user-img img.Male + h3, .user-img img.male + h3 {
         background: var(--blue);

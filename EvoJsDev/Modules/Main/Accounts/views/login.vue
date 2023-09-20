@@ -4,7 +4,7 @@
       <h2>Welcome Back!</h2>
     <Field name="email" type="email" placeholder="Email" :rules="isRequired" class="animate__animated animate__fadeInLeft" :class="appData().loginInputClass ?? ''" />
     <ErrorMessage name="email"></ErrorMessage><br>
-    <Button @click.prevent="loginStore.switchTab" class="animate__animated animate__fadeInLeft animate__delay-1s" :class="appData().loginButtonClass ?? ''" >Next</Button>
+    <Button @click.prevent="loginStore.switchTab" class="btn-next animate__animated animate__fadeInLeft animate__delay-1s" :class="appData().loginButtonClass ?? ''" >Next</Button>
     </div>
     <div v-show="!loginStore.ismail">
     <h2>{{values.email}}</h2>
@@ -12,7 +12,7 @@
     <ErrorMessage name="password"></ErrorMessage><br>
     <div class="flex">
       <Button @click.prevent="loginStore.switchTab" class="btn-back animate__animated animate__fadeInLeft animate__delay-1s" :class="appData().loginButtonClass ?? ''">Back</Button>
-      <Button type="submit" class="btn-submit btn-outline animate__animated animate__fadeInLeft animate__delay-2s" :processing="loginStore.submitting" :class="appData().loginButtonClass ?? ''">Submit</Button>
+      <Button type="submit" class="btn-submit btn-outline animate__animated animate__fadeInLeft animate__delay-1s" :processing="loginStore.submitting" :class="appData().loginButtonClass ?? ''">Submit</Button>
     </div>
     </div>
   </Form>
@@ -44,6 +44,7 @@ const handleSubmit = (values) => {
   .flex{
     display: flex;
   }
+  .btn-next, 
   .btn-back {
     width: calc(40% - 5px);
     margin-right: 5px;

@@ -2,7 +2,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import dashboard from '../views/dashboard.vue'
 import users from '../views/users.vue'
 import editProfile from '../views/editProfile.vue'
-import profile from '../views/editProfile.vue'
+import profile from '../views/profile.vue'
 import changeUserPassword from '../views/change-user-password.vue'
 import options from '../views/options.vue'
 
