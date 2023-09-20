@@ -61,12 +61,14 @@
         values: Object
     })
     const control = ref(0)
-    const rows = computed(() => {
-        if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0) {
-            initRows.value = [...Object.values(props.initialValues[props.name])].length
-        } else initRows.value = props.attrs.rows
-        return initRows.value + control.value
-    })
+    // const rows = computed(() => {
+    //     if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0) {
+    //         initRows.value = [...Object.values(props.initialValues[props.name])].length
+    //     } else initRows.value = props.attrs.rows
+    //     return initRows.value + control.value
+    // })
+
+    const rows = ref(3)
     
     const removeRow = () => {
         if(rows.value > 1) {
