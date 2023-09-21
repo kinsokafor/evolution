@@ -3,8 +3,7 @@
         <div>
             <Filters filterKey="usersList" v-slot="{key}">
                 <SelectFilter name="status" :filterKey="key" :options="status" selected="active" label="Status"/>
-                <TextFilter name="surname" :filterKey="key" value="" label="Surname"/>
-                <TextFilter name="other_names" :filterKey="key" value="" label="Other Names"/>
+                <TextFilter name="fullname" :filterKey="key" value="" label="Name"/>
                 <SelectFilter name="role" :filterKey="key" :options="configStore.roles" label="Role"/>
             </Filters>
         </div>
@@ -15,21 +14,14 @@
             :columns="columns" 
             :serial-number="filterStore.getSerialNumber" 
             :actions="actions" 
-            :data="usersStore.getUsers"
+            :data="users"
             :processing="usersStore.processing"
         ></Table>
-        <div>
-            <Filters filterKey="usersList">
-                <Limit :selected="limit" />
-                <Pagination />
-                <Summary></Summary>
-            </Filters>
-        </div>
     </Restricted>
 </template>
 
 <script setup>
-    import { onMounted, watch } from 'vue'
+    import { onMounted, computed, watch } from 'vue'
     import { useUsersStore } from '@/Modules/Main/store/users'
     import SelectFilter from '@/components/filters/SelectFilter.vue';
     import TextFilter from '@/components/filters/TextFilter.vue';
@@ -40,14 +32,41 @@
     import { useFilterStore } from '@/store/filter';
     import { useConfigStore } from '@/store/config';
     import Summary from '@/components/filters/Summary.vue';
-    import Restricted from '@/components/Restricted.vue';
-
+    import {getFullname} from '@/helpers'
+    import config from '/config.json'
+    import male from '@/components/images/male_avatar.svg'
 
     const filterStore = useFilterStore();
-    const limit = 20;
+
     const usersStore = useUsersStore();
     
     const configStore = useConfigStore();
+
+    const allUsers = computed(() => usersStore.get)
+
+    const users = computed(() => {
+        const filters = filterStore.getFilters('usersList')
+        const all = allUsers.value
+        if(all != undefined) {
+            return all.filter(j => {
+                for(var filter in filters) {
+                    if(filter == 'fullname') {
+                        const pos = getFullname(j).search(filters[filter].replaceAll('%', ''))
+                        if(pos == -1) return false
+                    }else if(filter in j) {
+                        if(filters[filter] != j[filter]) return false
+                    }
+                }
+                return true
+            }).map(i => {
+                i.fullname = getFullname(i)
+                i.role_name = config.Auth.roles[i.role].name ?? ""
+                i.profile_display = "<img src=\""+(i.profile_picture ?? male)+"\" style=\"margin: 0 !important;width: 49px !important;\">"
+                i.link = `/profile/${i.id}`
+                return i
+            })
+        }
+    })
 
     const columns = {
         fullname: "Fullname",
@@ -58,12 +77,12 @@
     }
 
     const actions = [
-        {
-            name: "Profile",
-            type: "router-link",
-            url: "/profile/{id}",
-            params: "id"
-        },
+        // {
+        //     name: "Profile",
+        //     type: "router-link",
+        //     url: "/profile/{id}",
+        //     params: "id"
+        // },
         // {
         //     name: "Profile2",
         //     type: "link",
@@ -108,10 +127,6 @@
 
     })
 
-    watch(filterStore.filters, () => {
-        usersStore.loadUsers()
-    })
-
     function disable(row, index) {
         usersStore.disable(row, index);
     }
@@ -121,7 +136,9 @@
     }
 
     function deleteUser(row, index) {
-        usersStore.deleteUser(row, index);
+        if(confirm("Are you sure that you want to delete "+getFullname(row)+" from the system?")) {
+            usersStore.deleteUser(row, index);
+        }
     }
 </script>
 

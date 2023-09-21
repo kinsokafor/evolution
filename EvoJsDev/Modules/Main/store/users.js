@@ -18,37 +18,25 @@ export const useUsersStore = defineStore('useUsersStore', {
         }
     },
     actions: {
-        async loadUsers() {
-            this.processing = true;
-            this.filterStore.filterKey = "usersList";
-            await this.usersClass.get(this.filterStore.getFilters)
-            .then(response => {
-                this.users = response.data
-                this.filterStore.addRequestURL(response)
-                this.processing = false;
-            })
-            .catch(response => {
-                this.alertStore.add(response.message, "danger");
-                this.processing = false;
-            });
-        },
-        async getFromServer(params) {
+        async getFromServer(params = {}) {
             this.processing = true
             const users = new Users()
+            params.limit = this.limit
+            params.offset = this.offset
             await users.get(params).then(r => {
                 if(Array.isArray(r.data)) {
-                    r.data.map(item => {
-                        item['fullname'] = item.surname + ' ' + item.other_names;
-                        item['role_name'] = this.configStore.Auth.roles[item.role].name ?? "";
-                        item['profile_display'] = "<img src=\""+item.profile_picture+"\" style=\"margin: 0 !important;width: 49px !important;\">"
-                        const index = this.users.findIndex(i => i.id == item.id)
+                    r.data.forEach(j => {
+                        const index = this.users.findIndex(i => i.id == j.id)
                         if(index == -1) {
-                            this.users = [...this.users, item]
-                        } else this.users[index] = item
-                    })
+                            this.users = [...this.users, j]
+                        } else {
+                            this.users[index] = j
+                        }
+                    }) 
                     this.processing = false
                     if(r.data.length >= this.limit) {
                         this.offset = this.offset + this.limit
+                        this.getFromServer(params)
                     }
                 }
                 else if(typeof(r.data) == 'object') {
@@ -64,6 +52,7 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         async enable(row, index) {
             this.processing = true;
+            index = this.users.findIndex(i => i.id == row.id)
             await this.usersClass.update(row.id, {
                 "status" : "active",
                 "id": row.id
@@ -78,6 +67,7 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         async disable(row, index) {
             this.processing = true;
+            index = this.users.findIndex(i => i.id == row.id)
             await this.usersClass.update(row.id, {
                 "status" : "inactive",
                 "id": row.id
@@ -92,6 +82,7 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         async deleteUser(row, index) {
             this.processing = true;
+            index = this.users.findIndex(i => i.id == row.id)
             await this.usersClass.delete({
                 "status" : "inactive",
                 "id": row.id
@@ -106,19 +97,8 @@ export const useUsersStore = defineStore('useUsersStore', {
         }
     },
     getters: {
-        getUsers: (state) => {
-            return state.users.map((item, index, arr) => {
-                item['fullname'] = item.surname + ' ' + item.other_names;
-                item['role_name'] = state.configStore.Auth.roles[item.role].name ?? "";
-                item['profile_display'] = "<img src=\""+item.profile_picture+"\" style=\"margin: 0 !important;width: 49px !important;\">"
-                return item;
-            })
-        },
         get: (state) => {
-            let params = state.filterStore.getFilters("usersList")
-            params.limit = state.limit
-            params.offset = state.offset
-            state.getFromServer(params)
+            state.getFromServer()
             return state.users
         },
         getUser: (state) => {

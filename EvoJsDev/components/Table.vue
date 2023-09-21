@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(row, index) in data" :key="row.id">
+                <tr v-for="(row, index) in data" :key="row.id" @click="window.location = row.link ?? '#'">
                     <td v-if="serialNumber != null">{{getIndex(index)}}</td>
                     <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="row[index]"></td>
                     <td v-if="actions.length > 0">
