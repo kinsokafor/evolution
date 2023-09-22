@@ -64,8 +64,8 @@
         width: 100%;
         padding: 4px 10px;
         border: none;
-        color: #6e6d6d;
+        color: var(--shadow3);
         background: transparent;
-        border-bottom: 1px solid #c8c8c8;
+        border-bottom: 1px solid var(--highlight3);
     }
 </style>

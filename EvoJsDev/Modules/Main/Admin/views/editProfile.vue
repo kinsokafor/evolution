@@ -1,5 +1,5 @@
 <template>
-    <Restricted access="5,6">
+    <Restricted access="1,2,3">
         <div class="row">
             <CreateForm :fields="fields" @submit="onSubmit" :initial-values="user" :columns=2>
                 <template #submitButton>
@@ -7,9 +7,6 @@
                 </template>
             </CreateForm>
         </div>
-        <Restricted access="2">
-            <router-link :to="'/change-user-password/'+user.id">Change Password</router-link>
-        </Restricted>
     </Restricted>
 </template>
 

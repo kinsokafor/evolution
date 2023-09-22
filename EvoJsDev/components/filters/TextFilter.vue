@@ -63,11 +63,16 @@
 <style lang="scss" scoped>
     .filter-container.text-filter input {
         width: 100%;
-        background: #f2efef;
+        background: transparent;
         border: none;
         padding: 3px 10px;
-        color: #6e6d6d;
+        color: var(--shadow3);
         background: transparent;
-        border-bottom: 1px solid #c8c8c8;
+        border-bottom: 1px solid var(--highlight3);
+        transition: 1s linear;
+    }
+    .filter-container.text-filter input:focus-visible {
+        outline: none;
+        border-bottom-color: var(--color2);
     }
 </style>

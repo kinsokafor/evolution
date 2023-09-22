@@ -8,5 +8,4 @@ if (preg_match('/\.(?:png|jpg|jpeg|css|js|woff|woff2)$/', $_SERVER['REQUEST_URI'
 }
 
 require_once("EvoPhp/autoload.php");
-
 ?>

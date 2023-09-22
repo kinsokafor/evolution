@@ -13,9 +13,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(row, index) in data" :key="row.id" @click="window.location = row.link ?? '#'">
+                <tr v-for="(row, index) in data" :key="row.id">
                     <td v-if="serialNumber != null">{{getIndex(index)}}</td>
-                    <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="row[index]"></td>
+                    <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(row[index], row.link)"></td>
                     <td v-if="actions.length > 0">
                         <div class="actions-container">
                             <span v-for="action in getActions(actions, row)" :key="action.name">
@@ -67,6 +67,10 @@
             default: null
         }
     })
+
+    const getContent = (content, link) => {
+        return `<a href="${link ?? '#'}">${content}</a>`
+    }
 
     function getIndex(index) {
         return props.serialNumber + index;
@@ -129,5 +133,14 @@
     .action-btn:hover {
         background: var(--color2);
         border: 1px solid var(--color2);
+    }
+    table td {
+        vertical-align: middle;
+    }
+</style>
+
+<style>
+    table td > a {
+        color: inherit;
     }
 </style>

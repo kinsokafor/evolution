@@ -51,7 +51,7 @@
             return all.filter(j => {
                 for(var filter in filters) {
                     if(filter == 'fullname') {
-                        const pos = getFullname(j).search(filters[filter].replaceAll('%', ''))
+                        const pos = getFullname(j).toLowerCase().search(filters[filter].replaceAll('%', '').toLowerCase())
                         if(pos == -1) return false
                     }else if(filter in j) {
                         if(filters[filter] != j[filter]) return false
@@ -62,7 +62,7 @@
                 i.fullname = getFullname(i)
                 i.role_name = config.Auth.roles[i.role].name ?? ""
                 i.profile_display = "<img src=\""+(i.profile_picture ?? male)+"\" style=\"margin: 0 !important;width: 49px !important;\">"
-                i.link = `/profile/${i.id}`
+                i.link = getLink(i.id, i.role)
                 return i
             })
         }
@@ -75,6 +75,13 @@
         role_name: "Role",
         profile_display: "Photo"
     }
+
+    const getLink = (id, role) => {
+        if("profile" in config.Auth.roles[role]) {
+            return ("/"+config.Auth.roles[role].profile+"/"+id).replace("//", "/").replace("//", "/");
+        }
+        return ("/admin/#/profile/"+id).replace("//", "/").replace("//", "/")
+    } 
 
     const actions = [
         // {

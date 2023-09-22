@@ -53,6 +53,7 @@
         position: absolute;
         right: 22px;
         bottom: -11px;
+        width: fit-content;
     }
 
     .filters .controls a {
