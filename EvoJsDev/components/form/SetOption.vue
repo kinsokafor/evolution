@@ -14,7 +14,7 @@
 <script setup>
     import Button from '@/components/Button.vue'
     import CreateForm from './CreateForm.vue'
-    import { ref, onBeforeMount } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { Options } from '@/helpers'
     import {useAlertStore} from '@/store/alert'
 
@@ -50,7 +50,7 @@
         }
     }
 
-    onBeforeMount(() => {
+    onMounted(() => {
         props.fields.forEach(item => {
             options.get(item.name).then(response => {
                 initialValues.value[item.name] = response.data

@@ -1,7 +1,7 @@
 <template>
     <div class="k-input-group" :class="layout">
         <label :for="name" class="label">{{ label }}</label>
-        <div v-for="(r, i) in rows" :key = "r">
+        <div v-for="(r, i) in rows" :key = "r" v-memo="[i]">
             <div class="collection-row">
                 <div 
                     class="collection-column"
@@ -22,7 +22,7 @@
         </div>
         <div class="collection-btns">
             <button @click.prevent="control++">Add row</button>
-            <button @click.prevent="removeRow()" v-if="rows > 1">Remove last row</button>
+            <button @click.prevent="removeRow()">Remove last row</button>
         </div>
         <small><slot name="hint"></slot></small>
     </div>
@@ -32,7 +32,6 @@
     import { useCreateFormStore } from '@/store/createForm';
     import { computed, ref } from 'vue'
 
-    const initRows = ref(0)
     const store = useCreateFormStore()
     const props = defineProps({
         layout: {
@@ -61,6 +60,7 @@
         values: Object
     })
     const control = ref(0)
+    const initRows = ref(0)
     const rows = computed(() => {
         if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0) {
             initRows.value = [...Object.values(props.initialValues[props.name])].length
