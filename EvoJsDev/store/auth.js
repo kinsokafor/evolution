@@ -52,7 +52,6 @@ export const useAuthStore = defineStore('useAuthStore', {
                 this.loginStatus();
                 return false;
             } else {
-                
                 if(this.getScope.length == 0) return true;
                 const intersect = arrayIntersect(this.getScope, this.userScope);
                 return intersect.length > 0;

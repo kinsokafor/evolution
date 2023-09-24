@@ -142,6 +142,11 @@ class Notifications
         return $this;
     }
 
+    public function action($url = "#") {
+        $this->action = $url;
+        return $this;
+    }
+
     public function mail() {
         $mail = $this->mail->send($this);
         $this->error = $mail->error;

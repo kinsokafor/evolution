@@ -46,7 +46,8 @@
 
     const menuItems = computed(() => {
         return props.items.filter(item => {
-            return auth.testAccess(item['access'] ?? []);
+            auth.access = item['access'] ?? []
+            return auth.testAccess();
         })
     })
 
