@@ -31,6 +31,7 @@ class GetRequest implements RequestInterface {
             $post->whereGroup($request->data);
             if($request->limit) $post->limit($request->limit);
             if($request->offset) $post->offset($request->offset);
+            if($request->order_by) $post->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
             http_response_code(200);
             $request->response = $post->execute();
         }
@@ -76,6 +77,7 @@ class GetRequest implements RequestInterface {
             $user->whereGroup($request->data);
             if($request->limit) $user->limit($request->limit);
             if($request->offset) $user->offset($request->offset);
+            if($request->order_by) $user->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
             http_response_code(200);
             $request->response = $user->execute();
         }
@@ -98,7 +100,7 @@ class GetRequest implements RequestInterface {
         $record = new Records;
         if(isset($request->data['key'])) {
             $request->response = $record->getRecord($request->data['key'], $request->cache, $request->cacheExpiry);
-            if($request->response) {
+            if($request->response !== NULL) {
                 http_response_code(200);
             } else http_response_code(404);
         } else {
@@ -116,6 +118,7 @@ class GetRequest implements RequestInterface {
         if($request->joinAt != null && $request->joinTable != null) $query->joinAt($request->joinTable, $request->joinAt);
         if($request->limit) $query->limit($request->limit);
         if($request->offset) $query->offset($request->offset);
+        if($request->order_by) $query->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
         http_response_code(200);
         $request->response = $query->execute()->rows();
     }

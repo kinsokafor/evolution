@@ -231,7 +231,7 @@ class Database {
 	 * @return bool|void True if the connection is up.
 	 */
 	public function check_connection() {
-		if ( ! empty( $this->dbh ) && mysqli_ping( $this->dbh ) ) {
+		if ( ! empty( $this->db_host ) && mysqli_ping( $this->db_host ) ) {
 			return true;
 		}
 

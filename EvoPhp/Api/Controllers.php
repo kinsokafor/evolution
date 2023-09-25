@@ -105,8 +105,9 @@ abstract class Controllers
             echo $this->getContent();
             return;
         }
+        self::signOut();
         header("HTTP/1.1 401 Unauthorized");
-        header("Location: /logout");
+        header("Location: /accounts");
     }
 
     abstract function getData($data);

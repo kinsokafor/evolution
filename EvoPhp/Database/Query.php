@@ -133,10 +133,7 @@ class Query extends Database
 
     private $leadingSetComma = false;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    public function __construct(){}
 
     public function __destruct() {
         $this->execute();
@@ -162,6 +159,7 @@ class Query extends Database
             // not ready to execute.
             return false;
         }
+        parent::__construct();
 
         $this->ready = false; //prevent double execution
 
@@ -195,19 +193,21 @@ class Query extends Database
             
         }
         $this->log_error($this->connection->error); 
-
         $this->num_queries++;
 
         if ( preg_match( '/^\s*(create|alter|truncate|drop)\s/i', $this->statement ) ) {
+            mysqli_close($this->connection);
             return $this->result;
         } elseif ( preg_match( '/^\s*(insert|delete|update|replace)\s/i', $this->statement ) ) {
             
             // Take note of the insert_id
             if ( preg_match( '/^\s*(insert|replace)\s/i', $this->statement ) ) {
                 $this->insert_id = $this->connection->insert_id;
+                mysqli_close($this->connection);
                 return $this->insert_id;
             }
             // Return number of rows affected
+            mysqli_close($this->connection);
             return $this->affected_rows;
         } else {
             $num_rows = 0;
@@ -218,6 +218,7 @@ class Query extends Database
             // Log number of rows the query returned
             // and return number of rows selected
             $this->num_rows = $num_rows;
+            mysqli_close($this->connection);
             return $this;
         }
     }
@@ -565,8 +566,10 @@ class Query extends Database
      * @return string escaped
      */
     public function _real_escape( $string ) {
+        parent::__construct();
         if ( $this->connection ) {
             $escaped = $this->connection->real_escape_string( $string );
+            mysqli_close($this->connection);
         } else {
             $escaped = addslashes( $string );
         }

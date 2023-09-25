@@ -68,7 +68,7 @@ Trait Auth {
         $instance->authorizationState = true;
         $roles = $config->Auth["roles"];
         $scope = $roles[$meta->role] ?? $roles[$config->Auth["defaultRole"]];
-        return $instance->createToken(Operations::getFullname($meta).": SignIn", $scope['capacity']);
+        return $instance->createToken($meta, $scope['capacity']);
     }
 
     public static function signOut() {
@@ -86,7 +86,8 @@ Trait Auth {
         return $existing;
     }
 
-    private function createToken($token_name, $scope = []) {
+    private function createToken($meta, $scope = []) {
+        $token_name = Operations::getFullname($meta).": SignIn";
         $query = new Query;
         $session = Session::getInstance();
         $token = Operations::randomString();
@@ -109,7 +110,8 @@ Trait Auth {
         $cookie = new Cookie("nonce");
         $cookie->setValue($nonce)->setMaxAge($config->Auth["tokenLifetime"])->save();
         $session->accesstoken = $token;
-        return ['loginStatus' => true, 'token' => $token, 'msg' => 'Login Successful'];
+        $index = $config->Auth["roles"][$meta->role]["index"] ?? "/";
+        return ['loginStatus' => true, 'token' => $token, 'msg' => 'Login Successful', 'index' => $index];
     }
 
     protected function getTokenObject($token) {

@@ -14,16 +14,21 @@
 <script setup>
     import Button from '@/components/Button.vue'
     import CreateForm from './CreateForm.vue'
-    import { ref, onMounted } from 'vue'
-    import { Options } from '@/helpers'
+    import { ref, onMounted, watch } from 'vue'
+    import { Options, Records } from '@/helpers'
     import {useAlertStore} from '@/store/alert'
 
+    const props = defineProps({
+        fields: Array,
+        as: {
+            type: String,
+            default: 'options'
+        }
+    })
+    
     const processing = ref(false)
     const alertStore = useAlertStore();
-    const options = new Options;
-    const props = defineProps({
-        fields: Array
-    })
+    const options = props.as == 'options' ? new Options : new Records;
 
     const initialValues = ref({})
 
@@ -51,12 +56,24 @@
     }
 
     onMounted(() => {
+        loadInitialValues()
+    })
+
+    watch(() => props.fields, () => {
+        loadInitialValues()
+    })
+
+    const loadInitialValues = () => {
         props.fields.forEach(item => {
             options.get(item.name).then(response => {
                 initialValues.value[item.name] = response.data
+            }).catch(e => {
+                if(item.default != undefined) {
+                    initialValues.value[item.name] = item.default
+                }
             })
         });
-    })
+    }
 </script>
 
 <style lang="scss" scoped>

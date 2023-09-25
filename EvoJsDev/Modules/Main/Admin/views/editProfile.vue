@@ -123,17 +123,12 @@
                 processing.value = false;
             })
         } else {
-            user.value = usersStore.getUsers.find(item => item.id == route.params.id);
+            user.value = usersStore.getUser(route.params.id);
         }
     })
 
     const onSubmit = async (values) => {
         processing.value = true;
-        values['file_attachments'] = {
-            profile_picture: {
-                data: values.profile_picture
-            }
-        }
         users.update(user.value.id, values).then(function(response){
             processing.value = false;
             alertStore.add("Profile updated", "success");

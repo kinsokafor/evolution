@@ -26,6 +26,10 @@ class Requests
 
     public $joinTable;
 
+    public $order_by = false;
+
+    public $order = false;
+
     public string $tableName;
 
     public bool $isCount = false;
@@ -104,6 +108,14 @@ class Requests
         if(isset($this->data['offset'])) {
             $this->offset = (int) $this->data['offset'];
             unset($this->data['offset']);
+        }
+        if(isset($this->data['order_by'])) {
+            $this->order_by = $this->data['order_by'];
+            unset($this->data['order_by']);
+        }
+        if(isset($this->data['order'])) {
+            $this->order = $this->data['order'];
+            unset($this->data['order']);
         }
         if(isset($this->data['iscount'])) {
             $this->isCount = true;

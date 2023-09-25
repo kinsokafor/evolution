@@ -126,7 +126,7 @@
     })
 
     const { value, errorMessage } = useField(props.name, props.required ? isRequired : true)
-
+    
     const setUpCroppie = () => {
         let id = "croppie-preview-" + instance.value
         let el = document.getElementById(id);
