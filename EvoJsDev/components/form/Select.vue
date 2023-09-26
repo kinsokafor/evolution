@@ -55,6 +55,10 @@
         column: {
             type: String
         },
+        options: {
+            type: Array,
+            default: []
+        },
         values: Object
     })
 
@@ -65,7 +69,7 @@
     })
 
     const getSelectOptions = computed(() => {
-        const options = props.attrs.options;
+        const options = (Array.isArray(props.attrs.options)) ? props.attrs.options : props.options;
         return options.map(option => {
             return typeof(option) == "string" ? {"name": option, "value": option} : option;
         });

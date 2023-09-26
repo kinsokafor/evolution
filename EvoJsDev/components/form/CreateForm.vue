@@ -1,5 +1,5 @@
-<template>
-    <Form @submit="onSubmit" :initial-values="initialValues" v-slot="{values, isSubmitting}">
+<template :values="values" :meta="meta">
+    <form>
         <loading :active="isSubmitting || processing" 
             :can-cancel="true" 
             :is-full-page=false></loading>
@@ -22,9 +22,9 @@
                 <DisplayFields :fields="getRightFields" :values="values" :initial-values="initialValues"/>
             </template>
         </component>
-        <slot></slot>
-        <slot name="submitButton"><Button type="submit" v-bind="buttonAttributes">Submit</Button></slot>
-    </Form>
+        <slot :values="values"></slot>
+        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes" :disabled="!meta.valid">Submit</Button></slot>
+    </form>
 </template>
 
 <script setup>
@@ -35,12 +35,11 @@
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import { ref, computed } from 'vue'
+    import { ref, computed, watchEffect } from 'vue'
     import SingleColumn from '@/components/layouts/SingleColumn.vue'
     import DoubleColumn from '@/components/layouts/DoubleColumn.vue'
     import TripleColumn from '@/components/layouts/TripleColumn.vue'
     
-
     // const store = useCreateFormStore();
 
     const props = defineProps({
@@ -68,11 +67,23 @@
         }
     })
 
-    const emit = defineEmits(['submit'])
+    const {values, handleSubmit, isSubmitting, meta, resetForm} = useForm({
+        initialValues: props.initialValues
+    })
 
-    const onSubmit = (values, actions) => {
+    const emit = defineEmits(['submit', 'values'])
+
+    handleSubmit((values, actions) => {
         emit("submit", values, actions);
-    }
+    })
+
+    watchEffect(() => {
+        emit("values", values)
+    })
+
+    watchEffect(() => {
+        resetForm({values: props.initialValues})
+    })
 
     // computed properties
 

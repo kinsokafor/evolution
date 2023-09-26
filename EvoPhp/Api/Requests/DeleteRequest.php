@@ -66,40 +66,8 @@ class DeleteRequest implements RequestInterface {
 
     public static function dbTable($request) {
         if(Operations::count($request->data)) {
-            $id = $request->data['id'];
-            $instance = new self();
             $query = new Query;
-            $request->setUniqueKeys();
-            if(Operations::count($request->uniqueKeys)) {
-                foreach($request->uniqueKeys as $uniqueKey) {
-                    if(!isset($request->data[$uniqueKey])) continue;
-                    $res = $query->select($request->tableName, "COUNT(*) as count, id")
-                                ->where($uniqueKey, $request->data[$uniqueKey], $instance->evaluateData($request->data[$uniqueKey])->valueType)
-                                ->execute()
-                                ->rows("OBJECT");
-                    if(($res->count > 0) && ($res->id != $id)) {
-                        http_response_code(422);
-                        $request->response = "Same \"".$uniqueKey."\" already exists in the database.";
-                    }
-                }
-            }
-            $query->update($request->tableName);
-            foreach($request->data as $key => $value) {
-                if($key == 'id') continue;
-                $query->set($key, $value, $instance->evaluateData($value)->valueType);
-            }
-
-            $query->where("id", $id, "i")->execute();
-            
-            if($query->connection->error !== "") {
-                http_response_code(400);
-                $request->response = "MySqli Error: ".$query->connection->error;
-            } else {
-                http_response_code(200);
-                $request->response = $query->select($request->tableName)
-                                        ->where("id", $id, "i")
-                                        ->execute()->rows();
-            }
+            return $query->delete($request->tableName)->whereGroup($request->data)->execute();
         } else {
             http_response_code(400);
             $request->response = NULL;

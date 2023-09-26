@@ -101,7 +101,7 @@ class Query extends Database
 
     public $havingData;
 
-    public $last_error;
+    public $last_error = "";
 
     /**
      * Cached column info, for sanity checking data before inserting
@@ -357,6 +357,15 @@ class Query extends Database
 
     public function where($column, $value, $type = false, $rel = "LIKE") {
 
+        if(strpos($value, ',')) {
+            $value = Operations::trimArray(explode(',', $value));
+            if(strstr( $rel, 'NOT' )) {
+                return $this->whereNotIn($column, $type, ...$value);
+            } else {
+                return $this->whereIn($column, $type, ...$value); 
+            }
+        }
+
         if(!$this->hasWhere)
             $this->statement .= " WHERE";
 
@@ -540,6 +549,7 @@ class Query extends Database
 
     public function log_error($error = "") {
         if($error !== "") {
+            $this->last_error = $error;
             $file = 'sql-errors.txt';
             if(!file_exists($file)) {
                 file_put_contents($file, "SQL Error Log".PHP_EOL);

@@ -85,9 +85,9 @@ class PutRequest implements RequestInterface {
 
             $query->where("id", $id, "i")->execute();
             
-            if($query->connection->error !== "") {
+            if($query->last_error !== "") {
                 http_response_code(400);
-                $request->response = "MySqli Error: ".$query->connection->error;
+                $request->response = "MySqli Error: ".$query->last_error;
             } else {
                 http_response_code(200);
                 $request->response = $query->select($request->tableName)

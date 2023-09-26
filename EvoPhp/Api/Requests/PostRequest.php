@@ -100,9 +100,9 @@ class PostRequest implements RequestInterface {
                 $dataTypes .= $instance->evaluateData($value)->valueType;
             }
             $query->insert($request->tableName, $dataTypes, ...$request->data);
-            if($query->connection->error !== "") {
+            if($query->last_error !== "") {
                 http_response_code(400);
-                $request->response = "MySqli Error: ".$query->connection->error;
+                $request->response = "MySqli Error: ".$query->last_error;
             } else {
                 $request->data['id'] = $query->insert_id;
                 http_response_code(201);

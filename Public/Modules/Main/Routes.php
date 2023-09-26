@@ -18,9 +18,9 @@ $router->group('/api/user', function () use ($router) {
         $request = new Requests;
         $request->user($params)->auth(1,2,3,4,5,6,7,8,9);
     });
-    $router->delete('/', function () {
+    $router->delete('/', function ($params) {
         $request = new Requests;
-        $request->user()->auth(1,2,3);
+        $request->user($params)->auth(1,2,3);
     });
     $router->delete('/id/{id}', function ($params) {
         $request = new Requests;
@@ -56,9 +56,9 @@ $router->group('/api/post', function () use ($router) {
         $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
         $request->post($params)->auth(5,6);
     });
-    $router->delete('/', function () {
+    $router->delete('/', function ($params) {
         $request = new Requests;
-        $request->post()->auth(1,2,3);
+        $request->post($params)->auth(1,2,3);
     });
     $router->delete('/id/{id}', function ($params) {
         $request = new Requests;
@@ -84,6 +84,25 @@ $router->group('/api/dbtable/{table}', function () use ($router) {
         $table = $params['table'];
         unset($params['table']);
         $request->{$table}($params)->auth(5,6);
+    });
+    $router->post('/{type}', function ($params) {
+        $request = new Requests;
+        $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
+        $table = $params['table'];
+        unset($params['table']);
+        $request->{$table}($params)->auth(1,2,3);
+    });
+    $router->delete('/id/{id}', function ($params) {
+        $request = new Requests;
+        $table = $params['table'];
+        unset($params['table']);
+        $request->{$table}($params)->auth(1,2,3);
+    });
+    $router->delete('/', function ($params) {
+        $request = new Requests;
+        $table = $params['table'];
+        unset($params['table']);
+        $request->{$table}($params)->auth(1,2,3);
     });
 });
 
