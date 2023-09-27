@@ -16,6 +16,7 @@
                         :attrs="getAttributes(attrs, c)"
                         :as="c.as"
                         :values="values"
+                        :initialValues="initialValues"
                     ></component>
                 </div>
             </div><hr>

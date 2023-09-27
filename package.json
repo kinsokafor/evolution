@@ -59,6 +59,7 @@
     "currency-in-words": "^2.1.3",
     "jenesius-vue-modal": "^1.8.2",
     "js-sha1": "^0.6.0",
+    "lodash": "^4.17.21",
     "pinia": "^2.0.22",
     "print-js": "^1.6.0",
     "qrcode.vue": "^3.4.1",

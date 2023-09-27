@@ -1,5 +1,5 @@
 <template :values="values" :meta="meta">
-    <form>
+    <form @submit="onSubmit">
         <loading :active="isSubmitting || processing" 
             :can-cancel="true" 
             :is-full-page=false></loading>
@@ -30,12 +30,12 @@
 <script setup>
     import { Form, useForm } from 'vee-validate';
     import Button from '@/components/Button.vue';
-    // import { useCreateFormStore } from '@/store/createForm';
+    import _ from 'lodash'
     import DisplayFields from './DisplayFields.vue';
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import { ref, computed, watchEffect } from 'vue'
+    import { ref, computed, watchEffect, watch } from 'vue'
     import SingleColumn from '@/components/layouts/SingleColumn.vue'
     import DoubleColumn from '@/components/layouts/DoubleColumn.vue'
     import TripleColumn from '@/components/layouts/TripleColumn.vue'
@@ -67,22 +67,28 @@
         }
     })
 
-    const {values, handleSubmit, isSubmitting, meta, resetForm} = useForm({
-        initialValues: props.initialValues
-    })
+    const {values, handleSubmit, isSubmitting, meta, resetForm} = useForm()
 
     const emit = defineEmits(['submit', 'values'])
 
-    handleSubmit((values, actions) => {
+    const onSubmit = handleSubmit((values, actions) => {
         emit("submit", values, actions);
     })
+
+    const tempInitialValues = ref({})
 
     watchEffect(() => {
         emit("values", values)
     })
 
     watchEffect(() => {
-        resetForm({values: props.initialValues})
+        const i = {...props.initialValues}
+        const j = {...tempInitialValues.value}
+        if(_.isEqual(i, j)) {
+            return
+        }
+        resetForm({values: i})
+        tempInitialValues.value = i
     })
 
     // computed properties
