@@ -355,7 +355,7 @@ class Post
 
     public function where($meta_name, $meta_value, $type = "s", $rel = "LIKE") {
         $this->query->or()->openGroup()->where("meta_name", $meta_name);
-        if(strpos($meta_value, ',')) {
+        if(gettype($meta_value) == 'string' && strpos($meta_value, ',')) {
             $meta_value = Operations::trimArray(explode(',', $meta_value));
         }
         if(is_array($meta_value)) {

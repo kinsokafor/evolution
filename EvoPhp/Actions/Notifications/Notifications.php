@@ -46,6 +46,7 @@ class Notifications
         $this->messageRaw = $message;
         $this->subject = $subject;
         $this->message = $message;
+        $this->messageHTML = $message;
         $this->clean();
         $this->mail = new Mails;
     }

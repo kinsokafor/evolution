@@ -72,6 +72,9 @@ class Records
     }
 
     public function getRecord($record_name, $cache = true, $expiry = 300) {
+        if(is_array($record_name)) {
+            return array_combine($record_name, array_map(fn($v) => (new \EvoPhp\Resources\Options)->getOption($v), $record_name));
+        }
         if($cache && isset($this->session->{"records_".$record_name})) {
             if($this->session->{"recordTS_".$record_name} + $expiry > time()) {
                 return $this->session->{"records_".$record_name};

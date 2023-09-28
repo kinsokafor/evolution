@@ -2,6 +2,7 @@
 
 namespace EvoPhp\Api\Requests;
 
+use EvoPhp\Api\Operations;
 use EvoPhp\Resources\Post;
 use EvoPhp\Resources\User;
 use EvoPhp\Resources\Options;
@@ -86,6 +87,9 @@ class GetRequest implements RequestInterface {
     public static function optionsTable($request) {
         $option = new Options;
         if(isset($request->data['key'])) {
+            if(strpos($request->data['key'], ',')) {
+                $request->data['key'] = \EvoPhp\Api\Operations::trimArray(\explode(',', $request->data['key']));
+            }
             $request->response = $option->getOption($request->data['key'], $request->cache, $request->cacheExpiry);
             if($request->response !== NULL) {
                 http_response_code(200);
@@ -99,6 +103,9 @@ class GetRequest implements RequestInterface {
     public static function recordsTable($request) {
         $record = new Records;
         if(isset($request->data['key'])) {
+            if(strpos($request->data['key'], ',')) {
+                $request->data['key'] = \EvoPhp\Api\Operations::trimArray(\explode(',', $request->data['key']));
+            }
             $request->response = $record->getRecord($request->data['key'], $request->cache, $request->cacheExpiry);
             if($request->response !== NULL) {
                 http_response_code(200);

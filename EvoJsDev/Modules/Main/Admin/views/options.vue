@@ -94,13 +94,14 @@
         {label: "SMTP password", name: "smtp_password"},
         {
             label: "Mialer", 
-            name: "use_unverified_role",
+            name: "mailer",
             as: "radio",
             options: [
                 {name: "SMTP", value: "smtp"},
                 {name: "Sendmail", value: "sendmail"},
                 {name: "Q-mail", value: "qmail"},
-                {name: "Mail", value: "mail"}
+                {name: "Mail", value: "mail"},
+                {name: "Elastic Email", value: "elastic"}
             ],
             class: "pr-2 pl-2",
             layout: "linear"

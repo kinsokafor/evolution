@@ -30,6 +30,10 @@ class Mails
 
     public $error = "";
 
+    public $ee;
+
+    public $isElastic = false;
+
     public function __construct()
     {
         $this->mail = new PHPMailer();
@@ -60,6 +64,10 @@ class Mails
         $this->mail->isSMTP();
     }
 
+    private function setElastic() {
+        $this->isElastic = true;
+    }
+
     private function setMailer() {
         $mailer = Options::get("mailer");
         if($mailer) :
@@ -75,8 +83,6 @@ class Mails
     }
 
     public function readyMailer() {
-        $this->setCredentials();
-        $this->setMailer();
 		$emailAddress = ($option = Options::get("company_email")) ? $option : $this->From;
 		$this->mail->AddAddress($emailAddress, "No Reply");
 		$this->mail->SMTPAuth = true;
@@ -92,16 +98,56 @@ class Mails
 
     public function send($notificationObject) {
         if(!Options::get("activate_smtp")) return $this;
+        $this->setCredentials();
+        $this->setMailer();
+        if($this->isElastic) {
+            $this->readyElasticEmail();
+            return $this->sendElasticEmail($notificationObject);
+        }
         $this->readyMailer();
         try {
             $this->mail->Subject = ucwords($notificationObject->subject);
-            $this->mail->Body    = $notificationObject->messageHtml;
+            $this->mail->Body    = $notificationObject->messageHTML;
             $this->mail->AltBody = $notificationObject->messageText;
             $this->mail->send();
             $this->error = $this->mail->ErrorInfo;
         } catch (Exception $e) {
             $this->error = $e->getMessage(); //Boring error messages from anything else!
         }
+        return $this;
+    }
+
+    public function readyElasticEmail() {
+        $config = \ElasticEmail\Configuration::getDefaultConfiguration()->setApiKey('X-ElasticEmail-ApiKey', $this->Password);
+		$this->ee = new \ElasticEmail\Api\EmailsApi(
+		    new \GuzzleHttp\Client(),
+		    $config
+		);
+    }
+
+    public function sendElasticEmail($notificationObject) {
+        $receivers = array_map(function($i){
+            return new \ElasticEmail\Model\EmailRecipient($i);
+        }, $notificationObject->receivers);
+        $email = new \ElasticEmail\Model\EmailMessageData(array(
+		    "recipients" => $receivers,
+		    "content" => new \ElasticEmail\Model\EmailContent(array(
+		        "body" => array(
+		            new \ElasticEmail\Model\BodyPart(array(
+		                "content_type" => "HTML",
+		                "content" => $notificationObject->messageHTML
+		            ))
+		        ),
+		        "from" => $this->From,
+		        "fromName" => $this->FromName,
+		        "subject" => ucwords($notificationObject->subject)
+		    ))
+		));
+		try {
+		    $this->ee->emailsPost($email);
+		} catch (Exception $e) {
+		    $this->error = 'Exception when calling EE API: '. $e->getMessage();
+		}
         return $this;
     }
 

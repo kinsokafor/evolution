@@ -9,6 +9,7 @@
             :value="option.value" 
             :selected="selected(value, option.value)">{{ option.name }}</option>
         </Field>
+        <small><slot name="hint">{{ attrs.hint ?? "" }}</slot></small>
     </div>
 </template>
 

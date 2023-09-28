@@ -72,6 +72,9 @@ class Options
     }
 
     public function getOption($option_name, $cache = true, $expiry = 300) {
+        if(is_array($option_name)) {
+            return array_combine($option_name, array_map(fn($v) => (new \EvoPhp\Resources\Options)->getOption($v), $option_name));
+        }
         if($cache && isset($this->session->{"options_".$option_name})) {
             if($this->session->{"optionTS_".$option_name} + $expiry > time()) {
                 return $this->session->{"options_".$option_name};
