@@ -67,6 +67,13 @@ export const useAuthStore = defineStore('useAuthStore', {
                 return state.access.trim() == "" ? [] : state.access.trim().split(",").map((x) => parseInt(x))
             }
             return state.access
+        },
+        getUser: (state) => {
+            if(state.currentUser.id !== undefined) {
+                return state.currentUser
+            }
+            state.loginStatus()
+            return state.currentUser
         }
     }
 })

@@ -44,12 +44,12 @@ class Options
         }
 
         $statement = "CREATE TABLE IF NOT EXISTS options (
-                id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 option_name VARCHAR(100) NOT NULL,
                 option_value TEXT NOT NULL,
                 data_type VARCHAR(6) DEFAULT 'string',
-                option_int BIGINT(20) NOT NULL,
-                option_double DOUBLE(20,4) NOT NULL,
+                option_int BIGINT NOT NULL DEFAULT 0,
+                option_double DOUBLE(20,4) NOT NULL DEFAULT 0,
                 option_blob BLOB NOT NULL
                 )";
         $self->query->query($statement)->execute();
@@ -59,7 +59,7 @@ class Options
         $statement = "ALTER TABLE options ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
-                            option_int BIGINT(20) NOT NULL,
+                            option_int BIGINT NOT NULL,
                             option_double DOUBLE(20,4) NOT NULL,
                             option_blob BLOB NOT NULL
                         )";
@@ -170,6 +170,10 @@ class Options
         if($ev->field) {
             $args["option_".$ev->field] = $ev->value;
             $types .= $ev->valueType;
+        }
+        if($ev->field !== 'blob') {
+            $args['option_blob'] = "";
+            $types .= "s";
         }
         $this->query->insert("options", $types, $args)->execute();
     }

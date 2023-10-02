@@ -9,7 +9,8 @@
     "watch": "webpack --watch --progress --config webpack.dev.js",
     "start": "concurrently \"php -S localhost:3000\" \"cls\" \"npm run watch\" \"npm run open\"",
     "open": "rundll32 url.dll,FileProtocolHandler http://localhost:3000",
-    "install-plugin": "node install-plugin.js"
+    "install-plugin": "node install-plugin.js",
+    "startsql": "\"C:\\xampp\\mysql\\bin\\mysqld\""
   },
   "repository": {
     "type": "git",

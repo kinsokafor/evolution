@@ -55,20 +55,20 @@ class Post
         }
 
         $statement = "CREATE TABLE IF NOT EXISTS post (
-                id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 title TEXT NOT NULL,
                 permalink TEXT NOT NULL
                 )";
         $self->query->query($statement)->execute();
 
         $statement = "CREATE TABLE IF NOT EXISTS post_meta (
-                id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                post_id BIGINT(20) NOT NULL,
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                post_id BIGINT NOT NULL,
                 meta_name TEXT NOT NULL,
                 meta_value LONGTEXT NOT NULL,
                 data_type VARCHAR(6) DEFAULT 'string',
-                meta_int BIGINT(20) NOT NULL,
-                meta_double DOUBLE(20,4) NOT NULL,
+                meta_int BIGINT NOT NULL DEFAULT 0,
+                meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
                 meta_blob BLOB NOT NULL
                 )";
         $self->query->query($statement)->execute();
@@ -78,7 +78,7 @@ class Post
         $statement = "ALTER TABLE post_meta ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
-                            meta_int BIGINT(20) NOT NULL,
+                            meta_int BIGINT NOT NULL,
                             meta_double DOUBLE(20,4) NOT NULL,
                             meta_blob BLOB NOT NULL
                         )";
@@ -171,6 +171,10 @@ class Post
             if($ev->field) {
                 $value['meta_'.$ev->field] = $ev->value;
                 $types .= $ev->valueType;
+            }
+            if($ev->field !== 'blob') {
+                $value['meta_blob'] = "";
+                $types .= "s";
             }
             $this->query->insert('post_meta', $types, $value)->execute();
         }

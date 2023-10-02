@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import dashboard from '../views/dashboard.vue'
 import myprofile from '../views/myprofile.vue'
+import notifications from '../views/notifications.vue'
 import changePassword from '../views/change-password.vue'
 
 const router = createRouter({
@@ -23,6 +24,12 @@ const router = createRouter({
             name: 'Change Password', 
             component: changePassword, 
             meta: {title: "Change Password | Home"}
+        },
+        {
+            path: '/notifications', 
+            name: 'Notifications', 
+            component: notifications, 
+            meta: {title: "Notifications | Home"}
         }
     ]
 });

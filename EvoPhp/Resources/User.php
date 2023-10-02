@@ -68,24 +68,24 @@ class User
             $self->query->query($statement)->execute();
 
             $statement = "CREATE TABLE IF NOT EXISTS user_meta (
-                    id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    user_id BIGINT(20) NOT NULL,
+                    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    user_id BIGINT NOT NULL,
                     meta_name TEXT NOT NULL,
                     meta_value LONGTEXT NOT NULL,
                     data_type VARCHAR(6) DEFAULT 'string',
-                    meta_int BIGINT(20) NOT NULL,
-                    meta_double DOUBLE(20,4) NOT NULL,
+                    meta_int BIGINT NOT NULL DEFAULT 0,
+                    meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
                     meta_blob BLOB NOT NULL
                     )";
             $self->query->query($statement)->execute();
         }
 
         $statement = "CREATE TABLE IF NOT EXISTS token (
-                id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                user_id BIGINT(20) NOT NULL,
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
                 name TEXT NOT NULL,
                 token TEXT NOT NULL,
-                expiry BIGINT(20) NOT NULL,
+                expiry BIGINT NOT NULL,
                 scope TEXT NOT NULL,
                 status VARCHAR(20) DEFAULT 'alive'
                 )";
@@ -219,32 +219,32 @@ class User
             switch (gettype($value)) {
                 case "boolean":
                         $value = $value ? 1 : 0;
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "data_type" => "boolean"];
-                        $types = "issis";
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "meta_blob" => "", "data_type" => "boolean"];
+                        $types = "ississ";
                     break;
 
                 case "integer":
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "data_type" => "int"];
-                        $types = "issis";
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "meta_blob" => "", "data_type" => "int"];
+                        $types = "ississ";
                     break;
 
                 case "double":
                 case "float":
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_double" => $value, "data_type" => "double"];
-                        $types = "issds";
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_double" => $value, "meta_blob" => "", "data_type" => "double"];
+                        $types = "issdss";
                     break;
 
                 case "array":
                         $value = Operations::serialize($value);
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "data_type" => "array"];
-                        $types = "isss";
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => "", "data_type" => "array"];
+                        $types = "issss";
                     break;
 
                 case "object":
                         $value = (array) $value;
                         $value = Operations::serialize($value);
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "data_type" => "object"];
-                        $types = "isss";
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => "", "data_type" => "object"];
+                        $types = "issss";
                     break;
 
                 case "blob":
@@ -253,8 +253,8 @@ class User
                     break;
 
                 default:
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "data_type" => "string"];
-                        $types = "isss";
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => "", "data_type" => "string"];
+                        $types = "issss";
                     break;
             }
             $this->query->insert('user_meta', $types, $value)->execute();

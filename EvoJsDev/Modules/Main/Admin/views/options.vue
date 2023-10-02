@@ -91,7 +91,7 @@
         {label: "SMTP host", name: "smtp_host"},
         {label: "SMTP port", name: "smtp_port"},
         {label: "SMTP username", name: "smtp_username"},
-        {label: "SMTP password", name: "smtp_password"},
+        {label: "SMTP password", name: "smtp_password", as: "password"},
         {
             label: "Mialer", 
             name: "mailer",
@@ -113,8 +113,25 @@
             name: 'site_name'
         },
         {
-            label: 'Root', 
+            label: 'Token Life Time', 
             name: 'Auth.tokenLifetime'
+        },
+        {
+            label: 'Mode', 
+            name: 'mode',
+            as: "select",
+            options: ["development", "production"]
+        },
+        {
+            label: "Site logo",
+            name: "logo",
+            as: "croppie",
+            enableResize: true
+        },
+        {
+            label: "Site icon",
+            name: "favicon",
+            as: "croppie"
         }
     ]
 </script>

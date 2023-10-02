@@ -44,12 +44,12 @@ class Records
         }
 
         $statement = "CREATE TABLE IF NOT EXISTS records (
-                id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 record_name VARCHAR(100) NOT NULL,
                 record_value TEXT NOT NULL,
                 data_type VARCHAR(6) DEFAULT 'string',
-                record_int BIGINT(20) NOT NULL,
-                record_double DOUBLE(20,4) NOT NULL,
+                record_int BIGINT NOT NULL DEFAULT 0,
+                record_double DOUBLE(20,4) NOT NULL DEFAULT 0,
                 record_blob BLOB NOT NULL
                 )";
         $self->query->query($statement)->execute();
@@ -59,7 +59,7 @@ class Records
         $statement = "ALTER TABLE records ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
-                            record_int BIGINT(20) NOT NULL,
+                            record_int BIGINT NOT NULL,
                             record_double DOUBLE(20,4) NOT NULL,
                             record_blob BLOB NOT NULL
                         )";
@@ -170,6 +170,10 @@ class Records
         if($ev->field) {
             $args["record_".$ev->field] = $ev->value;
             $types .= $ev->valueType;
+        }
+        if($ev->field !== 'blob') {
+            $args['record_blob'] = "";
+            $types .= "s";
         }
         $this->query->insert("records", $types, $args)->execute();
     }

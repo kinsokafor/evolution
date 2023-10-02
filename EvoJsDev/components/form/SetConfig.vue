@@ -1,5 +1,4 @@
 <template>
-    {{ initialValues }}
     <CreateForm 
         :fields="fields"
         @submit="handleSubmit"
@@ -19,6 +18,7 @@
     import {useAlertStore} from '@/store/alert'
     import {useConfigStore} from '@/store/config'
     import { Config, findByDottedIndex } from '@/helpers'
+    import _ from 'lodash';
     
     const processing = ref(false)
     const alertStore = useAlertStore()
@@ -29,6 +29,7 @@
     })
 
     const initialValues = ref({})
+    const temp = ref(null)
 
     const handleSubmit = (values) => {
         processing.value = true;
@@ -44,8 +45,26 @@
 
     onBeforeMount(() => {
         props.fields.forEach(item => {
-
-            // initialValues.value[item] = config[item]//findByDottedIndex(item.name, config)
+            const arr = item.name.split('.')
+            const temp = arr.reduce((a,b,i,ar)=> {
+                let v = null
+                if((i+1) == ar.length) {
+                    const vTemp = findByDottedIndex(item.name, config)
+                    if(vTemp != undefined) {
+                        switch(typeof(vTemp)) {
+                            case "number":
+                            case "boolean":
+                                v = vTemp
+                            break;
+                                
+                            default:
+                                v = "\""+vTemp+"\""
+                        }
+                    }
+                } else v = "{?}"
+                return a.replace("?", `"${b}":${v}`)
+            }, "{?}")
+            initialValues.value = _.merge(initialValues.value, JSON.parse(temp));
         });
     })
 </script>
