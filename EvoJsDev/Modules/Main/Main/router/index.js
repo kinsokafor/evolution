@@ -3,6 +3,7 @@ import dashboard from '../views/dashboard.vue'
 import myprofile from '../views/myprofile.vue'
 import notifications from '../views/notifications.vue'
 import changePassword from '../views/change-password.vue'
+import NotFound from '@/components/NotFound.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -30,6 +31,12 @@ const router = createRouter({
             name: 'Notifications', 
             component: notifications, 
             meta: {title: "Notifications | Home"}
+        },
+        {
+            path: '/:pathMatch(.*)*', 
+            name: 'NotFound', 
+            component: NotFound, 
+            meta: {title: "404 Not Found"}
         }
     ]
 });

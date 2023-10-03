@@ -5,6 +5,7 @@ import editProfile from '../views/editProfile.vue'
 import profile from '../views/profile.vue'
 import changeUserPassword from '../views/change-user-password.vue'
 import options from '../views/options.vue'
+import NotFound from '@/components/NotFound.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -44,6 +45,12 @@ const router = createRouter({
             name: 'Options', 
             component: options,
             meta: {title: "Options | Admin"}
+        },
+        {
+            path: '/:pathMatch(.*)*', 
+            name: 'NotFound', 
+            component: NotFound, 
+            meta: {title: "404 Not Found"}
         }
     ]
 });

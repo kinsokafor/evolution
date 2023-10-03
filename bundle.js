@@ -55,7 +55,9 @@ archive.pipe(output);
 // // append a file
 archive.file('index.php', { name: 'index.php' });
 archive.file('Install.php', { name: 'Install.php' });
-archive.file('config.json', { name: 'config.json' });
+if(process.env.npm_config_all != undefined) {
+  archive.file('config.json', { name: 'config.json' });
+}
 archive.file('color-scheme.css', { name: 'color-scheme.css' });
 archive.file('.htaccess', { name: '.htaccess' });
 
@@ -63,8 +65,11 @@ archive.file('.htaccess', { name: '.htaccess' });
 // archive.directory('subdir/', 'new-subdir');
 
 // append files from a sub-directory, putting its contents at the root of archive
-archive.directory('Public/', 'Public');
 archive.directory('vendor/', 'vendor');
+archive.glob('**', {
+  cwd:__dirname + '/Public',
+  ignore: ['Themes/*/Views/cache/*', '*/.git']
+}, {prefix: 'Public/'});
 // append files from a glob pattern
 archive.glob('**', {
   cwd:__dirname + '/EvoPhp',
