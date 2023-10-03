@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('useAuthStore', {
     actions: {
         async getLoginStatus() {
             return await axios.post(process.env.EVO_API_URL + '/api/loginStatus', {}, {
-                withCredentials: true,
+                'Access-Control-Allow-Credentials':true,
                 headers: {
                     'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',

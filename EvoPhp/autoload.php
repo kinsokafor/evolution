@@ -5,12 +5,13 @@
 
 	spl_autoload_register(function($className)
 	{
-		$file = "$className.php";
+		$className = str_replace('\\', '/', $className);
+		$file = ABSPATH."$className.php";
 		if(file_exists($file)) include $file;
 	});
 
 	// load dependency files
-	require 'vendor/autoload.php';
+	require ABSPATH.'vendor/autoload.php';
 
 	// load modules
 	$modules = Modules::getModules();

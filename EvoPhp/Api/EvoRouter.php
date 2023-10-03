@@ -3,6 +3,7 @@
 namespace EvoPhp\Api;
 
 use Inhere\Route\Router;
+use Inhere\Route\Dispatcher\Dispatcher;
 
 class EvoRouter
 {
@@ -34,12 +35,24 @@ class EvoRouter
 
     function __destruct()
     {
+
+    }
+
+    function dispatch($path = '', $method = '') {
         try {
-            $this->router->dispatch();
+            $dispatcher = new Dispatcher([
+                'dynamicAction' => true,
+            ]);
+            
+            // on notFound, output a message.
+            $dispatcher->on(Dispatcher::ON_NOT_FOUND, function ($path) {
+               echo "the page $path not found!";
+            });
+            
+            $this->router->dispatch($dispatcher, $path, $method);
         }
         catch(\Exception $exception) {
             ErrorHandler::handleException($exception);
         }
-        
     }
 }

@@ -12,7 +12,7 @@ use function getallheaders;
 
 class Requests
 {
-    use \Evophp\Api\Auth;
+    use \EvoPhp\Api\Auth;
 
 	public $response;
 

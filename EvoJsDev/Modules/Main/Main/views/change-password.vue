@@ -44,7 +44,7 @@
     const onSubmit = async (values) => {
         buttonAttributes.value.processing = true
         await axios.post(process.env.EVO_API_URL + "/api/change-password/", values, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',

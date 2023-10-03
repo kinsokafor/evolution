@@ -39,8 +39,8 @@ class Modules
     }
 
     static public function getModulePath($module) {
-        if(is_string($module)) return $module;
-        if(is_array($module) && isset($module['path'])) return $module['path'];
+        if(is_string($module)) return ABSPATH.$module;
+        if(is_array($module) && isset($module['path'])) return ABSPATH.$module['path'];
         return "";
     }
 

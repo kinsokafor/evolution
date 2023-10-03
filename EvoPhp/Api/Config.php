@@ -16,16 +16,16 @@ class Config
 
     public $json;
 
-    public function __construct(string $file = "./config.json")
+    public function __construct(string $file = "config.json")
     {
-        $this->json = new Json($file);
-        $this->reload($file);
+        $this->json = new Json(ABSPATH.$file);
+        $this->reload(ABSPATH.$file);
     }
 
     private function reload($file = null) {
         if (!$this->json->exists()) {
             $myfile = fopen($file, "w") or die("Unable to open file!");
-            $txt = file_get_contents("./sample.config.json");
+            $txt = file_get_contents(ABSPATH."sample.config.json");
             fwrite($myfile, $txt);
 	        fclose($myfile);
         }

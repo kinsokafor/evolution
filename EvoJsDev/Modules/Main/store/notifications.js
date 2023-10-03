@@ -22,7 +22,7 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
             this.fetching = true
             const url = process.env.EVO_API_URL + `/api/dbtable/notification?user_id=${user_id}&limit=${this.limit}&offset=${this.offset}&order_by=id&order=desc`
             axios.get(url, {
-                withCredentials: true,
+                'Access-Control-Allow-Credentials':true,
                 headers: {
                     'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',

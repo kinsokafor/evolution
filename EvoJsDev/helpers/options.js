@@ -5,7 +5,7 @@ export class Options {
 
     async get(option) {
         return await axios.get(process.env.EVO_API_URL + "/api/options/"+option, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export class Options {
 
     async update(option, value) {
         return await axios.put(process.env.EVO_API_URL + "/api/options/"+option, {value: value}, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export class Options {
 
     async delete(option) {
         return await axios.delete(process.env.EVO_API_URL + "/api/options/"+option, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',

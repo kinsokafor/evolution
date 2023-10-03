@@ -60,12 +60,16 @@
         initialValues: Object,
         values: Object
     })
+    const initiated = ref(false)
     const control = ref(0)
     const initRows = ref(0)
     const rows = computed(() => {
-        if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0) {
+        if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0 && !initiated.value) {
+            initiated.value = true
             initRows.value = [...Object.values(props.initialValues[props.name])].length
-        } else initRows.value = props.attrs.rows
+        } else if(!initiated.value) {
+            initRows.value = props.attrs.rows
+        }
         return initRows.value + control.value
     })
     

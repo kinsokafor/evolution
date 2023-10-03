@@ -71,7 +71,7 @@ export const useFilterStore = defineStore('useFilterStore', {
         async getTotalRecords() {
             var link = this.getCountLink;
             await axios.get(link, {
-                withCredentials: true,
+                'Access-Control-Allow-Credentials':true,
                 headers: {
                     'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',

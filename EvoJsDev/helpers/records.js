@@ -5,7 +5,7 @@ export class Records {
 
     async get(record) {
         return await axios.get(process.env.EVO_API_URL + "/api/records/"+record, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export class Records {
 
     async update(record, value) {
         return await axios.put(process.env.EVO_API_URL + "/api/records/"+record, {value: value}, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export class Records {
 
     async delete(record) {
         return await axios.delete(process.env.EVO_API_URL + "/api/records/"+record, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',

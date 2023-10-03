@@ -50,7 +50,7 @@
         values['user_id'] = parseInt(route.params.id);
         buttonAttributes.value.processing = true
         await axios.post(process.env.EVO_API_URL + "/api/change-user-password/", values, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',

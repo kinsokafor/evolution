@@ -85,7 +85,7 @@
 
     const getCount = async () => {
         await axios.get(link, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',

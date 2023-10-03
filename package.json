@@ -10,7 +10,8 @@
     "start": "concurrently \"php -S localhost:3000\" \"cls\" \"npm run watch\" \"npm run open\"",
     "open": "rundll32 url.dll,FileProtocolHandler http://localhost:3000",
     "install-plugin": "node install-plugin.js",
-    "startsql": "\"C:\\xampp\\mysql\\bin\\mysqld\""
+    "startsql": "\"C:\\xampp\\mysql\\bin\\mysqld\"",
+    "bundle": "node bundle.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/kinsokafor/evolution#readme",
   "devDependencies": {
+    "archiver": "^6.0.1",
     "concurrently": "^7.3.0",
     "css-loader": "^6.7.1",
     "dotenv-webpack": "^8.0.1",

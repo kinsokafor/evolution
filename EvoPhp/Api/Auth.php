@@ -3,7 +3,7 @@
 namespace EvoPhp\Api;
 
 use EvoPhp\Api\Config;
-use Evophp\Database\Query;
+use EvoPhp\Database\Query;
 use EvoPhp\Resources\User;
 use EvoPhp\Database\Session;
 use EvoPhp\Api\Operations;

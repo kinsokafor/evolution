@@ -6,7 +6,7 @@ export class Users {
     async get(filter = {}) {
         const link = this.buildQuery(process.env.EVO_API_URL + "/api/user/", filter);
         return await axios.get(link, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export class Users {
     async update(id, data = {}) {
         data['id'] = parseInt(id);
         return await axios.put(process.env.EVO_API_URL + '/api/user/id/'+id, data, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export class Users {
     async delete(filter = {}) {
         const link = this.buildQuery(process.env.EVO_API_URL + "/api/user/", filter);
         return await axios.delete(link, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export class Users {
     async new(data = {}, endpoint = null) {
         const url = endpoint == null ? process.env.EVO_API_URL + '/api/user/' : endpoint;
         return await axios.post(url, data, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',

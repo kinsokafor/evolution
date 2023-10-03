@@ -50,7 +50,7 @@ onMounted(() => {
 const handleSubmit = async (values) => {
   processing.value = true
   await axios.post(process.env.EVO_API_URL + '/api/login', JSON.stringify(values), {
-      withCredentials: true,
+    'Access-Control-Allow-Credentials':true,
       headers: {
           'Access-Control-Allow-Origin': '*', 
           'Content-Type': 'application/json',

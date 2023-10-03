@@ -5,7 +5,7 @@ export class Config {
 
     async get(key) {
         return await axios.post(process.env.EVO_API_URL + "/api/config/"+key, {key: key}, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export class Config {
 
     async update(values) {
         return await axios.post(process.env.EVO_API_URL + "/api/config/", values, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export class Config {
 
     async delete(key) {
         return await axios.delete(process.env.EVO_API_URL + "/api/config/"+key, {
-            withCredentials: true,
+            'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
