@@ -24,16 +24,16 @@ class Action
             id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             action_name VARCHAR(100) NOT NULL,
             action_cb TEXT NOT NULL,
-            priority INT UNSIGNED
+            priority INT UNSIGNED,
+            auth VARCHAR(100) NOT NULL DEFAULT ''
             )";
         $self->query->query($statement)->execute();
     }
 
     private function maintainTable() {
-        $auth = Operations::serialize([]);
         $statement = "ALTER TABLE actions ADD 
                         (
-                            auth TEXT DEFAULT '$auth'
+                            auth VARCHAR(100) NOT NULL DEFAULT ''
                         )";
         $this->query->query($statement)->execute();
     }
@@ -79,9 +79,8 @@ class Action
         return $instance->addAction($action, $cb, $priority, $auth);
     }
 
-    public function addAction($action, $cb, $priority = 1, $auth = []) {
+    public function addAction($action, $cb, $priority = 1, $auth = '') {
         $action = \strtolower($action);
-        $auth = Operations::serialize($auth);
         $res = $this->query->select("actions")
                     ->where("action_name", $action)
                     ->execute()->rows();

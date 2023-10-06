@@ -57,9 +57,9 @@ archive.file('index.php', { name: 'index.php' });
 archive.file('Install.php', { name: 'Install.php' });
 if(process.env.npm_config_all != undefined) {
   archive.file('config.json', { name: 'config.json' });
+  archive.file('.htaccess', { name: '.htaccess' });
 }
 archive.file('color-scheme.css', { name: 'color-scheme.css' });
-archive.file('.htaccess', { name: '.htaccess' });
 
 // // append files from a sub-directory and naming it `new-subdir` within the archive
 // archive.directory('subdir/', 'new-subdir');

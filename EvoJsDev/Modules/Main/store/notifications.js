@@ -13,13 +13,13 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
             processing: false,
             limit: 100,
             offset: 0,
-            fetching: false
+            firstLoad: false
         }
     },
     actions: {
         async getFromServer(user_id) {
             this.processing = true
-            this.fetching = true
+            this.firstLoad = true
             const url = process.env.EVO_API_URL + `/api/dbtable/notification?user_id=${user_id}&limit=${this.limit}&offset=${this.offset}&order_by=id&order=desc`
             axios.get(url, {
                 'Access-Control-Allow-Credentials':true,
@@ -42,7 +42,9 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
                     this.offset = this.limit + this.offset
                     this.getFromServer(user_id)
                 } else {
-                    this.fetching = false
+                    setTimeout(()=> {
+                        this.firstLoad = false
+                    }, 300000);
                     this.offset = 0
                 }
             }).catch(e => {
@@ -55,7 +57,7 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
             const authStore = storeToRefs(useAuthStore())
             const user = authStore.getUser.value
             if(user.id == undefined) return []
-            if(!state.fetching) state.getFromServer(user.id)
+            if(!state.firstLoad) state.getFromServer(user.id)
             return state.logs
         }
     }

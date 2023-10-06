@@ -6,6 +6,7 @@ use EvoPhp\Api\Operations;
 use EvoPhp\Resources\User;
 use EvoPhp\Actions\Notifications\Mails;
 use EvoPhp\Actions\Notifications\Log;
+use EvoPhp\Themes\Templates;
 use function strip_tags;
 use function str_replace;
 
@@ -41,12 +42,15 @@ class Notifications
 
     public $mail;
 
-    public function __construct(string $message = "", string $subject = "")
+    public $data;
+
+    public function __construct(string $message = "", string $subject = "", array $data = [])
     {
         $this->messageRaw = $message;
         $this->subject = $subject;
         $this->message = $message;
         $this->messageHTML = $message;
+        $this->data = $data;
         $this->clean();
         $this->mail = new Mails;
     }
@@ -157,6 +161,18 @@ class Notifications
     public function log() {
         $log = new Log;
         $log->log($this);
+        return $this;
+    }
+
+    public function template($template = 'email', $path = './Public/Templates') {
+        $t = new Templates();
+        $data = [
+            'mail_content' => $this->message,
+            'mail_subject' => $this->subject,
+            'mail_receivers' => $this->receivers
+        ];
+        $data = array_merge($data, $this->data);
+        $this->messageHTML = $t->get($template, $path, $data) ?: $this->messageHTML;
         return $this;
     }
     

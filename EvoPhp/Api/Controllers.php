@@ -80,9 +80,11 @@ abstract class Controllers
 
     private function getContent() {
         $this->addResources();
+        if($this->template == 'blank') return "";
         $blade = new Blade($this->viewPath, $this->viewPath.'/cache');
         $themes = new Themes($this->template, $this->data);
         $content = $blade->make($this->bladeTemplate, $themes->data)->render();
+        if($this->template == 'no_theme') return $content;
         return $themes->getView($content);
     }
 

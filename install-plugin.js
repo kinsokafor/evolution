@@ -4,7 +4,7 @@ if(process.env.npm_config_plugin == undefined) {
 }
 
 shell.cd('./Public/Modules')
-shell.exec(`git clone https://github.com/kinsokafor/${process.env.npm_config_plugin}`)
+shell.exec(`git clone https://github.com/kinsokafor/${process.env.npm_config_plugin} ${process.env.npm_config_plugin}`)
 
 shell.cd('../../EvoJsDev/Modules')
-shell.exec(`git clone https://github.com/kinsokafor/${process.env.npm_config_plugin}`)
+shell.exec(`git clone https://github.com/kinsokafor/${process.env.npm_config_plugin}.js ${process.env.npm_config_plugin}`)

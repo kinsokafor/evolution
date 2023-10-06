@@ -1,14 +1,22 @@
 <template>
-    <div class="list-item-container animate__animated animate__fadeInUp">
+    <div class="list-item-container animate__animated animate__fadeInUp">   
+        <div class="header" v-if="header != null">
+            <h3>{{ header }}</h3>
+        </div>
         <div class="list-item-flex">
-            <div class="list-left">
+            <div class="list-left"
+                @click="goToLink"
+                :class="{pointer: (href != '')}"
+            >
                 <slot></slot>
             </div>
             <div class="list-right">
                 <slot name="right"></slot>
             </div>
         </div>
-        
+        <div class="footer" v-if="footer != null">
+            <small>{{ footer }}</small>
+        </div>
     </div>
 </template>
 
@@ -23,8 +31,18 @@
         footer: {
             type: String,
             default: null
+        },
+        href: {
+            type: String,
+            default: ""
         }
     })
+
+    const goToLink = () => {
+        if(props.href != "" && props.href != "#") {
+            window.location = props.href
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -46,6 +64,9 @@
     }
     .list-item-container .list-right {
         text-align:right;
+    }
+    .pointer {
+        cursor: pointer;
     }
 </style>
 

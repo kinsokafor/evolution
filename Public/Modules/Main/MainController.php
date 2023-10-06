@@ -4,6 +4,7 @@ namespace Public\Modules\Main;
 
 use EvoPhp\Api\Controllers;
 use EvoPhp\Api\Operations;
+use EvoPhp\Themes\Templates;
 
 /**
  * summary
@@ -45,6 +46,13 @@ class MainController extends Controllers
     public function Accounts__indexData() {
         return [
             // "registrationLink" => $this->config->Links['insuranceRegistration'],
+        ];
+    }
+
+    public function testTemplateData() {
+        $t = new Templates;
+        return [
+            "templateView" => $t->get($this->data['template'], "./Public/Templates", $this->data)
         ];
     }
     

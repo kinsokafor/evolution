@@ -1,5 +1,4 @@
 <?php
-use EvoPhp\Api\EvoRouter;
 if(!file_exists("EvoPhp/Database/Config.php")) {
 	header("Location: \Install.php");
 } 

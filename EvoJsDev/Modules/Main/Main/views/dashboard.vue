@@ -3,7 +3,7 @@
         <div>
             <UserCard :user-id="auth.currentUser.id"></UserCard>
         </div>
-        <CounterCard 
+        <!-- <CounterCard 
           end-point="api/user?status=active" 
           title="Active Users" 
           icon-class="fa-users" 
@@ -16,14 +16,14 @@
           color="var(--yellow)"
           text-color="var(--shadow1)"
           layout-style="classic"
-          />
+          /> -->
     </Restricted>
 </template>
 
 <script setup>
     import Restricted from '@/components/Restricted.vue';
     import UserCard from '@/components/theme/UserCard.vue';
-    import CounterCard from '@/components/theme/CounterCard.vue';
+    // import CounterCard from '@/components/theme/CounterCard.vue';
     import {useAuthStore} from '@/store/auth'
     const auth = useAuthStore();
 </script>

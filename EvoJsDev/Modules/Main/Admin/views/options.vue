@@ -113,8 +113,21 @@
             name: 'site_name'
         },
         {
-            label: 'Token Life Time', 
-            name: 'Auth.tokenLifetime'
+            label: 'Main website', 
+            name: 'main_website'
+        },
+        {
+            label: 'Address', 
+            name: 'address',
+            as: 'textarea'
+        },
+        {
+            label: 'Email address', 
+            name: 'email'
+        },
+        {
+            label: 'Phone number', 
+            name: 'phone'
         },
         {
             label: 'Mode', 
@@ -125,6 +138,12 @@
         {
             label: "Site logo",
             name: "logo",
+            as: "croppie",
+            enableResize: true
+        },
+        {
+            label: "Site logo 2",
+            name: "logo2",
             as: "croppie",
             enableResize: true
         },

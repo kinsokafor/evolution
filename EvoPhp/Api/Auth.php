@@ -10,6 +10,7 @@ use EvoPhp\Api\Operations;
 use Delight\Cookie\Cookie;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use EvoPhp\Actions\Action;
 
 Trait Auth {
 
@@ -111,6 +112,8 @@ Trait Auth {
         $cookie->setValue($nonce)->setMaxAge($config->Auth["tokenLifetime"])->save();
         $session->accesstoken = $token;
         $index = $config->Auth["roles"][$meta->role]["index"] ?? "/";
+        $action = new Action;
+        $action->doAction("evoAfterLogin", $meta);
         return ['loginStatus' => true, 'token' => $token, 'msg' => 'Login Successful', 'index' => $index];
     }
 

@@ -3,6 +3,7 @@
 use Public\Modules\Main\MainController;
 use EvoPhp\Api\Requests\Requests;
 use EvoPhp\Database\Session;
+use EvoPhp\Themes\Templates;
 
 // API ROUTES
 $router->group('/api/user', function () use ($router) {
@@ -191,14 +192,6 @@ $router->post('/api/loginStatus', function(){
     });
 });
 
-// $router->post('/api/config', function(){
-//     $request = new Requests;
-//     $params = (array) json_decode(file_get_contents('php://input'), true);
-//     $request->evoAction($params)->auth()->execute(function() use ($params){
-//         return new \EvoPhp\Api\Config();
-//     });
-// });
-
 $router->post('/api/doaction', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
@@ -212,7 +205,7 @@ $router->post('/api/change-password', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
     $request->evoAction($params)->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($params){
-        return (new \EvoPhp\Resources\user())->changePassword($params);
+        return (new \EvoPhp\Resources\User())->changePassword($params);
     });
 });
 
@@ -220,7 +213,7 @@ $router->post('/api/change-user-password', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
     $request->evoAction($params)->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($params){
-        return (new \EvoPhp\Resources\user())->changeUserPassword($params);
+        return (new \EvoPhp\Resources\User())->changeUserPassword($params);
     });
 });
 
@@ -243,6 +236,12 @@ $router->get('/admin', function($params){
 $router->get('/logout', function(){
     $controller = new MainController;
     $controller->logout()->auth()->template("logout")->setData(['pageTitle' => "Log out"]);
+});
+
+$router->get('/test-template/{template}', function($params){
+    $controller = new MainController;
+    $params = array_merge($params, $_GET);
+    $controller->testTemplate($params)->auth(1)->template("no_theme")->setData(['pageTitle' => "Template - ".$params['template']]);
 });
 
 ?>

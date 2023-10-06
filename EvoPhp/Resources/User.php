@@ -8,6 +8,7 @@ use EvoPhp\Api\Operations;
 use EvoPhp\Database\DataType;
 use EvoPhp\Api\Auth;
 use EvoPhp\Api\FileHandling\Files;
+use EvoPhp\Actions\Action;
 
 /**
  * summary
@@ -204,6 +205,8 @@ class User
         if($user_id) {
             $meta = $this->processFiles($user_id, $meta);
             $this->addMeta($user_id, $meta);
+            $action = new Action;
+            $action->doAction("evoAfterSignUp", $user_id);
             return $user_id;
         }
         $this->error = ""; //set error message
