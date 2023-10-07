@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, computed } from 'vue';
     import { useRoute } from 'vue-router';
     import Restricted from '@/components/Restricted.vue'
     import CreateForm from '@/components/form/CreateForm.vue';
@@ -20,7 +20,7 @@
     import Button from '@/components/Button.vue'
     import {Users} from '@/helpers';
     import { useUsersStore } from '@/Modules/Main/store/users'
-    import { useConfigStore } from '@/store/config';
+    import config from '/config.json'
 
     const users = new Users;
     const user = ref({});
@@ -28,9 +28,18 @@
     const alertStore = useAlertStore();
     const processing = ref(false);
     const usersStore = useUsersStore();
-    const configStore = useConfigStore();
 
-    const fields = [
+    const roles = computed(() => {
+        return Object.entries(config.Auth.roles).map(role => {
+                return {
+                    name: role[1].name,
+                    value: role[0],
+                    capacity: role[1].capacity,
+                }
+            })
+    })
+
+    const fields = computed(() => [
         {
             "label": "Surname",
             "as": "input",
@@ -92,7 +101,7 @@
             "as": "select",
             "name": "role",
             "column": "left",
-            "options": configStore.roles
+            "options": roles.value
         },
         {
             "label": "Gender",
@@ -110,7 +119,7 @@
                 }
             ]
         }
-    ]
+    ])
     
     onMounted(() => {
         if(usersStore.users.length <= 0) {

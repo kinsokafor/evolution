@@ -17,12 +17,10 @@
     import { useAuthStore } from '@/store/auth';
     import { onBeforeMount, ref } from 'vue';
     import jpg from './images/undraw_security_on_re_e491.svg'
-    import {useConfigStore} from '@/store/config'
     import {appData} from '@/helpers'
     import 'animate.css'
 
     const root = ref(process.env.EVO_API_URL)
-    const config = useConfigStore()
     const authStore = useAuthStore();
     const props = defineProps({
         access: {

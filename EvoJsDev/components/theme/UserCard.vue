@@ -21,15 +21,14 @@
 <script setup>
     import { computed, ref } from 'vue';
     import { useUsersStore } from '@/Modules/Main/store/users'
-    import { useConfigStore } from '@/store/config';
     import { isEmpty, imageExists } from '@/helpers'
     import "/color-scheme.css";
     import 'animate.css'
     import male from '../images/male_avatar.svg'
     import female from '../images/female_avatar.svg'
+    import config from '/config.json'
 
     const usersStore = useUsersStore();
-    const configStore = useConfigStore();
 
     const props = defineProps({
         userId: {
@@ -78,14 +77,14 @@
     })
 
     const roleName = computed(() => {
-        if(configStore.Auth.roles[user.value.role] == undefined) return ""
-        return configStore.Auth.roles[user.value.role].name
+        if(config.Auth.roles[user.value.role] == undefined) return ""
+        return config.Auth.roles[user.value.role].name
     })
 
     const getProfileLink = computed(() => {
         if(user.value.role == undefined) return "#"
-        if("profile" in configStore.Auth.roles[user.value.role]) {
-            return ("/"+configStore.Auth.roles[user.value.role].profile+"/"+props.userId).replace("//", "/").replace("//", "/");
+        if("profile" in config.Auth.roles[user.value.role]) {
+            return ("/"+config.Auth.roles[user.value.role].profile+"/"+props.userId).replace("//", "/").replace("//", "/");
         }
         return ("/admin/#/profile/"+props.userId).replace("//", "/").replace("//", "/")
     })

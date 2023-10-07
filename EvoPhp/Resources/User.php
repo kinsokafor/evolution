@@ -222,7 +222,7 @@ class User
             switch (gettype($value)) {
                 case "boolean":
                         $value = $value ? 1 : 0;
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "meta_blob" => "", "data_type" => "boolean"];
+                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "meta_blob" => "", "data_type" => "boolea"];
                         $types = "ississ";
                     break;
 

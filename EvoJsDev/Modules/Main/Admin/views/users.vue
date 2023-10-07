@@ -4,7 +4,7 @@
             <Filters filterKey="usersList" v-slot="{key}">
                 <SelectFilter name="status" :filterKey="key" :options="status" selected="active" label="Status"/>
                 <TextFilter name="fullname" :filterKey="key" value="" label="Name"/>
-                <SelectFilter name="role" :filterKey="key" :options="configStore.roles" label="Role"/>
+                <SelectFilter name="role" :filterKey="key" :options="roles" label="Role"/>
             </Filters>
         </div>
         <Table 
@@ -26,21 +26,25 @@
     import SelectFilter from '@/components/filters/SelectFilter.vue';
     import TextFilter from '@/components/filters/TextFilter.vue';
     import Filters from '@/components/filters/Filters.vue';
-    import Limit from '@/components/filters/Limit.vue';
     import Table from '@/components/Table.vue';
-    import Pagination from '@/components/filters/Pagination.vue';
     import { useFilterStore } from '@/store/filter';
-    import { useConfigStore } from '@/store/config';
-    import Summary from '@/components/filters/Summary.vue';
     import {getFullname} from '@/helpers'
     import config from '/config.json'
     import male from '@/components/images/male_avatar.svg'
 
+    const roles = computed(() => {
+        return Object.entries(config.Auth.roles).map(role => {
+                return {
+                    name: role[1].name,
+                    value: role[0],
+                    capacity: role[1].capacity,
+                }
+            })
+    })
+    
     const filterStore = useFilterStore();
 
     const usersStore = useUsersStore();
-    
-    const configStore = useConfigStore();
 
     const allUsers = computed(() => usersStore.get)
 

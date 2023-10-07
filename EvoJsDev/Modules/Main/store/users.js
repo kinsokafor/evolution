@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
-import { useConfigStore } from '@/store/config';
+
 import { Users } from '@/helpers';
 
 export const useUsersStore = defineStore('useUsersStore', {
@@ -10,7 +10,6 @@ export const useUsersStore = defineStore('useUsersStore', {
             users: [],
             filterStore: useFilterStore(),
             alertStore: useAlertStore(),
-            configStore: useConfigStore(),
             processing: false,
             usersClass: new Users,
             limit: 100,

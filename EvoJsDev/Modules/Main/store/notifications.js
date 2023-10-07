@@ -1,7 +1,5 @@
 import {defineStore, storeToRefs} from 'pinia';
 import { useAuthStore } from '@/store/auth';
-import { useAlertStore } from '@/store/alert';
-import { useConfigStore } from '@/store/config';
 import { nonce } from '@/helpers';
 import axios from 'axios';
 

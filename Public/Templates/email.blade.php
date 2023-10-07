@@ -124,7 +124,7 @@
                                                     <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                                                         <tr>
                                                             <td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
-                                                                <div align="center" class="alignment" style="line-height:10px"><img src="{{$logo2}}" style="display: block; height: auto; border: 0; max-width: 120px; width: 100%;" width="120" /></div>
+                                                                <div align="center" class="alignment" style="line-height:10px"><img src="{{$hosted_logo ?? '#'}}" style="display: block; height: auto; border: 0; max-width: 120px; width: 100%;" width="120" /></div>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -146,7 +146,7 @@
                                                             <td class="pad">
                                                                 <div style="font-family: sans-serif">
                                                                     <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #555555; line-height: 1.2;">
-                                                                        <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">{{$mail_content}}</p>
+                                                                        <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">{!!$mail_content!!}</p>
                                                                     </div>
                                                                 </div>
                                                             </td>

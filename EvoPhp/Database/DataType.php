@@ -23,7 +23,7 @@ Trait DataType
     	switch (gettype($value)) {
             case "boolean":
                     $output->value = $value ? 1 : 0;
-                    $output->realType = "boolean";
+                    $output->realType = "boolea";
                     $output->valueType = "i";
                     $output->field = "int";
                 break;

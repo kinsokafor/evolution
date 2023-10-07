@@ -39,9 +39,19 @@
     import Restricted from '@/components/Restricted.vue'
     import SetOption from '@/components/form/SetOption.vue'
     import SetConfig from '@/components/form/SetConfig.vue'
-    import { useConfigStore } from '@/store/config'
     import { computed } from 'vue'
-    const configStore = useConfigStore();
+    import config from "/config.json"
+
+    const roles = computed(() => {
+        return Object.entries(config.Auth.roles).map(role => {
+                return {
+                    name: role[1].name,
+                    value: role[0],
+                    capacity: role[1].capacity,
+                }
+            })
+    })
+
     const registration_options = computed(() => [
         {
             label: 'Username Prefix', 
@@ -71,18 +81,14 @@
             label: "Default user role", 
             name: "default_user_role",
             as: "select",
-            options: configStore.roles
+            options: roles.value
         }
     ])
     const mail_options = [
         {
             label: "Activate SMTP", 
             name: "activate_smtp",
-            as: "radio",
-            options: [
-                {name: "Yes", value: true},
-                {name: "No", value: false}
-            ],
+            as: "checkbox",
             class: "pr-2 pl-2",
             layout: "linear"
         },
@@ -136,14 +142,12 @@
             options: ["development", "production"]
         },
         {
-            label: "Site logo",
-            name: "logo",
-            as: "croppie",
-            enableResize: true
+            label: "Hosted logo for emails",
+            name: "hosted_logo"
         },
         {
-            label: "Site logo 2",
-            name: "logo2",
+            label: "Site logo",
+            name: "logo",
             as: "croppie",
             enableResize: true
         },

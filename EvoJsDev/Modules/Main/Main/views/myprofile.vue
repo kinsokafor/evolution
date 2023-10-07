@@ -15,14 +15,12 @@
     import { useAlertStore } from '@/store/alert';
     import UserData from '@/components/theme/UserData.vue'
     import {Users} from '@/helpers';
-    import { useConfigStore } from '@/store/config';
     import { useAuthStore } from '@/store/auth';
 
     const users = new Users;
     const userId = ref(null);
     const alertStore = useAlertStore();
     const processing = ref(false);
-    const configStore = useConfigStore();
     const auth = useAuthStore();
 
     const menu = computed(() => [])

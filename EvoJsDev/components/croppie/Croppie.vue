@@ -51,14 +51,12 @@
     import './style.css'
     import { useField } from 'vee-validate'
     import img from './images/croppie-default.gif'
-    import {useConfigStore} from '@/store/config'
 
     var croppie = null;
     var image = ref(null);
     const instance = ref(randomId(8));
     var preview = ref(true);
     const defaultImage = ref(null);
-    const config = useConfigStore();
     
 
     const props = defineProps({

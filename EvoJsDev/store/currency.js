@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia';
-import { useConfigStore } from './config';
 import {currencyConverter} from '@/helpers';
-import {ref} from 'vue';
+import { useConfigStore } from '@/store/config'
 
 export const useCurrencyStore = defineStore('useCurrencyStore', {
     state: () => {
@@ -27,18 +26,18 @@ export const useCurrencyStore = defineStore('useCurrencyStore', {
     getters: {
         activeCurrency: (state) => {
             if(state.active == "any") {
-                state.active = state.config.currency.base;
+                state.active = state.config.get('currency.base')
             }
             return state.active;
         },
         baseCurrency: (state) => {
             if(state.base == "any") {
-                return state.config.currency.base;
+                return state.config.get('currency.base')
             }
             return state.base;
         },
         allowedCurrencies: (state) => {
-            return state.config.currency.allowed.filter(x => x != state.active);
+            return state.config.get('currency.allowed').filter(x => x != state.active);
         },
         amount: (state) => {
             return state.displayAmount;

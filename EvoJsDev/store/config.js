@@ -1,21 +1,74 @@
 import {defineStore} from 'pinia';
-const config = require('../../config.json');
+import axios from 'axios';
+import {nonce, findByDottedIndex} from '@/helpers'
 
 export const useConfigStore = defineStore('useConfigStore', {
     state: () => {
         return {
-            ...config
+            props: {},
+            loaded: false
+        }
+    },
+    actions: {
+        async loadFromServer() {
+            this.loaded = true
+            await axios.post(process.env.EVO_API_URL + '/api/config/all', {}, {
+                'Access-Control-Allow-Credentials':true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${nonce()}` 
+                }
+            }).then(r => {
+                this.props = r.data
+            })
+        },
+        async update(values) {
+            await axios.post(process.env.EVO_API_URL + "/api/config/", values, {
+                'Access-Control-Allow-Credentials':true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${nonce()}` 
+                }
+            }).then(r => {
+                for(var key in values) {
+                    this.props[key] = values[key]
+                }
+            });
+        },
+        async delete(key) {
+            await axios.delete(process.env.EVO_API_URL + "/api/config/"+key, {
+                'Access-Control-Allow-Credentials':true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${nonce()}` 
+                }
+            }).then(r => {
+                delete this.props[key]
+            });
+        }, 
+        async new(values) {
+            await this.update(values)
         }
     },
     getters: {
-        roles: (state) => {
-            return Object.entries(state.Auth.roles).map(role => {
-                return {
-                    name: role[1].name,
-                    value: role[0],
-                    capacity: role[1].capacity,
+        get: (state) => {
+            const p = state.props
+            return (key) => {
+                if(!(key in p)) {
+                    state.loadFromServer()
+                    return null
                 }
-            })
+                return findByDottedIndex(key, p);
+            }
+        },
+        all: (state) => {
+            if(!state.loaded) {
+                state.loadFromServer()
+                return state.props
+            }
         }
     }
 })

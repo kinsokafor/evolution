@@ -165,6 +165,14 @@ $router->group('/api/config', function () use ($router) {
         });
     });
 
+    $router->post('/all', function($params){
+        $request = new Requests;
+        $request->evoAction($params)->auth()->execute(function() use ($params){
+            return new \EvoPhp\Api\Config();
+        });
+    });
+
+    //setter
     $router->post('/', function($params){
         $request = new Requests;
         $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
