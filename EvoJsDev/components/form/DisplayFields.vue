@@ -31,6 +31,7 @@
     import Range from './Range.vue';
     import Currency from './Currency.vue';
     import Collection from './Collection.vue';
+    import WYSIWYG from '@/components/form/WYSIWYG.vue';
 
     // const store = useCreateFormStore();
     const props = defineProps(['fields', 'values', 'initialValues'])
@@ -75,6 +76,10 @@
 
                 case "textarea":
                         return Textarea;
+                    break;
+                
+                case "wysiwyg":
+                        return WYSIWYG;
                     break;
             
                 default:

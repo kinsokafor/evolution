@@ -104,6 +104,17 @@ class Notifications
                             $email = $r['email'] ?? "";
                             $phone = $r['phone'] ?? "";
                             $id = $r['id'] ?? false;
+                        elseif(gettype($r) == "string" || gettype($r) == 'integer') :
+                            if(filter_var($r, FILTER_VALIDATE_EMAIL)) {
+                                $name = Operations::getFullname($r);
+                                $email = $r;
+                                $phone = "";
+                                $id = false;
+                            }
+                            else if(Operations::validatePhoneNumber($r)) {
+                                $this->add(false, "", "", $r);
+                            }
+                            else {}
                         else:
                             $name = Operations::getFullname($receiver);
                             $email = $receiver['email'] ?? "";

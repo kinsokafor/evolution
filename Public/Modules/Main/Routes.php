@@ -225,6 +225,19 @@ $router->post('/api/change-user-password', function(){
     });
 });
 
+$router->post('/api/send-email', function(){
+    $request = new Requests;
+    $params = (array) json_decode(file_get_contents('php://input'), true);
+    $request->evoAction($params)->auth(1,2,3,4)->execute(function() use ($params){
+        if(strpos($params['emails'], ',')) {
+            $params['emails'] = \EvoPhp\Api\Operations::trimArray(\explode(',', $params['emails']));
+        }
+        $not = new \EvoPhp\Actions\Notifications\Notifications($params['message'], $params['subject']);
+        $not->to($params['emails'])->template()->mail();
+        return $not->error;
+    });
+});
+
 // Main ROUTES
 $router->get('/', function(){
     $controller = new MainController;

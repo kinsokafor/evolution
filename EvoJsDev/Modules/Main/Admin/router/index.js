@@ -5,6 +5,7 @@ import editProfile from '../views/editProfile.vue'
 import profile from '../views/profile.vue'
 import changeUserPassword from '../views/change-user-password.vue'
 import options from '../views/options.vue'
+import sendEmail from '../views/sendEmail.vue'
 import NotFound from '@/components/NotFound.vue'
 
 const router = createRouter({
@@ -45,6 +46,12 @@ const router = createRouter({
             name: 'Options', 
             component: options,
             meta: {title: "Options | Admin"}
+        },
+        {
+            path: '/send-email/:emails?', 
+            name: 'sendEmail', 
+            component: sendEmail,
+            meta: {title: "Send Email | Admin"}
         },
         {
             path: '/:pathMatch(.*)*', 

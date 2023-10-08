@@ -96,7 +96,7 @@ abstract class Controllers
         if(Operations::count($scripts)) {
             foreach ($scripts as $key => $script) {
                 if(!strstr($script->src, "/".$this->bladeTemplate."__")) continue;
-                JS::file("/Public/dist".$script->src, '', ["defer" => "defer"]);
+                JS::file("/Public/dist".$script->src, '', ["defer" => "defer", "rel" => "preload"]);
             }
         }
     }
