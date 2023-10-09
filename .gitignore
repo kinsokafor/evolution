@@ -21,3 +21,4 @@
 /bundle-*.zip
 /Public/Templates/*
 !/Public/Templates/email.blade.php
+/Public/Modules/Main/Views/cache/*

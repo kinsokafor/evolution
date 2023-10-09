@@ -77,7 +77,7 @@
         {
             label: "Message",
             name: "message",
-            as: "wysiwyg",
+            as: "textarea",
             rules: yup.string().required("Please enter a message")
         }
     ]
