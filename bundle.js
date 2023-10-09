@@ -68,7 +68,7 @@ archive.file('color-scheme.css', { name: 'color-scheme.css' });
 archive.directory('vendor/', 'vendor');
 archive.glob('**', {
   cwd:__dirname + '/Public',
-  ignore: ['Themes/*/Views/cache/*', '*/.git']
+  ignore: ['Themes/*/Views/cache/*', 'Modules/*/Views/cache/*', 'Templates/cache/*', '*/.git']
 }, {prefix: 'Public/'});
 // append files from a glob pattern
 archive.glob('**', {

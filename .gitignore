@@ -22,3 +22,5 @@
 /Public/Templates/*
 !/Public/Templates/email.blade.php
 /Public/Modules/Main/Views/cache/*
+/Public/Themes/*/Views/cache/*
+/Public/Templates/cache/*
