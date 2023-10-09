@@ -1,1 +1,0 @@
-<?php echo $templateView; ?><?php /**PATH C:\xampp\htdocs\myApp\Public\Modules\Main\Views/testTemplate.blade.php ENDPATH**/ ?>
