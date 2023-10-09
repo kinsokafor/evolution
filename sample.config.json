@@ -78,7 +78,6 @@
     "currentTheme": "Default",
     "modules": {
       "Main": {
-        "path": "Public/Modules/Main/",
         "entry": [
           "Accounts/index",
           "Main/index",

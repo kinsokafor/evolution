@@ -39,9 +39,7 @@ class Modules
     }
 
     static public function getModulePath($module) {
-        if(is_string($module)) return ABSPATH.$module;
-        if(is_array($module) && isset($module['path'])) return ABSPATH.$module['path'];
-        return "";
+        return ABSPATH."Public/Modules/$module/";
     }
 
     static public function moduleActive($module) {
@@ -55,7 +53,7 @@ class Modules
         if(\EvoPhp\Api\Operations::count($modules)) {
             foreach($modules as $moduleName => $module) {
                 if(self::moduleActive($module)) {
-                    $file = self::getModulePath($module)."Install.php";
+                    $file = self::getModulePath($moduleName)."Install.php";
                     if(file_exists($file)) include $file;
                 }
             }

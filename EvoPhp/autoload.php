@@ -19,7 +19,7 @@
 	if(Operations::count($modules)) {
 		foreach($modules as $moduleName => $module) {
 			if(Modules::moduleActive($module)) {
-				$file = Modules::getModulePath($module)."Routes.php";
+				$file = Modules::getModulePath($moduleName)."Routes.php";
 				if(file_exists($file)) include $file;
 			}
 		}
