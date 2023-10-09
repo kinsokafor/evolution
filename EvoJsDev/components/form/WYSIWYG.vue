@@ -3,15 +3,17 @@
     <Field v-slot="{ field }" :name="name" v-bind="attrs" :value="true">
         <label :for="name" class="label">{{ label }}</label>
         <!-- <vue-editor v-model="model" ></vue-editor> -->
+        <trumbowyg v-model="model" :config="config" v-bind="{...attrs, ...field}"></trumbowyg>
     </Field>
     </div>
 </template>
 
 <script setup>
-    // import { VueEditor } from "vue2-editor";
+    import Trumbowyg from 'vue-trumbowyg';
     import {ref, watchEffect} from 'vue'
     import { useField, Field } from 'vee-validate'
     import * as yup from 'yup'
+    import 'trumbowyg/dist/ui/trumbowyg.css'
 
     const props = defineProps({
         name: {
@@ -34,6 +36,8 @@
     })
 
     const { setErrors, setValue } = useField(props.name)
+
+    const config = ref({})
 
     const validate = (value) => {
         const schema = props.attrs.rules ?? yup.mixed();

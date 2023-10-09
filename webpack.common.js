@@ -1,7 +1,9 @@
 const {entryPoints} = require('./evo.config');
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const jQueryPath = 'jquery/dist/jquery.js'
 
 module.exports = {
     resolve: {
@@ -10,6 +12,7 @@ module.exports = {
         },
         alias: {
             '@': path.resolve(__dirname, 'EvoJsDev/'),
+            'jquery$': jQueryPath,
         }
     },
     entry: entryPoints(),
@@ -27,6 +30,11 @@ module.exports = {
             templateContent: '',
         }),
         new VueLoaderPlugin(),
+        new webpack.ProvidePlugin({     
+            jQuery: jQueryPath,
+            $: jQueryPath,
+            'window.jQuery': jQueryPath,
+        })
     ].filter(Boolean),
     module: {
         rules: [
