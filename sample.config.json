@@ -1,7 +1,7 @@
 {
-    "root": "http://localhost:3000",
-    "devRoot": "http://localhost:3000",
-    "main_website": "https://cryptinance.com",
+    "root": "http://localhost:<port>",
+    "devRoot": "http://localhost:<port>",
+    "main_website": "",
     "mode": "development",
     "salt": "ed094bf5e4438e841f17d6328f25adb845c32a90",
     "Auth": {
@@ -68,12 +68,12 @@
         {
           "client_id": "123456",
           "secret": "123456",
-          "domain": "localhost:3000",
+          "domain": "localhost:<port>",
           "protocol": "http"
         }
       ]
     },
-    "site_name": "Evolution",
+    "site_name": "<projectName>",
     "loginLink": "/accounts",
     "currentTheme": "Default",
     "modules": {

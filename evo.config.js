@@ -41,8 +41,13 @@ const mergeDeep = (target, ...sources) => {
     return mergeDeep(target, ...sources);
 }
 
+<<<<<<< HEAD
 exports.mergeConfig = (config) => {
     let file = editJsonFile("./config.json");
+=======
+const mergeConfig = (config, link = "./config.json") => {
+    let file = editJsonFile(link);
+>>>>>>> 31b95e6f2c2171869f8f6db306e11a2e441b9a71
     for(var data in config) {
         const oldValue = file.get(data);
         if(oldValue == undefined) {

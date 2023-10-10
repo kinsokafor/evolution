@@ -24,3 +24,4 @@
 /Public/Modules/Main/Views/cache/*
 /Public/Themes/*/Views/cache/*
 /Public/Templates/cache/*
+/package.json
