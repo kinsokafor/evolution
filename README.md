@@ -13,3 +13,9 @@
 <p>Run <code>cd your-project-name</code></p>
 <p>Run <code>node install</code></p>
 <p>On success, your composer must have installed together with node packages. So no need running <code>composer install</code> or <code>npm install</code>. However, to be sure, you can go ahead ad rerun the composer and npm installations.</p>
+
+<h2>Set up</h2>
+<p>Run <code>npm run start</code> or <code>npm start</code></p>
+<ul>
+  <li>Get your database credentials handy (host name, user name, password, and database name)</li>
+</ul>
