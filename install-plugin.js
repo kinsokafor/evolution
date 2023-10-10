@@ -1,9 +1,8 @@
 const shell = require('shelljs')
 const path = require('path')
-const axios = require('axios')
-const config = require('./config.json')
 const {mergeConfig} = require('./evo.config');
 const fs = require('fs');
+const { dependencies } = require('webpack');
 let pass1 = false, pass2 = false
 
 const plugin = process.env.npm_config_plugin
@@ -54,8 +53,41 @@ shell.cd('../../')
 
 //merge config file
 if(pass1 && pass2) {
-    const pluginConfig = require(path.resolve(__dirname, `./EvoJsDev/Modules/${pluginName}/config.json`))
-    mergeConfig(pluginConfig)
+    const configFile = path.resolve(__dirname, `./EvoJsDev/Modules/${pluginName}/config.json`)
+    if (fs.existsSync(configFile)) {
+        const pluginConfig = require(configFile)
+        mergeConfig(pluginConfig)
+    }
+    const dependenciesFile = path.resolve(__dirname, `./EvoJsDev/Modules/${pluginName}/dependencies.json`)
+    if (fs.existsSync(dependenciesFile)) {
+        const dependencies = require(dependenciesFile)
+        try {
+            if(dependencies.dev !== undefined) {
+                shell.exec(`npm install -D ${dependencies.dev}`)
+            }
+            if(dependencies.prod !== undefined) {
+                shell.exec(`npm install ${dependencies.prod}`)
+            }
+        }
+        catch(error) {
+            console.error(error)
+            throw new Error(error);
+        }
+    }
+
+    const sDependenciesFile = path.resolve(__dirname, `./Public/Modules/${pluginName}/dependencies.json`)
+    if (fs.existsSync(sDependenciesFile)) {
+        const dependencies = require(sDependenciesFile)
+        try {
+            if(dependencies.all !== undefined) {
+                shell.exec(`composer require ${dependencies.all}`)
+            }
+        }
+        catch(error) {
+            console.error(error)
+            throw new Error(error);
+        }
+    }
 
     console.log(`${plugin} plugin was installed successfully.`)
 } else {
