@@ -5,6 +5,13 @@ use EvoPhp\Api\Requests\Requests;
 use EvoPhp\Database\Session;
 use EvoPhp\Themes\Templates;
 
+//INSTALL
+$router->get('/install/plugin', function(){
+    $params = (array) json_decode(file_get_contents('php://input'), true);
+    $plugin = $params['plugin'];
+    echo require_once("./Public/Modules/$plugin/Install.php");
+});
+
 // API ROUTES
 $router->group('/api/user', function () use ($router) {
     $router->get('/', function () {
