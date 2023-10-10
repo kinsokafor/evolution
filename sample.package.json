@@ -58,7 +58,6 @@
       "axios": "^0.27.2",
       "chart.js": "^4.3.3",
       "croppie": "^2.6.5",
-      "crypto-exchange-rates": "^1.0.4",
       "jenesius-vue-modal": "^1.8.2",
       "js-sha1": "^0.6.0",
       "lodash": "^4.17.21",
