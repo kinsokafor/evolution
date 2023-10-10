@@ -41,7 +41,7 @@ const mergeDeep = (target, ...sources) => {
     return mergeDeep(target, ...sources);
 }
 
-exports.mergeConfig = (config) => {
+const mergeConfig = (config) => {
     let file = editJsonFile("./config.json");
     for(var data in config) {
         const oldValue = file.get(data);
@@ -97,3 +97,5 @@ exports.entryPoints = () => {
     mergeConfig(currentConfig);
     return entry;
 }
+
+exports.mergeConfig = mergeConfig;

@@ -51,6 +51,24 @@ const writeConfigJSON = () => {
     });
 }
 
+const writeColorScheme = () => {
+    fs.readFile("./sample-color-scheme.css", 'utf8', (err, data) => {
+        if (err) {
+          console.error('Error reading color scheme file:', err);
+          return;
+        }
+      
+        // Write the content to the destination file
+        fs.writeFile("./color-scheme.css", data, 'utf8', (err) => {
+          if (err) {
+            console.error('Error writing color scheme file:', err);
+            return;
+          }
+          console.log('Color scheme file created successfully.');
+        });
+      });     
+}
+
 const startApp = async() => {
     console.log("Welcome to Evolution!")
     projectName = await readLineAsync("What is the name of the project you want to build?");
@@ -60,6 +78,8 @@ const startApp = async() => {
 
     writeConfigJSON()
 
+    writeColorScheme()
+    
     exec(`composer install`, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing command: ${error}`);
