@@ -1,19 +1,19 @@
 const { exec } = require('child_process');
-import { createInterface } from "readline";
+const readline = require('readline');
 const fs = require('fs');
 
 let projectName = "Evolution"
 
 let port = 3000
 
-const readline = createInterface({
+const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
 const readLineAsync = msg => {
     return new Promise(resolve => {
-        readline.question(msg, userRes => {
+        rl.question(msg, userRes => {
             resolve(userRes);
         });
     });    
@@ -79,7 +79,7 @@ const startApp = async() => {
         console.log(`Command output: ${stdout}`);
         console.error(`Command errors: ${stderr}`);
     });
-    // readline.close();
+    rl.close();
     // console.log("Your response was: " + userRes + " - Thanks!");
 }
 
