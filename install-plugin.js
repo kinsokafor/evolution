@@ -25,5 +25,3 @@ shell.exec(`git clone https://github.com/${author}/${pluginName}.js ${pluginName
 //merge config file
 const pluginConfig = path.resolve(__dirname, `./EvoJsDev/Modules/${pluginName}/config.json`)
 mergeConfig(pluginConfig)
-
-//run the install.php

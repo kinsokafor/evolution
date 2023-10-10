@@ -41,8 +41,8 @@ const mergeDeep = (target, ...sources) => {
     return mergeDeep(target, ...sources);
 }
 
-const mergeConfig = (config) => {
-    let file = editJsonFile("./config.json");
+const mergeConfig = (config, link = "./config.json") => {
+    let file = editJsonFile(link);
     for(var data in config) {
         const oldValue = file.get(data);
         if(oldValue == undefined) {
