@@ -72,35 +72,18 @@ const writeColorScheme = () => {
 const startApp = async() => {
     console.log("Welcome to Evolution!")
     projectName = await readLineAsync("What is the name of the project you want to build?");
-    port = await readLineAsync("What is the local environment port? Enter 3000 or any other port that you wish");
+    port = await readLineAsync("What is the local environment port? Enter 3000 or any other port that you wish?");
 
     writePackageJSON();
 
     writeConfigJSON()
 
     writeColorScheme()
-    
-    exec(`composer install`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing command: ${error}`);
-            return;
-        }
 
-        console.log(stdout);
-        if(stderr != "") console.error(`Command errors: ${stderr}`);
-    });
-
-    exec(`npm install`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing command: ${error}`);
-            return;
-        }
-
-        console.log(stdout);
-        if(stderr != "") console.error(`Command errors: ${stderr}`);
-    });
     rl.close();
     console.log("Installation complete");
+
+    console.log("Run composer install and npm install to continue");
 }
 
 startApp();
