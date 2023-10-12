@@ -26,12 +26,11 @@ class Modules
         $modules = scandir("./Public/Modules");
         foreach ($modules as $module) {
             if ($module === '.' or $module === '..') continue;
-            if(!isset($config->modules[$module])) {
-                $file = "./Public/Modules/$module/$module.json";
-                $json = new Json($file);
-                if($json->exists()) {
-                    $moduleConfig = $json->get();
-                    $config->set("modules['$module']", $moduleConfig);
+            if(isset($config->modules[$module]) && isset($config->modules[$module]['installed'])) {
+                if($config->modules[$module]['active'] == true && $config->modules[$module]['installed'] == false) {
+                    $file = self::getModulePath($module)."Install.php";
+                    if(file_exists($file)) include $file;
+                    $config->set("modules['$module'][installed]", true);
                 }
             }
         }

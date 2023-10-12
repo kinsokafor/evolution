@@ -3,6 +3,8 @@ const path = require('path')
 const {mergeConfig} = require('./evo.config');
 const fs = require('fs');
 const { dependencies } = require('webpack');
+const axios = require('axios');
+const config = require('./config.json');
 let pass1 = false, pass2 = false
 
 const plugin = process.env.npm_config_plugin

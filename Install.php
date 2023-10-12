@@ -85,7 +85,7 @@ if(isset($_POST['submit'])) {
         "email" => $email,
         "password" => $password
     ]);
-	header("Location: \index.php");
+	header("Location: \accounts");
 }
 ?>
 <!DOCTYPE html>
