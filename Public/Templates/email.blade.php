@@ -145,7 +145,7 @@
                                                         <tr>
                                                             <td class="pad">
                                                                 <div style="font-family: sans-serif">
-                                                                    <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #555555; line-height: 1.2;">
+                                                                    <div class="" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #555555; line-height: 1.2;">
                                                                         <p style="margin: 0; font-size: 16px; text-align: left; mso-line-height-alt: 16.8px;">{!!$mail_content!!}</p>
                                                                     </div>
                                                                 </div>
