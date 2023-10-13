@@ -93,7 +93,7 @@ $router->group('/api/dbtable/{table}', function () use ($router) {
         unset($params['table']);
         $request->{$table}($params)->auth(5,6);
     });
-    $router->post('/{type}', function ($params) {
+    $router->post('/{table}', function ($params) {
         $request = new Requests;
         $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
         $table = $params['table'];
