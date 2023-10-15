@@ -1,14 +1,4 @@
 {
-    "modules": {
-        "Main": {
-            "entry": [
-              "Accounts/index",
-              "Main/index",
-              "Admin/index"
-            ],
-            "active": true
-        }
-    },
     "mainMenu": [
         {
             "link": "/",

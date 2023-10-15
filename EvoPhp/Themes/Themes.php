@@ -49,7 +49,6 @@ class Themes {
             endif;
         }
         $this->data['encoded'] = base64_encode(json_encode($this->data));
-        // var_dump($this->data['encoded']); echo "<br/>yes";
     }
 
     public function getView($content = "") {

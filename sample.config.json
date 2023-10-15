@@ -83,7 +83,8 @@
           "Main/index",
           "Admin/index"
         ],
-        "active": true
+        "active": true,
+        "order": 0
       }
     },
     "logo": null,

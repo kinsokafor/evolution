@@ -45,7 +45,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                     } else this.users[index] = r.data
                 }
             }).catch(r => {
-                this.alertStore.add(r.message, "danger");
+                // this.alertStore.add(r.message, "danger");
                 this.processing = false;
             })
         },

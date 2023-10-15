@@ -4,7 +4,7 @@
             <UserData :user-id="userId" />
         </div>
         <div class="col-md-8">
-            <Menu :items="menu" container-class="col-md-4"/>
+            <!-- <Menu :items="menu" container-class="col-md-4"/> -->
             <slot></slot>
         </div>
     </div>

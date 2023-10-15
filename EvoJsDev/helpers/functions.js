@@ -84,7 +84,6 @@ export const dragElement = (elmnt, handle = false) => {
       // get the mouse cursor position at startup:
       pos3 = e.clientX;
       pos4 = e.clientY;
-      console.log("Pos 3: "+pos3, "Pos 4: "+pos4)
       document.onmouseup = closeDragElement;
       // call a function whenever the cursor moves:
       document.onmousemove = elementDrag;

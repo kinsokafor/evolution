@@ -27,8 +27,11 @@
     import male from '../images/male_avatar.svg'
     import female from '../images/female_avatar.svg'
     import config from '/config.json'
+    import {useAuthStore} from '@/store/auth'
 
     const usersStore = useUsersStore();
+    const auth = useAuthStore()
+    const currentUser = computed(() => auth.getUser)
 
     const props = defineProps({
         userId: {
@@ -85,6 +88,9 @@
         if(user.value.role == undefined) return "#"
         if("profile" in config.Auth.roles[user.value.role]) {
             return ("/"+config.Auth.roles[user.value.role].profile+"/"+props.userId).replace("//", "/").replace("//", "/");
+        }
+        if(currentUser.value != undefined && currentUser.value.id == props.userId) {
+            return "/#/profile"
         }
         return ("/admin/#/profile/"+props.userId).replace("//", "/").replace("//", "/")
     })
