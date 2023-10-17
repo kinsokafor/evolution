@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-4 profile-block">
-            <UserData :user-id="route.params.id" />
+            <UserData :user-id="parseInt(route.params.id)" />
         </div>
         <div class="col-md-8">
             <Menu :items="items" container-class="col-md-4"/>

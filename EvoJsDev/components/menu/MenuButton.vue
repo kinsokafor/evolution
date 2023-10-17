@@ -59,19 +59,19 @@
         content: "";
         display: block;
         width: 0%;
-        background: v-bind(bgColor);
+        background: var(--color2);
         height: 100%;
         position: absolute;
         top: 0;
         z-index: -1;
         transition: width 1s;
     }
-    .k-menu-item:hover::after {
-        width: 100%;
-    }
-    .k-menu-item:hover .k-menu-label h2 {
-        color: v-bind(textColor);
-    }
+    // .k-menu-item:hover::after {
+    //     width: 100%;
+    // }
+    // .k-menu-item:hover .k-menu-label h2 {
+    //     color: var(--highlight1);
+    // }
     .k-menu-item:hover .k-menu-icon > svg {
         font-size: 27px;
     }
@@ -79,8 +79,8 @@
         display: flex;
     }
     .k-menu-item .k-menu-icon {
-        background: v-bind(bgColor);
-        color: v-bind(textColor);
+        background: var(--color2);
+        color: var(--highlight1);
         border-radius: 50%;
         width: 60px;
         height: 60px;

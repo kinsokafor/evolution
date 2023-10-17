@@ -74,7 +74,7 @@ class Action
         return $template;
     }
 
-    public static function add($action, $cb, $priority = 1, $auth = []) {
+    public static function add($action, $cb, $priority = 1, $auth = '') {
         $instance = new self;
         return $instance->addAction($action, $cb, $priority, $auth);
     }
