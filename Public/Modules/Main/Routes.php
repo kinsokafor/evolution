@@ -190,6 +190,37 @@ $router->group('/api/config', function () use ($router) {
     });
 });
 
+$router->group('/filepond/', function () use ($router) {
+    $router->post('/process', function(){
+        $request = new Requests;
+        $session = Session::getInstance();
+        $location = ($r = $session->getResourceOwner()) ? "User/$r->user_id" : "Guest";
+        $request->evoAction()->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($location) {
+            $data = reset($_FILES);
+            if(!$data) {
+                http_response_code(400);
+                return 'Empty upload';
+            }
+            return (new \EvoPhp\Api\FileHandling\Files)->processFile([
+                "data" => $data,
+                "path" => "Uploads/$location/",
+                "saveAs" => "",
+                "processor" => "UploadFile"
+            ]);
+        });
+    });
+
+    $router->post('/revert', function($params){
+        $request = new Requests;
+        $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
+        $request->evoAction()->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($params) {
+            $data = reset($params);
+            (new \EvoPhp\Api\FileHandling\Files)->unlink($data);
+            return $data;
+        });
+    });
+});
+
 $router->post('/api/login', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);

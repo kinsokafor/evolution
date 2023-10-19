@@ -41,7 +41,7 @@ abstract class Controllers
     public function __construct()
     {
         $this->config = new Config;
-        $this->data = (array) $this->config ?? [];
+        $this->data = (array) $this->config->data ?? [];
     }
 
     public function __call($name, $args) {

@@ -21,6 +21,11 @@
                     "link": "/#/change-password",
                     "label": "Change Password",
                     "access": ""
+                },
+                {
+                    "link": "/#/notifications",
+                    "label": "Notifications",
+                    "access": ""
                 }
             ]
         },
@@ -45,6 +50,11 @@
                     "link": "/admin/#/options",
                     "label": "Options",
                     "access": "1"
+                },
+                {
+                    "link": "/admin/#/send-email",
+                    "label": "Send Email",
+                    "access": "1,2,3"
                 }
             ]
         }

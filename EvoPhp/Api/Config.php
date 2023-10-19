@@ -16,10 +16,20 @@ class Config
 
     public $json;
 
+    public $data = [];
+
     public function __construct(string $file = "config.json")
     {
         $this->json = new Json(ABSPATH.$file);
         $this->reload(ABSPATH.$file);
+    }
+
+    public function __get($prop) {
+        return $this->data[$prop];
+    }
+
+    public function __set($prop, $value) {
+        $this->data[$prop] = $value;
     }
 
     private function reload($file = null) {
@@ -32,7 +42,7 @@ class Config
         $config = $this->json->get();
         if(Operations::count($config)) {
             foreach ($config as $key => $value) {
-                $this->$key = $value;
+                $this->data[$key] = $value;
             }
         }
     }

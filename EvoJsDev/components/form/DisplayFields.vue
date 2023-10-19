@@ -32,6 +32,7 @@
     import Currency from './Currency.vue';
     import Collection from './Collection.vue';
     import WYSIWYG from '@/components/form/WYSIWYG.vue';
+    import FilePond from './FilePond.vue';
 
     // const store = useCreateFormStore();
     const props = defineProps(['fields', 'values', 'initialValues'])
@@ -80,6 +81,10 @@
                 
                 case "wysiwyg":
                         return WYSIWYG;
+                    break;
+
+                case "filepond":
+                        return FilePond;
                     break;
             
                 default:

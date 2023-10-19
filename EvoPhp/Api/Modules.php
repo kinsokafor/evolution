@@ -20,9 +20,9 @@ class Modules
 
     static public function getModules() {
     	$config = new Config;
-        if(!property_exists($config, "modules")) {
-            $config->set("modules", new stdClass);
-        }
+        // if(!property_exists($config, "modules")) {
+        //     $config->set("modules", new stdClass);
+        // }
         $modules = scandir("./Public/Modules");
         foreach ($modules as $module) {
             if ($module === '.' or $module === '..') continue;
@@ -34,7 +34,7 @@ class Modules
                 }
             }
         }
-    	return property_exists($config, "modules") ? $config->modules : [];
+    	return $config->modules ?? [];
     }
 
     static public function getModulePath($module) {
