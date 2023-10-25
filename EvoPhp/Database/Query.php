@@ -355,6 +355,20 @@ class Query extends Database
         return $this;
     }
 
+    public function metaSet(array|object $data, array $tableCols = [], array|object $oldMeta = []) {
+        $data = (array) $data;
+        $oldMeta = (array) $oldMeta;
+        $data = array_merge($oldMeta, $data);
+        foreach($tableCols as $col) {
+            if(isset($data[$col])) {
+                $this->set($col, $data[$col]);
+                unset($data[$col]);
+            }
+        }
+        $this->set("meta", json_encode($data));
+        return $this;
+    }
+
     public function where($column, $value, $type = false, $rel = "LIKE") {
 
         if(strpos($value, ',')) {

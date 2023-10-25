@@ -1,17 +1,21 @@
 <template>
-    <input type="file" :name="`input-${name}`" ref="myFile"/>
+    <div class="mb-4">
+        <input type="file" :name="`input-${name}`" ref="myFile"/>
+        <small>{{ attrs.hint ?? "" }}</small>
+    </div>
 </template>
 
 <script setup>
     import * as FilePond from 'filepond';
     import 'filepond/dist/filepond.min.css';
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, inject, watchEffect } from 'vue';
     import {nonce} from '@/helpers';
     import { useField } from 'vee-validate'
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
     const myFile = ref(null)
     
+    const meta = inject("meta", {})
     const props = defineProps({
         label: {
             type: String,
@@ -27,11 +31,20 @@
         column: {
             type: String
         },
-        values: Object
+        values: Object,
+        layout: {
+            type: String,
+            default: ""
+        },
+        as : {
+            type: String,
+            default: "input"
+        },
+        initialValues: Object
     })
 
     const { value, errorMessage, setErrors, setValue } = useField(props.name, props.attrs.rules ?? '')
-
+    const pond = ref(null)
     onMounted(() => {
         // Create a FilePond instance
         const {acceptedFileTypes, ...attrs} = props.attrs;
@@ -85,11 +98,20 @@
             acceptedFileTypes: acceptedFileTypes ?? "application/pdf",
             ...attrs
         })
-        const pond = FilePond.create(myFile.value);
+        pond.value = FilePond.create(myFile.value);
 
+    })
+
+    watchEffect(() => {
+        if(meta.value.dirty == false) {
+            if(pond.value != null)
+                pond.value.removeFiles()
+        }
     })
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+    .filepond--credits {
+        display: none;
+    }
 </style>

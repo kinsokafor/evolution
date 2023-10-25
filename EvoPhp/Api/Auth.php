@@ -64,12 +64,16 @@ Trait Auth {
         endif;
         $session->failedSignInAttempts = 0;
         $instance = new self;
-        $config = new Config;
         $instance->resourceOwner = $meta;
         $instance->authorizationState = true;
+        $scope = $instance->getScope($meta->role);
+        return $instance->createToken($meta, $scope);
+    }
+
+    public function getScope($role) {
+        $config = new Config;
         $roles = $config->Auth["roles"];
-        $scope = $roles[$meta->role] ?? $roles[$config->Auth["defaultRole"]];
-        return $instance->createToken($meta, $scope['capacity']);
+        return ($roles[$role] ?? $roles[$config->Auth["defaultRole"]])['capacity'];
     }
 
     public static function signOut() {

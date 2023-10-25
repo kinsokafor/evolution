@@ -32,19 +32,19 @@
         {
             "link": "/admin",
             "label": "Admin Settings",
-            "access": [1,2,3,4,5],
+            "access": [1,2,3],
             "iconClass": "fa-sliders",
             "isRouter": false,
             "submenu": [
                 {
                     "link": "/admin/#/",
                     "label": "Admin Dashboard",
-                    "access": ""
+                    "access": "1,2"
                 },
                 {
                     "link": "/admin/#/users",
                     "label": "Users",
-                    "access": ""
+                    "access": "1,2"
                 },
                 {
                     "link": "/admin/#/options",

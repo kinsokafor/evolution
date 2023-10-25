@@ -35,7 +35,7 @@
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import { ref, computed, watchEffect, watch } from 'vue'
+    import { ref, computed, watchEffect, provide } from 'vue'
     import SingleColumn from '@/components/layouts/SingleColumn.vue'
     import DoubleColumn from '@/components/layouts/DoubleColumn.vue'
     import TripleColumn from '@/components/layouts/TripleColumn.vue'
@@ -70,6 +70,8 @@
     const {values, handleSubmit, isSubmitting, meta, resetForm} = useForm()
 
     const emit = defineEmits(['submit', 'values'])
+    
+    provide("meta", meta);
 
     const onSubmit = handleSubmit((values, actions) => {
         emit("submit", values, actions);

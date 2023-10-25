@@ -2,12 +2,14 @@
     <div>
         <input type="text" v-model="searchQuery" class="search-menu" placeholder="search for...">
         <div :class="parentContainerClass" class="k-menu">
-            <div :class="titleContainerClass" class="k-menu-header" v-if="title !== ''">
-                <h3>{{title}}</h3>
-                <hr/>
-            </div>
+            <slot name="header">
+                <div :class="titleContainerClass" class="k-menu-header" v-if="title !== ''">
+                    <h3>{{title}}</h3>
+                    <hr/>
+                </div>
+            </slot>
             <div :class="containerClass" v-for="item in searchedMenu" :key="item.link">
-                <MenuButton v-bind="item"/>
+                <component v-bind="item" :is="template"></component>
             </div>
         </div>
     </div>
@@ -41,6 +43,10 @@
         titleContainerClass: {
             type: String,
             default: "col-12"
+        },
+        template: {
+            type: Object,
+            default: MenuButton
         }
     })
 

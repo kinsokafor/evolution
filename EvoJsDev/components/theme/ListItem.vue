@@ -59,7 +59,7 @@
     .list-item-container {
         padding: 10px;
         margin-bottom: 15px;
-        box-shadow: 2px 0px 2px #6159595c;
+        box-shadow: 0px 0px 2px #6159595c;
         border-radius: 3px;
     }
     .list-item-container .list-right {
