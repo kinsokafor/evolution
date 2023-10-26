@@ -9,7 +9,7 @@
                 <img 
                     :src="value ?? defaultImage" 
                     class="gambar img-responsive img-thumbnail croppie-image" 
-                    :id="'croppie-output-' + instance" />
+                    :id="'croppie-output-' + instance"/>
                 <figcaption><i class="fas fa-camera"></i></figcaption>
             </figure>
             <input type="file" 
@@ -44,20 +44,20 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
-    import { randomId, isRequired } from '@/helpers'
+    import { ref, onMounted, watchEffect, inject } from 'vue'
+    import { randomId } from '@/helpers'
     import Croppie from 'croppie'
     import 'croppie/croppie.css'
     import './style.css'
     import { useField } from 'vee-validate'
     import img from './images/croppie-default.gif'
 
-    var croppie = null;
+    var croppie = ref(null);
     var image = ref(null);
     const instance = ref(randomId(8));
     var preview = ref(true);
     const defaultImage = ref(null);
-    
+    const meta = inject("meta", {})
 
     const props = defineProps({
         attrs: {
@@ -123,12 +123,12 @@
         defaultImage.value = props.default !== "" ? props.default : process.env.EVO_API_URL+img;
     })
 
-    const { value, errorMessage } = useField(props.name, props.required ? isRequired : true)
+    const { value } = useField(props.name, props.attrs.rules ?? '')
     
     const setUpCroppie = () => {
         let id = "croppie-preview-" + instance.value
         let el = document.getElementById(id);
-        croppie = new Croppie(el, {
+        croppie.value = new Croppie(el, {
             viewport: props.viewport,
             boundary: props.boundary,
             showZoomer: props.showZoomer,
@@ -138,7 +138,7 @@
             enableResize: props.enableResize,
             mouseWheelZoom: props.mouseWheelZoom
         })
-        croppie.bind({
+        croppie.value.bind({
             url: image.value
         })
     }
@@ -156,20 +156,27 @@
     }
 
     const rotateLeft = () => {
-        croppie.rotate(90)
+        croppie.value.rotate(90)
     }
 
     const rotateRight = () => {
-        croppie.rotate(-90)
+        croppie.value.rotate(-90)
     }
 
     const crop = () => {
-        croppie.result().then(result => {
+        croppie.value.result().then(result => {
             preview.value = true
             value.value = result
         })
     }
 
+    watchEffect(() => {
+        if(meta.value.dirty == false) {
+            if(croppie.value != null) {
+                value.value = ""
+            }
+        }
+    })
 </script>
 
 <style lang="scss" scoped>

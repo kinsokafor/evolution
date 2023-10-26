@@ -235,13 +235,26 @@ class Post
 
     private function processFiles($id, $type, $meta) {
         if(!isset($meta['file_attachments'])) return $meta;
+        if(gettype($meta['file_attachments']) == "string") {
+            $field = $meta['file_attachments'];
+            if(!isset($meta[$field])) return $meta;
+            $meta['file_attachments'] = [];
+            $meta['file_attachments'][$field] = $meta[$field];
+        }
         foreach ($meta['file_attachments'] as $key => $file) {
+            if(isset($meta[$file])) {
+                $file = $meta[$file];
+            }
             $default = [
                 "processor" => "uploadBase64Image",
-                "path" => "Uploads/$type/$id",
+                "path" => "Uploads/Post/$type/$id",
                 "saveAs" => $key
             ];
-            $file = array_merge($default, $file);
+            if(gettype($file) == 'array' || gettype($file) == 'object') {
+                $file = array_merge($default, (array) $file);
+            } else {
+                $file = array_merge($default, ["data" => $file]);
+            }
             $res = (new Files)->processFile($file);
             if($res) {
                 $meta[$key] = $res;

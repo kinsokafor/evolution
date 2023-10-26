@@ -21,6 +21,7 @@
     import {Users} from '@/helpers';
     import { useUsersStore } from '@/Modules/Main/store/users'
     import config from '/config.json'
+    import * as yup from 'yup'
 
     const users = new Users;
     const user = ref({});
@@ -52,7 +53,6 @@
             "label": "Profile",
             "as": "croppie",
             "name": "profile_picture",
-            "required": true,
             "class": "form-control",
             "column": "right",
             "viewport": {
@@ -136,8 +136,9 @@
         }
     })
 
-    const onSubmit = async (values) => {
+    const onSubmit = async (values, actions) => {
         processing.value = true;
+        values.file_attachments = ["profile_picture"]
         users.update(user.value.id, values).then(function(response){
             processing.value = false;
             alertStore.add("Profile updated", "success");

@@ -1,15 +1,20 @@
 <template>
     <div class="k-input-group" :class="layout">
         <label :for="name" class="label">{{ label }}</label>
-        <Croppie :name="name" v-bind="filteredAttr" />
+        <Croppie :name="name" :attrs="attrs" v-bind="filteredAttr" />
     </div>
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, computed } from 'vue';
     import Croppie from '@/components/croppie/Croppie.vue';
 
-    const filteredAttr = ref({});
+    const filteredAttr = computed(() => {
+        const copy = {...props.attrs}
+        delete copy.rules
+        delete copy.placeholder
+        return copy
+    });
 
     const props = defineProps({
         layout: {
@@ -37,10 +42,10 @@
         values: Object
     })
 
-    onMounted(() => {
-        filteredAttr.value = props.attrs;
-        delete filteredAttr.value.placeholder;
-    })
+    // onMounted(() => {
+    //     filteredAttr.value = props.attrs;
+    //     delete filteredAttr.value.placeholder;
+    // })
 
 </script>
 
