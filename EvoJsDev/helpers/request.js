@@ -1,7 +1,7 @@
 import axios from "axios";
 import {nonce} from "./functions"
 
-export class SendRequest {
+export class Request {
 
     async get(endpoint) {
         return await axios.get(endpoint, {
