@@ -203,7 +203,6 @@ class User
         unset($meta['password']);
 
         if($user_id) {
-            $meta = $this->processFiles($user_id, $meta);
             $this->addMeta($user_id, $meta);
             $action = new Action;
             $action->doAction("evoAfterSignUp", $user_id);
@@ -317,8 +316,6 @@ class User
 
 		if (isset($meta['user_id'])) unset($meta['user_id']);
 
-        $meta = $this->processFiles($existing->id, $meta);
-
         foreach($meta as $key => $value) {
             $res = $this->query->select("user_meta", "COUNT(*) AS count")
                     ->where("meta_name", $key)
@@ -375,37 +372,6 @@ class User
                 break;
         }
         $query->where('user_id', $id, "i")->where("meta_name", $meta)->execute();
-    }
-
-    private function processFiles($id, $meta) {
-        if(!isset($meta['file_attachments'])) return $meta;
-        if(gettype($meta['file_attachments']) == "string") {
-            $field = $meta['file_attachments'];
-            if(!isset($meta[$field])) return $meta;
-            $meta['file_attachments'] = [];
-            $meta['file_attachments'][$field] = $meta[$field];
-        }
-        foreach ($meta['file_attachments'] as $key => $file) {
-            if(isset($meta[$file])) {
-                $file = $meta[$file];
-            }
-            $default = [
-                "processor" => "uploadBase64Image",
-                "path" => "Uploads/User/$id",
-                "saveAs" => $key
-            ];
-            if(gettype($file) == 'array' || gettype($file) == 'object') {
-                $file = array_merge($default, (array) $file);
-            } else {
-                $file = array_merge($default, ["data" => $file]);
-            }
-            $res = (new Files)->processFile($file);
-            if($res) {
-                $meta[$key] = $res;
-            } else $meta[$key] = "";
-            unset($meta['file_attachments']);
-        }
-        return $meta;
     }
 
     public function generateUsername(array $meta = []) {

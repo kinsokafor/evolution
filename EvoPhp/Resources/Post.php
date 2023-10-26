@@ -151,7 +151,6 @@ class Post
         )->execute();
 
         if($post_id) {
-            $meta = $this->processFiles($post_id, $postType, $meta);
             $this->addMeta($post_id, $meta);
             return $post_id;
         }
@@ -206,7 +205,6 @@ class Post
                 }
             }
         }
-        $meta = $this->processFiles($postId, $existing->type, $meta);
         foreach($meta as $key => $value) {
             $res = $this->query->select("post_meta", "COUNT(*) AS count")
                     ->where("meta_name", $key)
@@ -231,37 +229,6 @@ class Post
             $query->set("meta_".$ev->field, $ev->value, $ev->valueType);
         }
         $query->where('post_id', $id, "i")->where("meta_name", $meta)->execute();
-    }
-
-    private function processFiles($id, $type, $meta) {
-        if(!isset($meta['file_attachments'])) return $meta;
-        if(gettype($meta['file_attachments']) == "string") {
-            $field = $meta['file_attachments'];
-            if(!isset($meta[$field])) return $meta;
-            $meta['file_attachments'] = [];
-            $meta['file_attachments'][$field] = $meta[$field];
-        }
-        foreach ($meta['file_attachments'] as $key => $file) {
-            if(isset($meta[$file])) {
-                $file = $meta[$file];
-            }
-            $default = [
-                "processor" => "uploadBase64Image",
-                "path" => "Uploads/Post/$type/$id",
-                "saveAs" => $key
-            ];
-            if(gettype($file) == 'array' || gettype($file) == 'object') {
-                $file = array_merge($default, (array) $file);
-            } else {
-                $file = array_merge($default, ["data" => $file]);
-            }
-            $res = (new Files)->processFile($file);
-            if($res) {
-                $meta[$key] = $res;
-            }
-            unset($meta['file_attachments']);
-        }
-        return $meta;
     }
 
     public function get($postId) {

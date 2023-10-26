@@ -4,6 +4,7 @@ namespace EvoPhp\Api\Requests;
 
 use EvoPhp\Api\Operations;
 use function getallheaders;
+use EvoPhp\Api\FileHandling\Files;
 // use EvoPhp\Resources\Post;
 // use EvoPhp\Resources\User;
 // use EvoPhp\Resources\Options;
@@ -195,6 +196,7 @@ class Requests
     }
 
     private function post() {
+        $this->processFiles($this->tableName);
         switch ($this->tableName) {
             case 'post':
                 PostRequest::postTable($this);
@@ -224,6 +226,7 @@ class Requests
     }
 
     private function put() {
+        $this->processFiles($this->tableName);
         switch ($this->tableName) {
             case 'post':
                 PutRequest::postTable($this);
@@ -295,26 +298,39 @@ class Requests
             }
             return $res;
         }
-
-        // $auth = (new config())->Auth;
-        // $clients = $auth['clients'];
-        // $clients = array_column($clients, NULL, 'client_id');
-        // $client = $_SERVER[ 'PHP_AUTH_USER' ];
-        // if(!isset($clients[$client])) {
-        //     return false;
-        // }
-        // else if($clients[$client]['secret'] != $_SERVER[ 'PHP_AUTH_PW' ]) {
-        //     return false;
-        // }
-        // else {
-        //     $clientDomain = $clients[$client]['domain'];
-        //     $protocol = $clients[$client]['protocol'];
-        //     \Delight\Http\ResponseHeader::set('Content-Security-Policy', 
-        //         "frame-ancestors 'self' $protocol://*.$clientDomain/ $protocol://$clientDomain/"
-        //     );
-        //     return true;
-        // }
         return false;
+    }
+
+    private function processFiles($folder = "all") {
+        $folder = ucwords($folder);
+        if(!isset($this->data['file_attachments'])) return;
+        if(gettype($this->data['file_attachments']) == "string") {
+            $field = $this->data['file_attachments'];
+            if(!isset($this->data[$field])) return $this->data;
+            $this->data['file_attachments'] = [];
+            $this->data['file_attachments'][$field] = $this->data[$field];
+        }
+        $id = $this->data['id'] ?? 'new';
+        foreach ($this->data['file_attachments'] as $key => $file) {
+            if(isset($this->data[$file])) {
+                $file = $this->data[$file];
+            }
+            $default = [
+                "processor" => "uploadBase64Image",
+                "path" => "Uploads/$folder/$id",
+                "saveAs" => $key
+            ];
+            if(gettype($file) == 'array' || gettype($file) == 'object') {
+                $file = array_merge($default, (array) $file);
+            } else {
+                $file = array_merge($default, ["data" => $file]);
+            }
+            $res = (new Files)->processFile($file);
+            if($res) {
+                $this->data[$key] = $res;
+            } else $this->data[$key] = "";
+            unset($this->data['file_attachments']);
+        }
     }
 
     protected function getResponse() {
