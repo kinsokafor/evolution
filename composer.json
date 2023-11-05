@@ -22,6 +22,7 @@
         "firebase/php-jwt": "^6.3",
         "symfony/filesystem": "^6.2",
         "josantonius/json": "^2.0",
-        "elasticemail/elasticemail-php": "^4.0"
+        "elasticemail/elasticemail-php": "^4.0",
+        "flow-php/array-dot": "1.x@dev"
     }
 }

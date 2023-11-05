@@ -6,6 +6,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use EvoPhp\Api\Config;
+use EvoPhp\Api\Operations;
 
 class Files {
 
@@ -48,7 +49,7 @@ class Files {
 
     public function uploadBase64Image($data, $path, $saveAs = "") {
         if($data != '') {
-            $saveAs = $saveAs == "" ? "image" : $saveAs;
+            $saveAs = $saveAs == "" ? Operations::randomString(4).time() : $saveAs;
             $dataArr = explode(';', $data);
             if(!isset($dataArr[1])) return false;
             list($type, $data) = $dataArr;

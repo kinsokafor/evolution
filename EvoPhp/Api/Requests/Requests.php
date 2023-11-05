@@ -97,7 +97,7 @@ class Requests
 
     private function execute($callable) {
         if($this->verifyClient()) {
-            $this->data['response'] = $callable();
+            $this->data['response'] = $callable($this->data);
         }
     }
 
@@ -318,7 +318,7 @@ class Requests
             $default = [
                 "processor" => "uploadBase64Image",
                 "path" => "Uploads/$folder/$id",
-                "saveAs" => $key
+                "saveAs" => ""
             ];
             if(gettype($file) == 'array' || gettype($file) == 'object') {
                 $file = array_merge($default, (array) $file);

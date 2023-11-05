@@ -1,6 +1,6 @@
 <template>
     <div class="mb-4">
-        <input type="file" :name="`input-${name}`" ref="myFile"/>
+        <input type="file" :name="`input-${name}`" ref="myFile" :id="id"/>
         <small>{{ attrs.hint ?? "" }}</small>
     </div>
 </template>
@@ -9,10 +9,11 @@
     import * as FilePond from 'filepond';
     import 'filepond/dist/filepond.min.css';
     import { onMounted, ref, inject, watchEffect } from 'vue';
-    import {nonce} from '@/helpers';
+    import {nonce,randomId} from '@/helpers';
     import { useField } from 'vee-validate'
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
+    const id = randomId(8)
     const myFile = ref(null)
     
     const meta = inject("meta", {})
@@ -43,13 +44,14 @@
         initialValues: Object
     })
 
-    const { value, errorMessage, setErrors, setValue } = useField(props.name, props.attrs.rules ?? '')
+    const { value, setErrors, setValue } = useField(props.name, props.attrs.rules ?? '')
     const pond = ref(null)
     onMounted(() => {
         // Create a FilePond instance
-        const {acceptedFileTypes, ...attrs} = props.attrs;
         FilePond.registerPlugin(FilePondPluginFileValidateType);
-        FilePond.setOptions({
+        const {acceptedFileTypes, ...attrs} = props.attrs;
+        pond.value = FilePond.create(myFile.value);
+        pond.value.setOptions({
             server: {
                 url: process.env.EVO_API_URL,
                 process: {
@@ -98,7 +100,7 @@
             acceptedFileTypes: acceptedFileTypes ?? "application/pdf",
             ...attrs
         })
-        pond.value = FilePond.create(myFile.value);
+        
 
     })
 

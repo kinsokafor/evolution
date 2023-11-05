@@ -76,6 +76,19 @@
     "site_name": "<projectName>",
     "loginLink": "/accounts",
     "currentTheme": "Default",
+    "currency": {
+        "base": "USD",
+        "allowed": [
+            "USD",
+            "NGN",
+            "EUR",
+            "GBP"
+        ],
+        "apiKey": "2389d899198a00af94d91953",
+        "endPoint": "https:\/\/v6.exchangerate-api.com\/v6\/{key}\/latest\/{base}",
+        "rateKey": "conversion_rates",
+        "refreshes": 24
+    },
     "modules": {
       "Main": {
         "entry": [

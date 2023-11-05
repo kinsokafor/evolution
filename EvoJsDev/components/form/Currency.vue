@@ -33,14 +33,7 @@
     const currencyStore = useCurrencyStore();
     const showConverter = ref(true);
     
-    const amount = useField(useAttrs().name, value => {
-        if(isNaN(value)) {
-            showConverter.value = false;
-            return "Only numbers allowed"
-        }
-        showConverter.value = true;
-        return true 
-    });
+    const amount = useField(useAttrs().name);
 
     const currencyIn = useField(`${useAttrs().name}-currency`);
 

@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Base64 } from "./base64";
+import { Request } from "./request";
+import { Records } from "./records";
 
 export const randomId = (length) => {
     var result           = '';
@@ -113,17 +115,44 @@ export const dragElement = (elmnt, handle = false) => {
 }
 
 export const currencyConverter = async (currency, base = "USD", amount = 1) => {
-    return await axios.get("https://api.exchangerate.host/latest").then(response => {
-        if(response.status == 200) {
-            if(response.data.rates.hasOwnProperty(base) && response.data.rates.hasOwnProperty(currency)) {
-                var fetchedBase = response.data.base;
-                var rateToBase = response.data.rates[base];
-                var rateToCurrency = response.data.rates[currency];
-                const ret = (rateToCurrency/rateToBase) * amount;
-                return ((ret + Number.EPSILON) * 100).toFixed(6) / 100
-            } else return "NA"
-        } else return "failed"
-    })
+    const convert = (data, currency, base) => {
+        if(base in data && currency in data) {
+            var rateToBase = data[base];
+            var rateToCurrency = data[currency];
+            const ret = (rateToCurrency/rateToBase) * amount;
+            return (((ret + Number.EPSILON) * 100).toFixed(6) / 100).toFixed(2)
+        } else return "NA"
+    }
+
+    const getFromServer = async (currency, base, endPoint, rateKey, refreshes) => {
+        return await axios.get(endPoint).then(response => {
+            if(response.status == 200) {
+                if(rateKey in response.data) {
+                    var a = new Date(); 
+                    a.setHours(a.getHours()+parseInt(refreshes));
+                    (new Records).update("exchange_rates", {rates: response.data[rateKey], expiry: a.getTime()});
+                    return convert(response.data[rateKey], currency, base)
+                } else return "NA"
+            } else return "failed"
+        })
+    }
+    return await (new Request).post(process.env.EVO_API_URL + "/api/config/all").then(async (r) => {
+        let endPoint = r.data.data.currency.endPoint ?? "https://api.exchangerate.host/latest"
+        const apiKey = r.data.data.currency.apiKey ?? ""
+        const rateKey = r.data.data.currency.rateKey ?? "rates"
+        const refreshes = r.data.data.currency.refreshes ?? 1
+        endPoint = endPoint.replace("{key}", apiKey).replace("{base}", base)
+        return await (new Records).get("exchange_rates").then(r => {
+            var a = new Date();
+            if(a.getTime() >= r.data.expiry) {
+                return getFromServer(currency, base, endPoint, rateKey, refreshes);
+            }
+            return convert(r.data.rates, currency, base)
+        }).catch(async (e) => {
+            return getFromServer(currency, base, endPoint, rateKey, refreshes);
+        })
+        
+    })  
 }
 
 export const isEmpty = (obj) => {
@@ -192,7 +221,7 @@ export const imageExists = (imageSrc, good, bad) => {
 
 export const findByDottedIndex = (i, obj) => {
 	const arr = i.split('.')
-    return arr.reduce((a, b) => a[b], obj)
+    return arr.reduce((a, b) =>  a[b], obj)
 }
 
 export const clickToCopyText = (textElementId) => {

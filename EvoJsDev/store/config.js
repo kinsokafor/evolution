@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import axios from 'axios';
 import {nonce, findByDottedIndex} from '@/helpers'
+import _ from 'lodash'
 
 export const useConfigStore = defineStore('useConfigStore', {
     state: () => {
@@ -55,20 +56,19 @@ export const useConfigStore = defineStore('useConfigStore', {
     },
     getters: {
         get: (state) => {
-            const p = state.props
+            const p = state.all
             return (key) => {
-                if(!(key in p)) {
-                    state.loadFromServer()
-                    return null
+                if(_.isEmpty(p)) {
+                    return ""
                 }
-                return findByDottedIndex(key, p);
+                return findByDottedIndex(key, p.data);
             }
         },
         all: (state) => {
             if(!state.loaded) {
                 state.loadFromServer()
-                return state.props
             }
+            return state.props
         }
     }
 })

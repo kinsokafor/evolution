@@ -13,6 +13,8 @@ import SingleColumn from '@/components/layouts/SingleColumn.vue'
 import DoubleColumn from '@/components/layouts/DoubleColumn.vue'
 import TripleColumn from '@/components/layouts/TripleColumn.vue'
 import Textarea from '@/components/form/Textarea.vue';
+import WYSIWYG from '@/components/form/WYSIWYG.vue';
+import FilePond from '@/components/form/FilePond.vue';
 
 export const useCreateFormStore = defineStore('useCreateFormStore', {
     state: () => {
@@ -62,6 +64,14 @@ export const useCreateFormStore = defineStore('useCreateFormStore', {
 
                 case "textarea":
                         return Textarea;
+                    break;
+
+                case "wysiwyg":
+                        return WYSIWYG;
+                    break;
+
+                case "filepond":
+                        return FilePond;
                     break;
             
                 default:

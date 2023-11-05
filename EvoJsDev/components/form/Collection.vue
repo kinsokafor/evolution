@@ -18,8 +18,10 @@
                         :values="values"
                         :initialValues="initialValues"
                     ></component>
+                    
                 </div>
-            </div><hr>
+                <ErrorMessage :name="name+'.'+i"></ErrorMessage>
+            </div>
         </div>
         <div class="collection-btns">
             <button @click.prevent="control++">Add row</button>
@@ -31,7 +33,9 @@
 
 <script setup>
     import { useCreateFormStore } from '@/store/createForm';
+    import { ErrorMessage } from 'vee-validate';
     import { computed, ref } from 'vue'
+    import '/color-scheme.css'
 
     const store = useCreateFormStore()
     const props = defineProps({
@@ -96,6 +100,13 @@
     //     bottom: 0;
     //     left: 0;
     // }
+    .k-input-group > label ~ div {
+        padding: 10px;
+    }
+    .k-input-group > label ~ div:nth-child(2n+1) {
+        background: #f7f7f798;
+        border-radius: 12px;
+    }
     .collection-btns button {
         border: none;
         background: none;
@@ -186,4 +197,12 @@
         }
     }
 
+</style>
+
+<style lang="scss">
+.k-input-group > label ~ div:nth-child(2n+1) {
+    .collection-row .form-control {
+        background-color: transparent;
+    }
+}
 </style>

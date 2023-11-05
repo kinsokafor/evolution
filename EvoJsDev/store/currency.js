@@ -1,11 +1,10 @@
-import {defineStore} from 'pinia';
+import {defineStore, storeToRefs} from 'pinia';
 import {currencyConverter} from '@/helpers';
 import { useConfigStore } from '@/store/config'
 
 export const useCurrencyStore = defineStore('useCurrencyStore', {
     state: () => {
         return {
-            config: useConfigStore(),
             active: "any",
             displayAmount: 0,
             base: "any"
@@ -26,18 +25,21 @@ export const useCurrencyStore = defineStore('useCurrencyStore', {
     getters: {
         activeCurrency: (state) => {
             if(state.active == "any") {
-                state.active = state.config.get('currency.base')
+                return state.baseCurrency
             }
             return state.active;
         },
         baseCurrency: (state) => {
+            const config = storeToRefs(useConfigStore());
             if(state.base == "any") {
-                return state.config.get('currency.base')
+                return config.get.value('currency.base')
             }
             return state.base;
         },
         allowedCurrencies: (state) => {
-            return state.config.get('currency.allowed').filter(x => x != state.active);
+            const config = storeToRefs(useConfigStore());
+            if(config.get.value('currency.allowed') == "") return []
+            return config.get.value('currency.allowed').filter(x => x != state.active);
         },
         amount: (state) => {
             return state.displayAmount;

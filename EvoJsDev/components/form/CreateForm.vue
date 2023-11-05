@@ -96,34 +96,37 @@
     // computed properties
 
     const getRightFields = computed(() => {
-        return getFields.value.filter(field => field.column == 'right')
+        return getFields.value.filter(field => (field.column == 'right' && field.condition == true))
     });
 
     const getLeftFields = computed(() => {
-        return getFields.value.filter(field => field.column == 'left')
+        return getFields.value.filter(field => (field.column == 'left' && field.condition == true))
     })
 
     const getCenterFields = computed(() => {
-        return getFields.value.filter(field => field.column == 'center')
+        return getFields.value.filter(field => (field.column == 'center' && field.condition == true))
     })
 
     const getFields = computed(() => {
+        
         return props.fields.map(field => {
-            field['as'] = field.as == undefined ? "input" : field.as;
-            field['label'] = field.label == undefined ? "" : field.label;
-            field['placeholder'] = field.placeholder == undefined ? field.label : field.placeholder;
-            field['error'] = field.error == undefined ? "" : field.error;
-            field['class'] = field.class == undefined ? "form-control" : field.class;
-            field['layout'] = field.layout !== "linear" ? "" : field.layout;
-            field['layout'] = field.linear == true ? "linear" : field.layout;
-            field['column'] = field.column == undefined ? "left" : field.column;
+            const defaultField = {
+                as: "input",
+                label: "",
+                placeholder: field.label ?? "",
+                error: "",
+                class: "form-control",
+                layout: field.linear == true ? "linear" : field.layout ?? "",
+                column: "left",
+                condition: true
+            }
+            field = {...defaultField, ...field}
             if(field['as'] == 'input') {
                 field['type'] = field.type == undefined ? "text" : field.type;
             }
             switch (field.column) {
                 case "left":
                 case "right":
-                    
                     break;
 
                 case "center":

@@ -2,7 +2,7 @@
     <div class="k-input-group" :class="layout">
         <label :for="name" class="label">{{ label }}</label>
         <Field :as="as" :id="name" :name="name" v-bind="getAttributes" v-slot="{value}">
-            <option disabled>Select {{ label }}</option>
+            <option disabled value="">Select {{ label }}</option>
             <option 
             v-for="(option, index) in getSelectOptions" 
             :key="index" 
