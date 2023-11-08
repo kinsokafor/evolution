@@ -3,25 +3,27 @@
         <loading :active="isSubmitting || processing" 
             :can-cancel="true" 
             :is-full-page=false></loading>
-        <component
-            :is="formLayout"
-        >
-            <template v-slot>
-                <DisplayFields :fields="getFields" :values="values" :initial-values="initialValues"/>
-            </template>
+        <slot name="fields" :fields="getFields" :values="values">
+            <component
+                :is="formLayout"
+            >
+                <template v-slot>
+                    <DisplayFields :fields="getFields" :values="values" :initial-values="initialValues"/>
+                </template>
 
-            <template #left>
-                <DisplayFields :fields="getLeftFields" :values="values" :initial-values="initialValues"/>
-            </template>
+                <template #left>
+                    <DisplayFields :fields="getLeftFields" :values="values" :initial-values="initialValues"/>
+                </template>
 
-            <template #center>
-                <DisplayFields :fields="getCenterFields" :values="values" :initial-values="initialValues"/>
-            </template>
+                <template #center>
+                    <DisplayFields :fields="getCenterFields" :values="values" :initial-values="initialValues"/>
+                </template>
 
-            <template #right>
-                <DisplayFields :fields="getRightFields" :values="values" :initial-values="initialValues"/>
-            </template>
-        </component>
+                <template #right>
+                    <DisplayFields :fields="getRightFields" :values="values" :initial-values="initialValues"/>
+                </template>
+            </component>
+        </slot>
         <slot :values="values"></slot>
         <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes" :disabled="!meta.valid">Submit</Button></slot>
     </form>

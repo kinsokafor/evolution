@@ -20,6 +20,7 @@ $router->group('/api/user', function () use ($router) {
     });
     $router->get('/id/{id}', function ($params) {
         $request = new Requests;
+        $params["id"] = (int) $params["id"];
         $request->user($params)->auth(1,2,3,4,5,6,7,8,9);
     });
     $router->get('/username/{username}', function ($params) {
@@ -32,10 +33,12 @@ $router->group('/api/user', function () use ($router) {
     });
     $router->delete('/id/{id}', function ($params) {
         $request = new Requests;
+        $params["id"] = (int) $params["id"];
         $request->user($params)->auth(1,2,3);
     });
     $router->put('/id/{id}', function ($params) {
         $request = new Requests;
+        $params["id"] = (int) $params["id"];
         $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
         $request->user($params)->auth(5,6);
     });

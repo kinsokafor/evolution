@@ -35,7 +35,7 @@
     
     const amount = useField(useAttrs().name);
 
-    const currencyIn = useField(`${useAttrs().name}-currency`);
+    const currencyIn = useField(`${useAttrs().name}_currency`);
 
     currencyStore.displayAmount = amount.value
 

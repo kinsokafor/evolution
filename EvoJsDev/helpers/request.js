@@ -26,7 +26,7 @@ export class Request {
     }
 
     async put(endpoint, data = {}) {
-        return await axios.post(endpoint, data, {
+        return await axios.put(endpoint, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 

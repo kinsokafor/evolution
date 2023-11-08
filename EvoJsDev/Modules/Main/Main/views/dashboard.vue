@@ -1,28 +1,24 @@
 <template>
     <div>
-        <UserCard :data="auth.getUser"></UserCard>
+        <UserCard :user-id="auth.getUser.id" :data="auth.getUser"></UserCard>
     </div>
-    <!-- <CounterCard 
-      end-point="api/user?status=active" 
-      title="Active Users" 
-      icon-class="fa-users" 
-      color="var(--green)"
-      />
-      <CounterCard 
-      end-point="api/user?status=inactive" 
-      title="Inactive Users" 
-      icon-class="fa-users" 
-      color="var(--yellow)"
-      text-color="var(--shadow1)"
-      layout-style="classic"
-      /> -->
 </template>
 
 <script setup>
     import UserCard from '@/components/theme/UserCard.vue';
     // import CounterCard from '@/components/theme/CounterCard.vue';
     import {useAuthStore} from '@/store/auth'
+    import { watchEffect, computed } from 'vue';
+    import {useConfigStore} from '@/store/config'
     const auth = useAuthStore();
+    const config = useConfigStore()
+    const roles = computed(() => config.get(`Auth.roles.${auth.getUser.role}`))
+
+    watchEffect(() => {
+      if(roles.value.index != undefined) {
+        window.location = roles.value.index
+      }
+    })
 </script>
 
 <script>

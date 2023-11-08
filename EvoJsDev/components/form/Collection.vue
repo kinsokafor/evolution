@@ -6,7 +6,7 @@
                 <div 
                     class="collection-column"
                     :class="c.col ? 'col'+c.col : 'col3'" 
-                    v-for="{as, layout, label, ...c} in (attrs.fields ?? [])"
+                    v-for="{as, layout, label, ...c} in fields"
                     :key = "c">
                     <component
                         :is="store.getComponent(as)"
@@ -23,7 +23,7 @@
                 <ErrorMessage :name="name+'.'+i"></ErrorMessage>
             </div>
         </div>
-        <div class="collection-btns">
+        <div class="collection-btns" v-if="adjustableRows">
             <button @click.prevent="control++">Add row</button>
             <button @click.prevent="removeRow()">Remove last row</button>
         </div>
@@ -64,6 +64,11 @@
         initialValues: Object,
         values: Object
     })
+    const fields = computed(() => {
+        if(props.attrs.fields == undefined) return []
+        return props.attrs.fields.filter(i => i.condition == undefined ? true : i.condition);
+    })
+    const adjustableRows = computed(() => props.attrs.adjustableRows == undefined ? true : props.attrs.adjustableRows)
     const initiated = ref(false)
     const control = ref(0)
     const initRows = ref(0)
