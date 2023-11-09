@@ -123,10 +123,17 @@ class GetRequest implements RequestInterface {
         if($request->joinUserAt != null) $query->joinUserAt($request->joinUserAt);
         if($request->joinPostAt != null) $query->joinPostAt($request->joinPostAt);
         if($request->joinAt != null && $request->joinTable != null) $query->joinAt($request->joinTable, $request->joinAt);
-        if($request->limit) $query->limit($request->limit);
-        if($request->offset) $query->offset($request->offset);
-        if($request->order_by) $query->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
-        http_response_code(200);
-        $request->response = $query->execute()->rows();
+        if(isset($request->data['id'])) {
+            $request->response = $query->execute()->row();
+            if($request->response !== null) {
+                http_response_code(200);
+            } else http_response_code(404);
+        } else {
+            if($request->limit) $query->limit($request->limit);
+            if($request->offset) $query->offset($request->offset);
+            if($request->order_by) $query->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
+            http_response_code(200);
+            $request->response = $query->execute()->rows();
+        }
     }
 }
