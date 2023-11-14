@@ -59,8 +59,7 @@
         options: {
             type: Array,
             default: []
-        },
-        values: Object
+        }
     })
 
     const getAttributes = computed(() => {

@@ -31,8 +31,7 @@
         },
         column: {
             type: String
-        },
-        values: Object
+        }
     })
 
 </script>

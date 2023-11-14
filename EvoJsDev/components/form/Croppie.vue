@@ -38,8 +38,7 @@
         },
         column: {
             type: String
-        },
-        values: Object
+        }
     })
 
     // onMounted(() => {

@@ -37,7 +37,6 @@
         column: {
             type: String
         },
-        values: Object,
         initialValues: {
             type: Object,
             default: {}

@@ -10,7 +10,6 @@
             :layout="layout"
             :attrs="attrs"
             :as="as"
-            :values="values"
             :initial-values="initialValues"
         ></component>
         <ErrorMessage :name="name" v-if="error == '' && as !== 'label'"></ErrorMessage>

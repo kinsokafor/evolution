@@ -18,8 +18,7 @@
         as: {
             type: String,
             default: "input"
-        },
-        values: Object
+        }
     })
 
     onMounted(() => {

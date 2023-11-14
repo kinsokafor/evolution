@@ -33,8 +33,7 @@
         },
         column: {
             type: String
-        },
-        values: Object
+        }
     })
 
     const { value, errorMessage } = useField(props.name, props.required ? isRequired : true)

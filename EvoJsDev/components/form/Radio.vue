@@ -3,7 +3,7 @@
         <Field :name="name" type="radio" v-slot="{ field }">
             <div><label>{{label}}</label></div>
             <label v-for="(option, index) in getSelectOptions" :key="index" v-bind="getAttributes">
-                <input type="radio" v-bind="{...field, ...getAttributes}" :value="option.value" :checked="option.value == values[name]" @input="(val) => setValue(val.target.checked)" />
+                <input type="radio" v-bind="{...field, ...getAttributes}" :value="option.value" :checked="option.value == initialValues[name]" @input="(val) => setValue(val.target.checked)" />
                 {{option.name}}
             </label>
         </Field>
@@ -39,7 +39,7 @@
         column: {
             type: String
         },
-        values: Object
+        initialValues: Object
     })
 
     const getSelectOptions = computed(() => {

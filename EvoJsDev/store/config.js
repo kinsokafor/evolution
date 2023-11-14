@@ -21,7 +21,7 @@ export const useConfigStore = defineStore('useConfigStore', {
                     'Authorization': `Bearer ${nonce()}` 
                 }
             }).then(r => {
-                this.props = r.data
+                this.props = r.data.data;
             })
         },
         async update(values) {
@@ -61,7 +61,7 @@ export const useConfigStore = defineStore('useConfigStore', {
                 if(_.isEmpty(p)) {
                     return ""
                 }
-                return findByDottedIndex(key, p.data);
+                return findByDottedIndex(key, p);
             }
         },
         all: (state) => {

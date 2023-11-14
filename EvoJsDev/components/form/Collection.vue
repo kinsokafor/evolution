@@ -15,7 +15,6 @@
                         :layout="layout ?? ''"
                         :attrs="getAttributes(attrs, c)"
                         :as="c.as"
-                        :values="values"
                         :initialValues="initialValues"
                     ></component>
                     
@@ -61,8 +60,7 @@
         column: {
             type: String
         },
-        initialValues: Object,
-        values: Object
+        initialValues: Object
     })
     const fields = computed(() => {
         if(props.attrs.fields == undefined) return []

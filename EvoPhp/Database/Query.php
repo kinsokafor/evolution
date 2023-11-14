@@ -4,6 +4,7 @@ namespace EvoPhp\Database;
 
 use Exception;
 use EvoPhp\Api\Operations;
+use Throwable;
 
 /**
  * summary
@@ -190,7 +191,7 @@ class Query extends Database
             }
         }
         catch(Exception $e) {
-            
+            $this->log_error($e->getMessage());
         }
         $this->log_error($this->connection->error); 
         $this->num_queries++;

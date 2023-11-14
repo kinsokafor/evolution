@@ -32,7 +32,6 @@
         column: {
             type: String
         },
-        values: Object,
         layout: {
             type: String,
             default: ""
