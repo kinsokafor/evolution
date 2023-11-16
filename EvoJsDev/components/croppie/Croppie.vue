@@ -116,6 +116,10 @@
         },
         column: {
             type: String
+        },
+        condition: {
+            type: Boolean,
+            default: true
         }
     })
 

@@ -30,6 +30,7 @@
         </div>
         <!-- <QrShow :user-id="data.username"/>
         <QrAccess /> -->
+        <slot></slot>
     </div>
 </template>
 
@@ -111,6 +112,10 @@
         transform: translate(-50%);
         border-radius: 30px;
         background: var(--color1);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 151px;
     }
     .user-img img.Male + h3, .user-img img.male + h3 {
         background: var(--blue);
@@ -124,15 +129,24 @@
     .user-img img.Female, .user-img img.female {
         border: 2px solid var(--purple);
     }
-    .user-data > div {
+    .user-data > div[data-v-5beb1081] {
         display: flex;
-        padding: 3px;
+        padding: 3px 10px;
         margin-bottom: 5px;
-        border-bottom: 1px solid var(--highlight3);
+        gap: 14px;
+        background: #f4f4f4;
+        border-radius: 5px;
     }
     .user-data > div .label {
         width: 200px;
         max-width: 37%;
+        font-size: 0.8em;
+        text-transform: uppercase;
+        color: var(--color2);
+        font-weight: 500;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     .value {
         padding-left: 5px;

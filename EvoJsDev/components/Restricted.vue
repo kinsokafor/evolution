@@ -1,7 +1,7 @@
 <template>
     <div class="access-restricted-area">
         <slot v-if="authStore.getAccess"></slot>
-        <div v-if="!authStore.getAccess" class="no-access">
+        <div v-if="!authStore.getAccess && showBackdrop" class="no-access">
             <slot name="message">
                 <div class="security-check">
                     <img :src="root+jpg" alt="" class="animate__animated animate__pulse animate__infinite">
@@ -26,6 +26,10 @@
         access: {
             type: String,
             default: ""
+        },
+        showBackdrop: {
+            type: Boolean,
+            default: true
         }
     })
 

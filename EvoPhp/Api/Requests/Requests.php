@@ -97,6 +97,7 @@ class Requests
 
     private function execute($callable) {
         if($this->verifyClient()) {
+            $this->processFiles($this->tableName);
             $this->data['response'] = $callable($this->data);
         }
     }
@@ -196,7 +197,6 @@ class Requests
     }
 
     private function post() {
-        $this->processFiles($this->tableName);
         switch ($this->tableName) {
             case 'post':
                 PostRequest::postTable($this);
@@ -226,7 +226,6 @@ class Requests
     }
 
     private function put() {
-        $this->processFiles($this->tableName);
         switch ($this->tableName) {
             case 'post':
                 PutRequest::postTable($this);
@@ -242,6 +241,11 @@ class Requests
 
             case 'records':
                 PutRequest::recordsTable($this);
+                break;
+
+            case 'evoAction':
+            case 'evoActions':
+                PostRequest::evoActions($this);
                 break;
             
             default:
@@ -312,9 +316,6 @@ class Requests
         }
         $id = $this->data['id'] ?? 'new';
         foreach ($this->data['file_attachments'] as $key => $file) {
-            if(isset($this->data[$file])) {
-                $file = $this->data[$file];
-            }
             $default = [
                 "processor" => "uploadBase64Image",
                 "path" => "Uploads/$folder/$id",
@@ -323,6 +324,10 @@ class Requests
             if(gettype($file) == 'array' || gettype($file) == 'object') {
                 $file = array_merge($default, (array) $file);
             } else {
+                if(isset($this->data[$file])) {
+                    $key = $file;
+                    $file = $this->data[$file];
+                }
                 $file = array_merge($default, ["data" => $file]);
             }
             $res = (new Files)->processFile($file);
