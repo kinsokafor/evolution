@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input type="text" v-model="searchQuery" class="search-menu" placeholder="search for...">
+        <input type="text" v-model="searchQuery" class="search-menu mb-4" placeholder="search for...">
         <div :class="parentContainerClass" class="k-menu">
             <slot name="header">
                 <div :class="titleContainerClass" class="k-menu-header" v-if="title !== ''">
@@ -71,7 +71,6 @@
 
 <style lang="scss" scoped>
     .search-menu {
-        margin-bottom: 20px;
         border: 1px solid var(--highlight2);
         background: var(--highlight1);
         padding: 5px 10px;
