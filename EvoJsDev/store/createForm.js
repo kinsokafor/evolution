@@ -15,6 +15,7 @@ import TripleColumn from '@/components/layouts/TripleColumn.vue'
 import Textarea from '@/components/form/Textarea.vue';
 import WYSIWYG from '@/components/form/WYSIWYG.vue';
 import FilePond from '@/components/form/FilePond.vue';
+import VSelect from '@/components/form/VSelect.vue';
 
 export const useCreateFormStore = defineStore('useCreateFormStore', {
     state: () => {
@@ -72,6 +73,10 @@ export const useCreateFormStore = defineStore('useCreateFormStore', {
 
                 case "filepond":
                         return FilePond;
+                    break;
+
+                case "vselect":
+                        return VSelect;
                     break;
             
                 default:

@@ -32,6 +32,7 @@
     import Collection from './Collection.vue';
     import WYSIWYG from '@/components/form/WYSIWYG.vue';
     import FilePond from './FilePond.vue';
+    import VSelect from './VSelect.vue';
 
     // const store = useCreateFormStore();
     const props = defineProps(['fields', 'values', 'initialValues'])
@@ -84,6 +85,10 @@
 
                 case "filepond":
                         return FilePond;
+                    break;
+
+                case "vselect":
+                        return VSelect;
                     break;
             
                 default:
