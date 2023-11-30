@@ -14,8 +14,6 @@
     import { Field, useField } from 'vee-validate';
     import { computed } from 'vue'
 
-    const {value, setValue} = useField(props.name);
-
     const props = defineProps({
         layout: {
             type: String,
@@ -41,6 +39,8 @@
         },
         initialValues: Object
     })
+    
+    const {value, setValue} = useField(props.name);
 
     const getSelectOptions = computed(() => {
         const options = props.attrs.options;

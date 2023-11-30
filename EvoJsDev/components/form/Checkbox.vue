@@ -12,8 +12,6 @@
     import { onMounted, watch } from 'vue';
     import '/color-scheme.css'
 
-    const {value, setValue} = useField(props.name);
-
     const props = defineProps({
         layout: {
             type: String,
@@ -42,6 +40,8 @@
             default: {}
         }
     })
+    
+    const {value, setValue} = useField(props.name);
 
     onMounted(() => {
         setValue(props.initialValues[props.name] ?? (props.attrs.value ?? false));
