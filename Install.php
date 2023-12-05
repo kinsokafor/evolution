@@ -74,6 +74,7 @@ if(isset($_POST['submit'])) {
     \EvoPhp\Resources\Options::createTable();
     \EvoPhp\Actions\Action::createTable();
     \EvoPhp\Actions\Notifications\Log::createTable();
+	\EvoPhp\Api\Cron::createTable();
     \EvoPhp\Api\Modules::install();
     $user = new User;
     $user->new([
