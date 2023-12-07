@@ -64,7 +64,6 @@
       "js-sha1": "^0.6.0",
       "lodash": "^4.17.21",
       "pinia": "^2.0.22",
-      "qrcode.vue": "^3.4.1",
       "vee-validate": "^4.11.6",
       "vue-chartjs": "^5.2.0",
       "vue-trumbowyg": "^4.0.0",

@@ -1,18 +1,22 @@
 <template>
     <div>
-        <ListItem v-for="item in store.get" :key="item.id">
-            <p>{{ item.content }}</p>
-            <template #right>
-                <span class="small">{{ getDate(item.last_sent) }}</span>
-                <p :class="{'text-success': (item.status = 'read'), 'text-danger': (item.status = 'unread')}">{{ item.status }}</p>
-            </template>
-        </ListItem>
+        <InfiniteScroll :data="store.get" v-slot="{data}">
+            <ListItem v-for="item in data" :key="item.id" v-memo="item">
+                <p>{{ item.content }}</p>
+                <template #right>
+                    <span class="small">{{ getDate(item.last_sent) }}</span>
+                    <p :class="{'text-success': (item.status = 'read'), 'text-danger': (item.status = 'unread')}">{{ item.status }}</p>
+                </template>
+            </ListItem>
+        </InfiniteScroll>
     </div>
 </template>
 
 <script setup>
     import {useNotificationsStore} from '../../store/notifications'
     import ListItem from '@/components/theme/ListItem.vue'
+    import InfiniteScroll from '@/components/InfiniteScroll.vue';
+
     const store = useNotificationsStore()
 
     const getDate = (timestamp) => {
