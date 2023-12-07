@@ -23,7 +23,7 @@
         },
         chunk: {
             type: Number,
-            default: 2
+            default: 20
         },
         key: {
             type: String,
