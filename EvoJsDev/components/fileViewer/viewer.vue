@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ListItem v-for="item in filesArr" :key="item">
+        <ListItem v-for="item in filesArr" :key="item" class="file">
             {{ getName(item) }}
             <template #right>
                 <a :href="item" download class="download-btn">
@@ -39,40 +39,43 @@
 </script>
 
 <style lang="scss" scoped>
+    .file {
+        line-height: 2.2;
+        font-size: 0.8rem;
+        color: #798079;
+        text-transform: lowercase;
+    }
     .download-btn {
         color: white;
-        background: #798079;
+        background: var(--color1);
         display: flex;
         border-radius: 50px;
-        width: 32px;
-        height: 32px;
+        width: 27px;
+        height: 27px;
         justify-content: center;
         align-items: center;
         transition: 0.5s linear;
     }
     @keyframes changeColor {
         0% {
-            box-shadow: 0 0 5px #ffb24f8a;
+            box-shadow: 0 0 0px rgba(255, 255, 255, 0.541);
         }
 
         30% {
-            box-shadow: 0 0 5px #55ff4f8a;
+            box-shadow: 0 0 1px rgba(237, 233, 10, 0.635);
         }
 
         60% {
-            box-shadow: 0 0 5px #694fff8a;
-        }
+            box-shadow: 0 0 2px rgba(103, 77, 255, 0.541)        }
         80% {
-            box-shadow: 0 0 5px #f81ce68a;
-        }
+            box-shadow: 0 0 1px rgba(248, 27, 230, 0.541)        }
         100% {
-            box-shadow: 0 0 5px #ff0714b7;
+            box-shadow: 0 0 3px rgba(255, 8, 20, 0.718);
         }
     }
     .download-btn:hover {
-        color: #b51313;
+        color: var(--highlight2);
         scale: 1.05;
         animation: changeColor-36d79186 infinite 2s alternate;
-        background-image: linear-gradient(10deg, #f4f4f4, #f7eecd, #fdd1d1);
     }
 </style>
