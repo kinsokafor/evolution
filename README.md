@@ -14,7 +14,6 @@
 <p>Run <code>node evolution</code></p>
 <p>Run <code>composer install</code></p>
 <p>Run <code>npm install</code></p>
-<p>On success, your composer must have installed together with node packages. So no need running <code>composer install</code> or <code>npm install</code>. However, to be sure, you can go ahead ad rerun the composer and npm installations.</p>
 
 <h2>Set up</h2>
 <p>Run <code>npm run start</code> or <code>npm start</code></p>
