@@ -9,7 +9,7 @@
       "watch": "webpack --watch --progress --config webpack.dev.js",
       "start": "concurrently \"php -S localhost:<port>\" \"cls\" \"npm run watch\" \"npm run open\"",
       "open": "rundll32 url.dll,FileProtocolHandler http://localhost:<port>",
-      "install-plugin": "node install-plugin.js",
+      "plugin": "node install-plugin.js",
       "startsql": "\"C:\\xampp\\mysql\\bin\\mysqld\"",
       "bundle": "node bundle.js"
     },
@@ -66,6 +66,7 @@
       "pinia": "^2.0.22",
       "vee-validate": "^4.11.6",
       "vue-chartjs": "^5.2.0",
+      "vue-select": "^4.0.0-beta.6",
       "vue-trumbowyg": "^4.0.0",
       "vue3-qrcode-reader": "^0.0.1",
       "yup": "^1.2.0"
