@@ -237,8 +237,7 @@ class Post
         $stmt = "SELECT DISTINCT meta_name, meta_value, data_type, meta_int, meta_double, meta_blob, title, permalink
             FROM post_meta 
             LEFT JOIN post ON post.id = ?
-            WHERE post_id = ?
-            ORDER BY meta_value ASC";
+            WHERE post_id = ?";
         $res = $this->query->query($stmt, "ii", $postId, $postId)->execute()->rows("OBJECT_K");
         if(empty($res)) {
             $this->error = "Post ID not found";
