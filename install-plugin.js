@@ -39,6 +39,27 @@ const getPluginName = async() => {
     return arr;
 }
 
+const getThemeName = async() => {
+    var check = false;
+    let arr = [];
+
+    do {
+        const theme = await readLineAsync("Enter the name of the theme?");
+
+        arr = theme.replace('https://github.com/', '')
+                .replace('http://github.com/', '')
+                .replace('//github.com/', '')
+                .split('/')
+        if(arr.length < 2) {
+            console.error('theme name must include the author\'s name like johndoe/exampletheme');
+        } else {
+            check = true;
+        }
+    } while(!check)
+
+    return arr;
+}
+
 const test = (str, maxLength) => {
     str = str.trim().replace(" ", "")
     if(str.length > maxLength) {
@@ -89,6 +110,29 @@ const clone = async(author, pluginName) => {
     }
     shell.cd('../../')
     return (pass1 && pass2);
+}
+
+const cloneTheme = async(author, themeName) => {
+
+        shell.cd('./Public/Themes')
+        if (fs.existsSync(themeName)) {
+            pass1 = true
+        } else {
+            try {
+                var c = shell.exec(`git clone https://github.com/${author}/${themeName} ${themeName}`)
+                if(c.code == 0) {
+                    pass1 = true
+                }
+            }
+            catch(error) {
+                console.error(error)
+                pass1 = false
+                throw new Error(error);
+            }
+        }
+        shell.cd('../../')
+        return pass1
+
 }
 
 const editFile = async (file, data) => {
@@ -237,10 +281,62 @@ const newPlugin = async() => {
     }
 }
 
+const newTheme = async() => {
+
+    const [author, themeName] = await getThemeName();
+
+    const done = await cloneTheme(author, themeName);
+
+    if(done) {
+        await editFile(`./Public/Themes/${themeName}/Data/index.data.php`, {
+            themeName: themeName
+        })
+
+        await editFile(`./Public/Themes/${themeName}/Data/login.data.php`, {
+            themeName: themeName
+        })
+
+        await editFile(`./Public/Themes/${themeName}/Views/index.blade.php`, {
+            themeName: themeName
+        })
+
+        await editFile(`./Public/Themes/${themeName}/Views/login.blade.php`, {
+            themeName: themeName
+        })
+
+        console.log(`${themeName} theme was installed successfully.`)
+    } else {
+        console.error(`${themeName} theme was not installed successfully. Try again.`)
+    }
+}
+
+const installTheme = async() => {
+
+    const [author, themeName] = await getThemeName();
+
+    const done = await cloneTheme(author, themeName);
+
+    if(done) {
+        console.log(`${themeName} theme was installed successfully.`)
+    } else {
+        console.error(`${themeName} theme was not installed successfully. Try again.`)
+    }
+}
+
 const installNewPlugin = process.env.npm_config_i ?? false;
 
-if(installNewPlugin) {
-    newPlugin()
+const isTheme = process.env.npm_config_t ?? false;
+
+if(isTheme) {
+    if(installNewPlugin) {
+        newTheme()
+    } else {
+        installTheme()
+    }
 } else {
-    install()
+    if(installNewPlugin) {
+        newPlugin()
+    } else {
+        install()
+    }
 }
