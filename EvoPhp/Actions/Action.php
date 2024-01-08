@@ -15,10 +15,6 @@ class Action
 
     public static function createTable() {
         $self = new self;
-        if($self->query->checkTableExist("actions")) {
-            $self->maintainTable();
-            return;
-        }
 
         $statement = "CREATE TABLE IF NOT EXISTS actions (
             id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -30,12 +26,13 @@ class Action
         $self->query->query($statement)->execute();
     }
 
-    private function maintainTable() {
+    public static function maintainTable() {
+        $self = new self;
         $statement = "ALTER TABLE actions ADD 
                         (
                             auth VARCHAR(100) NOT NULL DEFAULT ''
                         )";
-        $this->query->query($statement)->execute();
+        $self->query->query($statement)->execute();
     }
 
     public static function do($action, $args = array()) {

@@ -25,10 +25,6 @@ class Log
 
     public static function createTable() {
         $self = new self;
-        if($self->query->checkTableExist("notification")) {
-            $self->maintainTable();
-            return;
-        }
 
         $statement = "CREATE TABLE IF NOT EXISTS notification (
             id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -45,11 +41,12 @@ class Log
         $self->query->query($statement)->execute();
     }
 
-    private function maintainTable() {
+    public static function maintainTable() {
+        $self = new self();
         $statement = "ALTER TABLE notification
                         MODIFY COLUMN last_sent BIGINT(20),
                         MODIFY COLUMN send_interval BIGINT(20)";
-        $this->query->query($statement)->execute();
+        $self->query->query($statement)->execute();
     }
 
     private function prepareData($notificationObject) {

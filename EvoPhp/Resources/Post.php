@@ -49,10 +49,6 @@ class Post
 
     public static function createTable() {
         $self = new self;
-        if($self->query->checkTableExist("post")) {
-            $self->maintainTable();
-            return;
-        }
 
         $statement = "CREATE TABLE IF NOT EXISTS post (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -74,7 +70,8 @@ class Post
         $self->query->query($statement)->execute();
     }
 
-    private function maintainTable() {
+    public static function maintainTable() {
+        $self = new self;
         $statement = "ALTER TABLE post_meta ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
@@ -82,7 +79,7 @@ class Post
                             meta_double DOUBLE(20,4) NOT NULL,
                             meta_blob BLOB NOT NULL
                         )";
-        $this->query->query($statement)->execute();
+        $self->query->query($statement)->execute();
     }
 
     public function execute() {

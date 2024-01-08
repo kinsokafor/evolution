@@ -56,30 +56,28 @@ class User
 
     public static function createTable() {
         $self = new self;
-        if($self->query->checkTableExist("users")) {
-            $self->maintainTable();
-        } else {
-            $statement = "CREATE TABLE IF NOT EXISTS users (
-                id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(30) NOT NULL,
-                email VARCHAR(50) NOT NULL,
-                password TEXT NOT NULL,
-                date_created TEXT NOT NULL
-            )";
-            $self->query->query($statement)->execute();
 
-            $statement = "CREATE TABLE IF NOT EXISTS user_meta (
-                    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    user_id BIGINT NOT NULL,
-                    meta_name TEXT NOT NULL,
-                    meta_value LONGTEXT NOT NULL,
-                    data_type VARCHAR(6) DEFAULT 'string',
-                    meta_int BIGINT NOT NULL DEFAULT 0,
-                    meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
-                    meta_blob BLOB NOT NULL
-                    )";
-            $self->query->query($statement)->execute();
-        }
+        $statement = "CREATE TABLE IF NOT EXISTS users (
+            id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(30) NOT NULL,
+            email VARCHAR(50) NOT NULL,
+            password TEXT NOT NULL,
+            date_created TEXT NOT NULL
+        )";
+        $self->query->query($statement)->execute();
+
+        $statement = "CREATE TABLE IF NOT EXISTS user_meta (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                meta_name TEXT NOT NULL,
+                meta_value LONGTEXT NOT NULL,
+                data_type VARCHAR(6) DEFAULT 'string',
+                meta_int BIGINT NOT NULL DEFAULT 0,
+                meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
+                meta_blob BLOB NOT NULL
+                )";
+        $self->query->query($statement)->execute();
+
 
         $statement = "CREATE TABLE IF NOT EXISTS token (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -93,7 +91,8 @@ class User
         $self->query->query($statement)->execute();
     }
 
-    private function maintainTable() {
+    public static function maintainTable() {
+        $self = new self;
         $statement = "ALTER TABLE user_meta ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
@@ -101,7 +100,18 @@ class User
                             meta_double DOUBLE(20,4) NOT NULL,
                             meta_blob BLOB NOT NULL
                         )";
-        $this->query->query($statement)->execute();
+        $self->query->query($statement)->execute();
+
+        $statement = "CREATE TABLE IF NOT EXISTS token (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            name TEXT NOT NULL,
+            token TEXT NOT NULL,
+            expiry BIGINT NOT NULL,
+            scope TEXT NOT NULL,
+            status VARCHAR(20) DEFAULT 'alive'
+            )";
+        $self->query->query($statement)->execute();
     }
 
     public function execute() {

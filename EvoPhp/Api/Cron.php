@@ -48,7 +48,6 @@ class Cron
 	}
 
     public static function schedule($expression, $callback, ...$args) {
-        \EvoPhp\Api\Cron::testCb();
         $self = new self;
 		$cron = new \Cron\CronExpression($expression);
 		$next_runtime = $cron->getNextRunDate()->getTimestamp();
@@ -134,9 +133,9 @@ class Cron
 		}
         $upd->where('id', $job->id)->execute();
         $session = Session::getInstance();
-        $this->query->insert('cron_logs', '', [
+        $this->query->insert('cron_logs', 'iiiss', [
             'crontab_id' => (int) $job->id, 
-            'initiator' => (int) $session->getResourceOwner()->user_id, 
+            'initiator' => $session->getResourceOwner() ? (int) $session->getResourceOwner()->user_id : 0, 
             'exact_runtime' => $runtime, 
             'status' => $status, 
             'feedback' => $feedback])->execute();

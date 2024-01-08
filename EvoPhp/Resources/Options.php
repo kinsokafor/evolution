@@ -38,10 +38,6 @@ class Options
 
     public static function createTable() {
         $self = new self;
-        if($self->query->checkTableExist("options")) {
-            $self->maintainTable();
-            return;
-        }
 
         $statement = "CREATE TABLE IF NOT EXISTS options (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +51,8 @@ class Options
         $self->query->query($statement)->execute();
     }
 
-    private function maintainTable() {
+    public static function maintainTable() {
+        $self = new self;
         $statement = "ALTER TABLE options ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
@@ -63,7 +60,7 @@ class Options
                             option_double DOUBLE(20,4) NOT NULL,
                             option_blob BLOB NOT NULL
                         )";
-        $this->query->query($statement)->execute();
+        $self->query->query($statement)->execute();
     }
 
     public static function get($option_name, $cache = true, $expiry = 300) {

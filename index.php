@@ -15,6 +15,6 @@ require_once("EvoPhp/autoload.php");
 // $url = "https://www.mapquestapi.com/geocoding/v1/address?key=$apiKey&location=Umuchigbo+Nike,+Enugu,+Nigeria";
 // var_dump(\EvoPhp\Api\Operations::callAPI("GET", $url, [])->results);
 // \EvoPhp\Api\Cron::schedule("* * * 5 1", "\EvoPhp\Api\Cron::testCb", 12, "okay");
-// \EvoPhp\Api\Cron::executeDueJobs();
+\EvoPhp\Api\Cron::executeDueJobs();
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 ?>

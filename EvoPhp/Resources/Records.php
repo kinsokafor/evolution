@@ -38,10 +38,6 @@ class Records
 
     public static function createTable() {
         $self = new self;
-        if($self->query->checkTableExist("records")) {
-            $self->maintainTable();
-            return;
-        }
 
         $statement = "CREATE TABLE IF NOT EXISTS records (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +51,8 @@ class Records
         $self->query->query($statement)->execute();
     }
 
-    private function maintainTable() {
+    public static function maintainTable() {
+        $self = new self;
         $statement = "ALTER TABLE records ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
@@ -63,7 +60,7 @@ class Records
                             record_double DOUBLE(20,4) NOT NULL,
                             record_blob BLOB NOT NULL
                         )";
-        $this->query->query($statement)->execute();
+        $self->query->query($statement)->execute();
     }
 
     public static function get($record_name, $cache = true, $expiry = 300) {
