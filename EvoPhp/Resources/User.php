@@ -96,8 +96,8 @@ class User
         $statement = "ALTER TABLE user_meta ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
-                            meta_int BIGINT(20) NOT NULL,
-                            meta_double DOUBLE(20,4) NOT NULL,
+                            meta_int BIGINT(20) NOT NULL DEFAULT 0,
+                            meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
                             meta_blob BLOB NOT NULL
                         )";
         $self->query->query($statement)->execute();

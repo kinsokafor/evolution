@@ -1,24 +1,25 @@
 import {defineStore} from 'pinia';
 import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
+import { useLocalStorage } from '@vueuse/core'
 
 import { Users } from '@/helpers';
 
 export const useUsersStore = defineStore('useUsersStore', {
     state: () => {
         return {
-            users: [],
+            users: useLocalStorage('evo-users', []),
             filterStore: useFilterStore(),
             alertStore: useAlertStore(),
             processing: false,
             usersClass: new Users,
-            limit: 100,
-            offset: 0
+            limit: 50,
+            offset: 0,
+            fetching: false
         }
     },
     actions: {
         async getFromServer(params = {}) {
-            this.processing = true
             const users = new Users()
             params.limit = this.limit
             params.offset = this.offset
@@ -36,6 +37,12 @@ export const useUsersStore = defineStore('useUsersStore', {
                     if(r.data.length >= this.limit) {
                         this.offset = this.offset + this.limit
                         this.getFromServer(params)
+                    } else {
+                        setTimeout(() => {
+                            this.fetching = false;
+                        }, 300000)
+                        
+                        this.offset = 0;
                     }
                 }
                 else if(typeof(r.data) == 'object') {
@@ -43,6 +50,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                     if(index == -1) {
                         this.users = [...this.users, r.data]
                     } else this.users[index] = r.data
+                    this.fetching = false;
                 }
             }).catch(r => {
                 // this.alertStore.add(r.message, "danger");
@@ -97,13 +105,20 @@ export const useUsersStore = defineStore('useUsersStore', {
     },
     getters: {
         get: (state) => {
-            state.getFromServer()
+            if(!state.fetching) {
+                state.fetching = true;
+                if(state.users.length < 1) {
+                    state.processing = true
+                }
+                state.getFromServer()
+            }
             return state.users
         },
         getUser: (state) => {
             return (id) => {
                 const user = state.users.find(i => i.id == id)
                 if(user == undefined) {
+                    state.fetching = true;
                     state.getFromServer({id: id})
                     return {}
                 }

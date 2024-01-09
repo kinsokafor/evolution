@@ -56,8 +56,8 @@ class Options
         $statement = "ALTER TABLE options ADD 
                         (
                             data_type VARCHAR(6) DEFAULT 'string',
-                            option_int BIGINT NOT NULL,
-                            option_double DOUBLE(20,4) NOT NULL,
+                            option_int BIGINT NOT NULL DEFAULT 0,
+                            option_double DOUBLE(20,4) NOT NULL DEFAULT 0,
                             option_blob BLOB NOT NULL
                         )";
         $self->query->query($statement)->execute();
