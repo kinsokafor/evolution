@@ -1,11 +1,13 @@
 <template>
     <Restricted access="1,2,3">
         <div class="row">
-            <CreateForm :fields="fields" @submit="onSubmit" :initial-values="user" :columns=2>
-                <template #submitButton>
-                    <Button type="submit" class="btn btn-primary" :processing="processing">Update</Button>
-                </template>
-            </CreateForm>
+            <div class="col-md-6">
+                <CreateForm :fields="fields" @submit="onSubmit" :initial-values="user" :columns=2>
+                    <template #submitButton>
+                        <Button type="submit" class="btn btn-primary" :processing="processing">Update</Button>
+                    </template>
+                </CreateForm>
+            </div>
         </div>
     </Restricted>
 </template>

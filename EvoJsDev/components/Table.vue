@@ -7,14 +7,48 @@
         <table :class="tableClass">
             <thead>
                 <tr>
-                    <th v-if="serialNumber != null">SN</th>
-                    <th v-for="(column, index) in columns" :key="column" @click="sortNow(index)">{{column}}</th>
+                    <td :colspan="Object.keys(columns).length + 2">
+                        <div class="tools">
+                            <div class="controls">
+                                <div>
+                                    <div class="btn-group">
+                                        <button 
+                                            class="btn btn-primary btn-sm"
+                                            v-for="index in pageArray"
+                                            :key="index"
+                                            @click="setPage(index)"
+                                            :class="{active: page == index}"
+                                            >{{ index }}</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <select v-model="limit">
+                                        <option :value="20">20</option>
+                                        <option :value="50">50</option>
+                                        <option :value="75">75</option>
+                                        <option :value="100">100</option>
+                                        <option :value="200">200</option>
+                                        <option :value="500">500</option>
+                                        <option :value="0">All</option>
+                                    </select>
+                                    <em> showing {{ computedData.length }} of {{ data.length }} records on page {{ page }}</em>
+                                </div>
+                            </div>
+                            <div class="search">
+                                <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>SN</th>
+                    <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{column}}</th>
                     <th v-if="actions.length > 0">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(row, index) in data" :key="row.id">
-                    <td v-if="serialNumber != null">{{getIndex(index)}}</td>
+                <tr v-for="(row, index) in computedData" :key="row.id">
+                    <td>{{index + ((page - 1) * limit) + 1}}</td>
                     <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(row[index], row.link)"></td>
                     <td v-if="actions.length > 0">
                         <div class="actions-container">
@@ -27,6 +61,9 @@
                     </td>
                 </tr>
             </tbody>
+            <tfoot>
+                
+            </tfoot>
         </table>
     </div>
 </template>
@@ -36,6 +73,8 @@
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
+    import {computed, ref} from 'vue'
+    import { appData } from '@/helpers'
 
     const props = defineProps({
         tableClass: {
@@ -50,10 +89,6 @@
             type: Object,
             default: {}
         },
-        serialNumber: {
-            type: Number,
-            default: null
-        },
         actions: {
             type: Array,
             default: []
@@ -63,9 +98,80 @@
             default: false
         },
         data: {
-            type: Object,
-            default: null
+            type: Array,
+            default: []
         }
+    })
+
+    const sortBy = ref(null)
+
+    const limit = ref(50)
+
+    const page = ref(1)
+
+    const search = ref("")
+
+    const pageSize = computed(() => {
+        let l = props.data.length ?? 0
+        const max = limit.value == 0 ? 1 : Math.ceil(l/limit.value)
+        if(page.value > max) {
+            page.value = max
+        }
+        return max;
+    })
+
+    const pageArray = computed(() => {
+        var items = [1]
+        if(page.value >= 1 && page.value <= 4) {
+            for (let i = 2; i <= (pageSize.value < 4 ? pageSize.value : 4); i++) {
+                items.push(i)
+            }
+        } else items.push("<")
+        for(let i = (pageSize.value - 7) > page.value ? page.value : pageSize.value - 7; i <= (page.value + 3); i++) {
+            if(pageSize.value > 4 && i > 4 && i < (pageSize.value - 4) && (pageSize.value - 4) > page.value) {
+                items.push(i)
+            }
+        }
+        if((pageSize.value - 4) <= page.value) {
+            for (let i = (pageSize.value - 4); i <= pageSize.value; i++) {
+                if(i > 4) {
+                    items.push(i)
+                }
+            }
+        } else {
+            items.push(">")
+            items.push(pageSize.value)
+        }
+        return items
+    })
+
+    const computedData = computed(() => {
+        var d = [...props.data]
+        if(sortBy.value !== null) {
+            d.sort(dynamicSort(sortBy.value))
+        }
+        var end = page.value * limit.value
+        var start = (page.value - 1) * limit.value;
+        if(search.value != "") {
+            if(limit.value == 0) return d.filter(i => {
+                for(var j in props.columns) {
+                    if(i[j].toLowerCase().search(search.value.toLowerCase()) != -1) {
+                        return true
+                    }
+                }
+                return false
+            });
+            return d.filter(i => {
+                for(var j in props.columns) {
+                    if(i[j].toLowerCase().search(search.value.toLowerCase()) != -1) {
+                        return true
+                    }
+                }
+                return false
+            }).slice(start, end)
+        }
+        if(limit.value == 0) return d;
+        return d.slice(start, end)
     })
 
     const getContent = (content, link) => {
@@ -110,8 +216,25 @@
         return url;
     }
 
-    function sortNow(column) {
-        props.data.sort(dynamicSort(column))
+    function setSortBy(index) {
+        if(index == sortBy.value) {
+            sortBy.value = `-${index}`
+        }
+        else {
+            sortBy.value = index
+        }
+    }
+
+    const setPage = (index) => {
+        if(index == "<") {
+            page.value = pageArray.value[pageArray.value.findIndex(i => i == "<")+1]-1
+            return
+        }
+        if(index == ">") {
+            page.value = pageArray.value[pageArray.value.findIndex(i => i == ">")-1]+1
+            return
+        }
+        page.value = index
     }
 </script>
 
@@ -136,6 +259,13 @@
     }
     table td {
         vertical-align: middle;
+    }
+    .tools {
+        display: flex;
+        justify-content: space-between;
+        .controls div {
+            margin-bottom: 5px;
+        }
     }
 </style>
 
