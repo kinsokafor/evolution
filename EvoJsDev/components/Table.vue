@@ -114,7 +114,7 @@
     const pageSize = computed(() => {
         let l = props.data.length ?? 0
         const max = limit.value == 0 ? 1 : Math.ceil(l/limit.value)
-        if(page.value > max) {
+        if(page.value > max && l != 0) {
             page.value = max
         }
         return max;
