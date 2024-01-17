@@ -11,6 +11,16 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+const salt = () => {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < 15; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 const readLineAsync = msg => {
     return new Promise(resolve => {
         rl.question(msg, userRes => {
@@ -38,9 +48,11 @@ const writePackageJSON = () => {
 const writeConfigJSON = () => {
     const configJSON = require("./sample.config.json");
 
+    const mySalt = salt();
+
     let configStr = JSON.stringify(configJSON, null, 2);
 
-    configStr = configStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName);
+    configStr = configStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName).replaceAll("<salt>",mySalt);
 
     fs.writeFile("./config.json", configStr, 'utf8', (err) => {
         if (err) {

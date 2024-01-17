@@ -3,7 +3,7 @@
     "devRoot": "http://localhost:<port>",
     "main_website": "",
     "mode": "development",
-    "salt": "ed094bf5e4438e841f17d6328f25adb845c32a90",
+    "salt": "<salt>",
     "Auth": {
       "tokenLifetime": "86400",
       "roles": {
@@ -84,7 +84,7 @@
             "EUR",
             "GBP"
         ],
-        "apiKey": "2389d899198a00af94d91953",
+        "apiKey": "<salt>",
         "endPoint": "https:\/\/v6.exchangerate-api.com\/v6\/{key}\/latest\/{base}",
         "rateKey": "conversion_rates",
         "refreshes": 24
