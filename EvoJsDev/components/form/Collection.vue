@@ -1,7 +1,7 @@
 <template>
     <div class="k-input-group" :class="layout">
         <label :for="name" class="label">{{ label }}</label>
-        <div v-for="(r, i) in rows" :key = "r" v-memo="[i]">
+        <div v-for="(r, i) in rows" :key = "r" v-memo="[i, memo]">
             <div class="collection-row">
                 <div 
                     class="collection-column"
@@ -33,8 +33,10 @@
 <script setup>
     import { useCreateFormStore } from '@/store/createForm';
     import { ErrorMessage } from 'vee-validate';
-    import { computed, ref } from 'vue'
+    import { computed, ref, watch } from 'vue'
     import '/color-scheme.css'
+    import {randomId} from '@/helpers'
+    import _ from 'lodash';
 
     const store = useCreateFormStore()
     const props = defineProps({
@@ -62,9 +64,18 @@
         },
         initialValues: Object
     })
+    const oldFields = ref([])
+    const memo = ref(randomId(7))
     const fields = computed(() => {
         if(props.attrs.fields == undefined) return []
         return props.attrs.fields.filter(i => i.condition == undefined ? true : i.condition);
+    })
+    watch(fields, () => {
+        if(!_.isEqual(fields.value, oldFields.value)) {
+            oldFields.value = fields.value
+            memo.value = randomId(7)
+            console.log("Yes")
+        }
     })
     const adjustableRows = computed(() => props.attrs.adjustableRows == undefined ? true : props.attrs.adjustableRows)
     const initiated = ref(false)
