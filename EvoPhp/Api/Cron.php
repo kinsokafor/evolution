@@ -49,6 +49,9 @@ class Cron
 
     public static function schedule($expression, $callback, ...$args) {
         $self = new self;
+        if($self::scheduleExists($expression, $callback, ...$args)) {
+            return false;
+        }
 		$cron = new \Cron\CronExpression($expression);
 		$next_runtime = $cron->getNextRunDate()->getTimestamp();
 		return $self->query->insert('crontabs', "ssis",
@@ -59,6 +62,16 @@ class Cron
                         'expression' => $expression
                     ])->execute();
 	}
+
+    public static function scheduleExists($expression, $callback, ...$args) {
+        $self = new self;
+        $res = $self->query->select('crontabs', 'COUNT(*) AS count')
+            ->where('callback', $callback)
+            ->where('expression', $expression)
+            ->where('args', json_encode($args))
+            ->execute()->row();
+        return $res->count == 0 ? false : true;
+    }
 
     public static function testCb($args = []) {
         var_dump($args);

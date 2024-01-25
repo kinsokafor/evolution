@@ -389,7 +389,7 @@ class Query extends Database
 
         $this->statement .= " `$column` $rel ?";
 
-        array_push($this->data, $value);
+        array_push($this->data, $this->_real_escape($value));
 
         $this->dataTypes .= !$type ? $this->evaluateData($value)->valueType : $type;;
 
@@ -430,7 +430,7 @@ class Query extends Database
         foreach($values as $v) {
             $vString .= " ?";
             if(end($values) !== $v) $vString .= ",";
-            array_push($this->data, $v);
+            array_push($this->data, $this->_real_escape($v));
             $this->dataTypes .= $type;
         }
         $this->statement .= " $column IN ($vString)";
@@ -457,7 +457,7 @@ class Query extends Database
         foreach($values as $v) {
             $vString .= " ?";
             if(end($values) !== $v) $vString .= ",";
-            array_push($this->data, $v);
+            array_push($this->data, $this->_real_escape($v));
             $this->dataTypes .= $type;
         }
         $this->statement .= " $column NOT IN ($vString)";
