@@ -360,7 +360,7 @@ class Operations
         if ((bool)$return) return $export; else echo $export;
     }
 
-    static public function callAPI($method, $url, $data){
+    static public function callAPI($url, $data = [], $method = "POST", $apiKey = "APIKEY: 111111111111111111111", $contentType = "application/json"){
         $curl = curl_init();
         switch ($method){
             case "POST":
@@ -377,12 +377,11 @@ class Operations
                 if ($data)
                     $url = sprintf("%s?%s", $url, http_build_query($data));
         }
-        echo $url;
         // OPTIONS:
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            'APIKEY: 111111111111111111111',
-            'Content-Type: application/json',
+            $apiKey,
+            'Content-Type: '.$contentType,
         ));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
