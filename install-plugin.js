@@ -323,20 +323,24 @@ const installTheme = async() => {
     }
 }
 
-const installNewPlugin = process.env.npm_config_i ?? false;
+async function start() {
+    const pluginortheme = await readLineAsync("Press 't' to install theme or 'p' to install plugin...");
 
-const isTheme = process.env.npm_config_t ?? false;
-
-if(isTheme) {
-    if(installNewPlugin) {
-        newTheme()
+    if(pluginortheme == 't') {
+        const neworexisting = await readLineAsync("Press 'n' to install a new theme or 'i' for existing...");
+        if(neworexisting == 'n') {
+            newTheme()
+        } else {
+            installTheme()
+        }
     } else {
-        installTheme()
-    }
-} else {
-    if(installNewPlugin) {
-        newPlugin()
-    } else {
-        install()
+        const neworexisting = await readLineAsync("Press 'n' to install a new plugin or 'i' for existing...");
+        if(neworexisting == 'n') {
+            newPlugin()
+        } else {
+            install()
+        }
     }
 }
+
+start()

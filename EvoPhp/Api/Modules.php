@@ -19,6 +19,9 @@ class Modules
     }
 
     static public function getModules() {
+        if(!file_exists("./EvoPhp/Database/Config.php")) {
+            return [];
+        } 
     	$config = new Config;
         // if(!property_exists($config, "modules")) {
         //     $config->set("modules", new stdClass);

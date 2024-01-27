@@ -199,18 +199,22 @@ class Requests
     private function post() {
         switch ($this->tableName) {
             case 'post':
+                $this->processFiles("post/");
                 PostRequest::postTable($this);
                 break;
 
             case 'user':
+                $this->processFiles("user/");
                 PostRequest::usersTable($this);
                 break;
 
             case 'options':
+                $this->processFiles("options/");
                 PostRequest::optionsTable($this);
                 break;
 
             case 'records':
+                $this->processFiles("records/");
                 PostRequest::recordsTable($this);
                 break;
 
@@ -228,18 +232,22 @@ class Requests
     private function put() {
         switch ($this->tableName) {
             case 'post':
+                $this->processFiles("post/");
                 PutRequest::postTable($this);
                 break;
 
             case 'user':
+                $this->processFiles("user/");
                 PutRequest::usersTable($this);
                 break;
 
             case 'options':
+                $this->processFiles("options/");
                 PutRequest::optionsTable($this);
                 break;
 
             case 'records':
+                $this->processFiles("records/");
                 PutRequest::recordsTable($this);
                 break;
 
