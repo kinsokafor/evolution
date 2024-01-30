@@ -2,6 +2,8 @@ import {defineStore} from 'pinia';
 import axios from 'axios';
 import { nonce } from '@/helpers';
 import { arrayIntersect } from '@/helpers';
+import { useLocalStorage } from '@vueuse/core';
+import config from '/config.json';
 
 export const useAuthStore = defineStore('useAuthStore', {
     state: () => {
@@ -10,8 +12,9 @@ export const useAuthStore = defineStore('useAuthStore', {
             currentUser: {},
             userScope: [],
             access: [],
-            expiry: 0,
-            failedTest: false
+            expiry: useLocalStorage(`${config.salt}authexpiry`, 0),
+            failedTest: false,
+            fetching: false
         }
     },
     actions: {
@@ -26,6 +29,7 @@ export const useAuthStore = defineStore('useAuthStore', {
             })
         },
         async loginStatus() {
+            this.fetching = true;
             await this.getLoginStatus().then(response => {
                 this.isloggedIn = response.data.loginStatus;
                 this.expiry = response.data.expiry;
@@ -36,6 +40,7 @@ export const useAuthStore = defineStore('useAuthStore', {
                 } else {
                     this.failedTest = true
                 }
+                this.fetching = false;
             });
         },
         isExpired() {
@@ -43,19 +48,25 @@ export const useAuthStore = defineStore('useAuthStore', {
             const date = new Date();
             return expiry < date.valueOf() ? true : false;
         },
-        testAccess() {
+        testAccess(scope = null) {
             if(this.isExpired()) {
                 this.loginStatus();
                 return false;
             }
             if(!this.isloggedIn) {
-                this.loginStatus();
+                if(!this.fetching) {
+                    this.loginStatus();
+                }
                 return false;
             } else {
-                if(this.getScope.length == 0) return true;
-                const intersect = arrayIntersect(this.getScope, this.userScope);
+                scope = scope == null ? this.getScope : scope;
+                if(scope.length == 0) return true;
+                const intersect = arrayIntersect(scope, this.userScope);
                 return intersect.length > 0;
             }
+        },
+        toArray(string) {
+            return string.trim() == "" ? [] : string.trim().split(",").map((x) => parseInt(x))
         }
     },
     getters: {
@@ -64,7 +75,7 @@ export const useAuthStore = defineStore('useAuthStore', {
         },
         getScope: (state) => {
             if(typeof(state.access) == "string") {
-                return state.access.trim() == "" ? [] : state.access.trim().split(",").map((x) => parseInt(x))
+                return state.toArray(state.access)
             }
             return state.access
         },

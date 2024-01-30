@@ -119,9 +119,11 @@
     }
     .user-img img.Male + h3, .user-img img.male + h3 {
         background: var(--blue);
+        color: var(--highlight1);
     }
     .user-img img.Female + h3, .user-img img.female + h3 {
         background: var(--purple);
+        color: var(--highlight1);
     }
     .user-img img.Male, .user-img img.male {
         border: 2px solid var(--blue);

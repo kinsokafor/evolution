@@ -18,10 +18,11 @@
 <script setup>
     import MenuButton from './MenuButton.vue';
     import {useAuthStore} from '@/store/auth';
-    import { computed, ref } from 'vue';
+    import { computed, ref, watchEffect } from 'vue';
 
     const auth = useAuthStore();
     const searchQuery = ref("")
+    const lastSQ = ref("")
 
     const props = defineProps({
         items: {
@@ -50,16 +51,23 @@
         }
     })
 
-    const menuItems = computed(() => {
-        return props.items.filter(item => {
-            auth.access = item['access'] ?? []
-            if(item.condition != undefined && item.condition == false) return false 
-            return auth.testAccess();
+    const menuItems = ref([])
+
+    watchEffect(() => {
+        menuItems.value = props.items.map(x => {
+            x.access = x.access ?? []
+            if(typeof(x.access) == 'string') {
+                x.access = auth.toArray(x.access)
+            }
+            return x;
         })
     })
 
     const searchedMenu = computed(() => {
-        return menuItems.value.filter((m) => {
+        return menuItems.value.filter(item => {
+            if(item.condition != undefined && item.condition == false) return false 
+            return auth.testAccess(item.access);
+        }).filter((m) => {
             return (
               m.label
                 .toLowerCase()
