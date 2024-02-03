@@ -13,6 +13,6 @@ if ( !defined('ABSPATH') )
 require_once("EvoPhp/autoload.php");
 // \Public\Modules\TryBet\Classes\Events::refreshMatchData();
 
-// (new \EvoPhp\Resources\User)->update('kinsokafor2@gmail.com', ['password'=> '1988xsld']);
+// \Public\Modules\Tokens2Wealth\Classes\Migrate::migrateTransactions();
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 ?>

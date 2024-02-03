@@ -313,7 +313,16 @@ class Post
         $this->query->select("post_meta", "post_id");
         $this->query->statement .= " WHERE";
         $this->query->hasWhere = true;
-        $this->query->openGroup()->where("meta_name", "type")->where("meta_value", $postType)->closeGroup();
+        $this->query->openGroup();
+        if(gettype($postType) == 'string' && strpos($postType, ',')) {
+            $postType = Operations::trimArray(explode(',', $postType));
+        }
+        if(is_array($postType)) {
+            $this->query->whereIn("meta_value", 's', ...$postType);
+        } else {
+            $this->query->where("meta_value", $postType, 's');
+        }
+        $this->query->closeGroup();
         $this->addArgument("type", $postType);
         $this->query->ready = false;
         return $this;
