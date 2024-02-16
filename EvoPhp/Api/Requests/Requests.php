@@ -47,6 +47,8 @@ class Requests
 
     public array $uniqueKeys = [];
 
+    public array $rightColumns = [];
+
     public $protocol;
 
     protected $verified = false;
@@ -122,6 +124,10 @@ class Requests
         if(isset($this->data['iscount'])) {
             $this->isCount = true;
             unset($this->data['iscount']);
+        }
+        if(isset($this->data['rightcolumns'])) {
+            $this->rightColumns = explode(",", $this->data['rightcolumns']);
+            unset($this->data['rightcolumns']);
         }
         if(isset($this->data['joinuserat'])) {
             $this->joinUserAt = $this->data['joinuserat'];

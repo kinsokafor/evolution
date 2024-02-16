@@ -120,9 +120,9 @@ class GetRequest implements RequestInterface {
         $query = new DbTable;
         $selection = $request->isCount ? "COUNT(*) AS count" : "*";
         $query->select($request->tableName, $selection)->whereGroup($request->data);
-        if($request->joinUserAt != null) $query->joinUserAt($request->joinUserAt);
-        if($request->joinPostAt != null) $query->joinPostAt($request->joinPostAt);
-        if($request->joinAt != null && $request->joinTable != null) $query->joinAt($request->joinTable, $request->joinAt);
+        if($request->joinUserAt != null) $query->joinUserAt($request->joinUserAt, ...$request->rightColumns);
+        if($request->joinPostAt != null) $query->joinPostAt($request->joinPostAt, ...$request->rightColumns);
+        if($request->joinAt != null && $request->joinTable != null) $query->joinAt($request->joinTable, $request->joinAt, ...$request->rightColumns);
         if(isset($request->data['id'])) {
             $request->response = $query->execute()->row();
             if($request->response !== null) {

@@ -9,64 +9,76 @@ import { Users } from '@/helpers';
 export const useUsersStore = defineStore('useUsersStore', {
     state: () => {
         return {
-            users: useLocalStorage(`${config.salt}evo-users`, []),
+            data: useLocalStorage(`${config.salt}evo-users`, []),
             filterStore: useFilterStore(),
             alertStore: useAlertStore(),
             processing: false,
             usersClass: new Users,
             limit: 50,
             offset: 0,
-            fetching: false
+            fetching: false,
+            sent: []
         }
     },
     actions: {
-        async getFromServer(params = {}) {
-            const users = new Users()
-            params.limit = this.limit
-            params.offset = this.offset
-            await users.get(params).then(r => {
-                if(Array.isArray(r.data)) {
-                    r.data.forEach(j => {
-                        const index = this.users.findIndex(i => i.id == j.id)
-                        if(index == -1) {
-                            this.users = [...this.users, j]
-                        } else {
-                            this.users[index] = j
-                        }
-                    }) 
-                    this.processing = false
-                    if(r.data.length >= this.limit) {
-                        this.offset = this.offset + this.limit
-                        this.getFromServer(params)
+        async loadFromServer(params = {}) {
+            for (var k in params) {
+                //return when all data are not ready
+                if (params[k] == undefined) return;
+            }
+            this.fetching = true;
+            this.processing = true;
+            const u = new Users;
+            u.get({
+                limit: this.limit,
+                offset: this.offset,
+                ...params
+            }).then(r => {
+                if ("id" in params) {
+                    // const meta = JSON.parse(r.data.meta)
+                    // delete r.data.meta
+                    let i = { ...r.data }
+                    const index = this.data.findIndex(j => j.id == i.id)
+                    if (index == -1) {
+                        this.data = [...this.data, i]
                     } else {
-                        setTimeout(() => {
-                            this.fetching = false;
-                        }, 300000)
-                        
-                        this.offset = 0;
+                        if (!_.isEqual(this.data[index], i)) {
+                            this.data[index] = i
+                        }
                     }
+                } else {
+                    r.data.forEach(i => {
+                        const index = this.data.findIndex(j => j.id == i.id)
+                        if (index == -1) {
+                            this.data = [...this.data, i]
+                        } else {
+                            if (!_.isEqual(this.data[index], i)) {
+                                this.data[index] = i
+                            }
+                        }
+                    })
                 }
-                else if(typeof(r.data) == 'object') {
-                    const index = this.users.findIndex(i => i.id == r.data.id)
-                    if(index == -1) {
-                        this.users = [...this.users, r.data]
-                    } else this.users[index] = r.data
-                    this.fetching = false;
+                if (r.data.length >= this.limit) {
+                    this.offset = this.limit + this.offset
+                    this.loadFromServer(params)
+                } else {
+                    this.offset = 0
+                    setTimeout(() => {
+                        this.fetching = false
+                    }, 60000)
                 }
-            }).catch(r => {
-                // this.alertStore.add(r.message, "danger");
-                this.processing = false;
             })
         },
         async enable(row, index) {
             this.processing = true;
-            index = this.users.findIndex(i => i.id == row.id)
-            await this.usersClass.update(row.id, {
+            index = this.data.findIndex(i => i.id == row.id)
+            const u = new Users;
+            await u.update(row.id, {
                 "status" : "active",
                 "id": row.id
             }).then(response => {
                 this.processing = false;
-                this.users[index] = response.data
+                this.data[index] = response.data
                 this.alertStore.add("Done", "success");
             }).catch(response => {
                 this.alertStore.add(response.message, "danger");
@@ -75,13 +87,14 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         async disable(row, index) {
             this.processing = true;
-            index = this.users.findIndex(i => i.id == row.id)
-            await this.usersClass.update(row.id, {
+            index = this.data.findIndex(i => i.id == row.id)
+            const u = new Users;
+            await u.update(row.id, {
                 "status" : "inactive",
                 "id": row.id
             }).then(response => {
                 this.processing = false;
-                this.users[index] = response.data
+                this.data[index] = response.data
                 this.alertStore.add("Done", "success");
             }).catch(response => {
                 this.alertStore.add(response.message, "danger");
@@ -90,13 +103,14 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         async deleteUser(row, index) {
             this.processing = true;
-            index = this.users.findIndex(i => i.id == row.id)
-            await this.usersClass.delete({
+            index = this.data.findIndex(i => i.id == row.id)
+            const u = new Users;
+            await u.delete({
                 "status" : "inactive",
                 "id": row.id
             }).then(response => {
                 this.processing = false;
-                delete this.users[index]
+                delete this.data[index]
                 this.alertStore.add("Done", "success");
             }).catch(response => {
                 this.alertStore.add(response.message, "danger");
@@ -105,25 +119,35 @@ export const useUsersStore = defineStore('useUsersStore', {
         }
     },
     getters: {
-        get: (state) => {
-            if(!state.fetching) {
-                state.fetching = true;
-                if(state.users.length < 1) {
-                    state.processing = true
-                }
-                state.getFromServer()
+        all: (state) => {
+            if (!state.fetching) {
+                state.loadFromServer()
             }
-            return state.users
+            return state.data;
+        },
+        get: (state) => {
+            const data = state.data
+            return (params = {}) => {
+                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
+                    state.lastParams = params;
+                    state.loadFromServer(params)
+                }
+                const r = data.filter(i => {
+                    for (var k in params) {
+                        if(typeof params[k] == "string") {
+                            return new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+                        }
+                        if (k in i && params[k] != i[k]) return false
+                        return true
+                    }
+                    return true
+                })
+                return r
+            }
         },
         getUser: (state) => {
             return (id) => {
-                const user = state.users.find(i => i.id == id)
-                if(user == undefined) {
-                    state.fetching = true;
-                    state.getFromServer({id: id})
-                    return {}
-                }
-                return user ?? {}
+                return state.get({id: id})
             }
         }
     }

@@ -15,7 +15,6 @@
 </template>
 
 <script setup>
-    import Restricted from '@/components/Restricted.vue'
     import { onMounted, ref } from 'vue'
     import axios from 'axios'
     import {nonce} from "@/helpers"
@@ -26,10 +25,11 @@
     import { fab } from '@fortawesome/free-brands-svg-icons';
     import { far } from '@fortawesome/free-regular-svg-icons';
     import "animate.css"
+    import {Request} from '@/helpers'
+    import { useLocalStorage } from '@vueuse/core'
 
     library.add(fas, far, fab)
 
-    const count = ref(0);
     const props = defineProps({
         endPoint: String,
         title: {
@@ -69,7 +69,7 @@
     /*list of available themes are
         default
     */
-
+    const count = ref(useLocalStorage(`${props.endPoint}-count`, 0));
     const link = new URL(process.env.EVO_API_URL + "/" + props.endPoint);
     link.searchParams.append("iscount", 1);
 
@@ -84,14 +84,8 @@
     })
 
     const getCount = async () => {
-        await axios.get(link, {
-            'Access-Control-Allow-Credentials':true,
-            headers: {
-                'Access-Control-Allow-Origin': '*', 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${nonce()}` 
-            }
-        }).then(r => {
+        const req = new Request
+        req.get(link).then(r => {
             count.value = r.data;
         })
     }
