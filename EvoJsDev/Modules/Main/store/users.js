@@ -27,7 +27,6 @@ export const useUsersStore = defineStore('useUsersStore', {
                 if (params[k] == undefined) return;
             }
             this.fetching = true;
-            this.processing = true;
             const u = new Users;
             u.get({
                 limit: this.limit,
@@ -67,6 +66,8 @@ export const useUsersStore = defineStore('useUsersStore', {
                         this.fetching = false
                     }, 60000)
                 }
+            }).finally(i => {
+                this.processing = false;
             })
         },
         async enable(row, index) {
@@ -121,6 +122,7 @@ export const useUsersStore = defineStore('useUsersStore', {
     getters: {
         all: (state) => {
             if (!state.fetching) {
+                state.processing = true;
                 state.loadFromServer()
             }
             return state.data;
@@ -130,6 +132,7 @@ export const useUsersStore = defineStore('useUsersStore', {
             return (params = {}) => {
                 if (!state.fetching || !_.isEqual(params, state.lastParams)) {
                     state.lastParams = params;
+                    state.processing = true;
                     state.loadFromServer(params)
                 }
                 const r = data.filter(i => {

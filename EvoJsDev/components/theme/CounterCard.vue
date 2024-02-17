@@ -2,6 +2,10 @@
     <div class="main-counter-container">
         <div class="counter-container animate__animated animate__flipInX" :class="layoutStyle">
             <div class="count">
+                <loading :active=processing 
+                    :can-cancel="true" 
+                    :is-full-page=false>
+                </loading>
                 <small>{{prefix}}</small>{{ count }}<small>{{surfix}}</small>
             </div>
             <div class="count-title animate__animated animate__bounceIn">
@@ -16,8 +20,8 @@
 
 <script setup>
     import { onMounted, ref } from 'vue'
-    import axios from 'axios'
-    import {nonce} from "@/helpers"
+    import Loading from 'vue3-loading-overlay';
+    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
     import { library } from '@fortawesome/fontawesome-svg-core'
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -38,7 +42,7 @@
         },
         interval: {
             type: Number,
-            default: 0
+            default: 600
         },
         layoutStyle: {
             type: String,
@@ -72,21 +76,24 @@
     const count = ref(useLocalStorage(`${props.endPoint}-count`, 0));
     const link = new URL(process.env.EVO_API_URL + "/" + props.endPoint);
     link.searchParams.append("iscount", 1);
+    const nextRun = ref(useLocalStorage(`${props.endPoint}-nextrun`, 0))
+    const processing = ref(false)
 
     onMounted( () => {
-        getCount();
-        if(props.interval > 0) {
-            const interval = props.interval * 1000
-            setInterval(() => {
-                getCount()
-            }, interval)
+        const nowTime = new Date().getTime();
+        if(nowTime > nextRun.value) {
+            getCount().then(r => {
+                nextRun.value = nowTime + (props.interval * 1000)
+            });
         }
     })
 
     const getCount = async () => {
+        processing.value = true
         const req = new Request
-        req.get(link).then(r => {
+        return req.get(link).then(r => {
             count.value = r.data;
+            processing.value = false
         })
     }
 </script>

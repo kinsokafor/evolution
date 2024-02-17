@@ -46,7 +46,7 @@
 
     const usersStore = useUsersStore();
 
-    const allUsers = computed(() => usersStore.get)
+    const allUsers = computed(() => usersStore.get())
 
     const users = computed(() => {
         const filters = filterStore.getFilters('usersList')
@@ -64,7 +64,7 @@
                 return true
             }).map(i => {
                 i.fullname = getFullname(i)
-                i.role_name = config.Auth.roles[i.role].name ?? ""
+                i.role_name = config.Auth.roles[i.role]?.name ?? ""
                 i.profile_display = "<img src=\""+(i.profile_picture ?? male)+"\" style=\"margin: 0 !important;width: 49px !important;\">"
                 i.link = getLink(i.id, i.role)
                 return i

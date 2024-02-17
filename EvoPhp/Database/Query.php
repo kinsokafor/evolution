@@ -391,7 +391,7 @@ class Query extends Database
 
         array_push($this->data, $this->_real_escape($value));
 
-        $this->dataTypes .= !$type ? $this->evaluateData($value)->valueType : $type;;
+        $this->dataTypes .= !$type ? $this->evaluateData($value)->valueType : $type;
 
         $this->prependAnd = true;
 
@@ -461,6 +461,31 @@ class Query extends Database
             $this->dataTypes .= $type;
         }
         $this->statement .= " $column NOT IN ($vString)";
+
+        $this->prependAnd = true;
+
+        $this->hasWhere = true;
+
+        $this->ready = true;
+        return $this;
+    }
+
+    public function whereBetween($column, $v1, $v2, $type = false) {
+        if(!$this->hasWhere)
+            $this->statement .= " WHERE";
+
+        if($this->prependAnd)
+            $this->and();
+
+        $vString = "";
+
+        $this->dataTypes .= !$type ? $this->evaluateData($v1)->valueType.$this->evaluateData($v2)->valueType : $type;
+
+        array_push($this->data, $this->_real_escape($v1));
+
+        array_push($this->data, $this->_real_escape($v2));
+
+        $this->statement .= " $column BETWEEN ? AND ?";
 
         $this->prependAnd = true;
 
