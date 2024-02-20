@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue'
+    import { onMounted, ref, onUnmounted } from 'vue'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
@@ -33,6 +33,8 @@
     import { useLocalStorage } from '@vueuse/core'
 
     library.add(fas, far, fab)
+
+    const req = new Request
 
     const props = defineProps({
         endPoint: String,
@@ -88,9 +90,12 @@
         }
     })
 
+    onUnmounted(() => {
+        req.abort()
+    })
+
     const getCount = async () => {
         processing.value = true
-        const req = new Request
         return req.get(link).then(r => {
             count.value = r.data;
             processing.value = false

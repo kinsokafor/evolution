@@ -3,7 +3,10 @@ import {nonce} from "./functions"
 
 export class Users {
 
+    controller = new AbortController();
+
     async get(filter = {}) {
+        const signal = this.controller.signal
         const link = this.buildQuery(process.env.EVO_API_URL + "/api/user/", filter);
         return await axios.get(link, {
             'Access-Control-Allow-Credentials':true,
@@ -11,7 +14,8 @@ export class Users {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
-            }
+            },
+            signal
         })
     }
 
@@ -66,6 +70,10 @@ export class Users {
             }
         }
         return link;
+    }
+
+    abort() {
+        this.controller.abort()
     }
     
 }

@@ -3,14 +3,18 @@ import {nonce} from "./functions"
 
 export class Request {
 
+    controller = new AbortController();
+
     async get(endpoint) {
+        const signal = this.controller.signal
         return await axios.get(endpoint, {
             'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
-            }
+            },
+            signal
         })
     }
 
@@ -45,5 +49,9 @@ export class Request {
                 'Authorization': `Bearer ${nonce()}` 
             }
         })
+    }
+
+    abort() {
+        this.controller.abort()
     }
 }

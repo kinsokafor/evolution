@@ -3,7 +3,10 @@ import {nonce} from "./functions"
 
 export class dbTable {
 
+    controller = new AbortController();
+
     async get(table, filter = {}) {
+        const signal = this.controller.signal
         const link = this.buildQuery(process.env.EVO_API_URL + `/api/dbtable/${table}/`, filter);
         return await axios.get(link, {
             'Access-Control-Allow-Credentials':true,
@@ -11,7 +14,8 @@ export class dbTable {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
-            }
+            },
+            signal
         })
     }
 
@@ -47,6 +51,10 @@ export class dbTable {
                 'Authorization': `Bearer ${nonce()}` 
             }
         });
+    }
+
+    abort() {
+        this.controller.abort()
     }
 
     buildQuery(base, filter = {}) {

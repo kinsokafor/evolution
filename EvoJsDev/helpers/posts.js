@@ -3,7 +3,10 @@ import {nonce} from "./functions"
 
 export class Posts {
 
+    controller = new AbortController();
+
     async get(filter = {}, type = false) {
+        const signal = this.controller.signal
         if(type) {
             filter["type"] = type;
         }
@@ -14,7 +17,8 @@ export class Posts {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
-            }
+            },
+            signal
         })
     }
 
@@ -67,6 +71,10 @@ export class Posts {
             }
         }
         return link;
+    }
+
+    abort() {
+        this.controller.abort()
     }
     
 }

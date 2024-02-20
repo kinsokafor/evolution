@@ -155,7 +155,7 @@
         if(search.value != "") {
             if(limit.value == 0) return d.filter(i => {
                 for(var j in props.columns) {
-                    if(i[j].toLowerCase().search(search.value.toLowerCase()) != -1) {
+                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
                         return true
                     }
                 }
@@ -163,7 +163,7 @@
             });
             return d.filter(i => {
                 for(var j in props.columns) {
-                    if(i[j].toLowerCase().search(search.value.toLowerCase()) != -1) {
+                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
                         return true
                     }
                 }
@@ -175,6 +175,7 @@
     })
 
     const getContent = (content, link) => {
+        if(link == undefined) return content;
         return `<a href="${link ?? '#'}">${content}</a>`
     }
 
