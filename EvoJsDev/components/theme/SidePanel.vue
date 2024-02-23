@@ -42,7 +42,7 @@
       <style lang="scss" scoped>
         .drawer-container {
           height: 0vh;
-          width: 100vw;
+          width: auto; //100vw;
           position: fixed;
           top: 0;
           overflow: hidden;
