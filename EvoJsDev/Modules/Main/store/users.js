@@ -150,7 +150,7 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         getUser: (state) => {
             return (id) => {
-                return state.get({id: id})
+                return state.get({id: id})[0] ?? {}
             }
         }
     }

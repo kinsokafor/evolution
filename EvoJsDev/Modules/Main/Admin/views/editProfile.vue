@@ -26,11 +26,11 @@
     import * as yup from 'yup'
 
     const users = new Users;
-    const user = ref({});
     const route = useRoute();
     const alertStore = useAlertStore();
     const processing = ref(false);
     const usersStore = useUsersStore();
+    const user = computed(() => usersStore.getUser(route.params.id));
 
     const roles = computed(() => {
         return Object.entries(config.Auth.roles).map(role => {
@@ -123,20 +123,9 @@
         }
     ])
     
-    onMounted(() => {
-        if(usersStore.users.length <= 0) {
-            processing.value = true;
-            users.get({id: route.params.id}).then(response => {
-                user.value = response.data;
-                processing.value = false;
-            }).catch(error => {
-                alertStore.add(error.message, "danger")
-                processing.value = false;
-            })
-        } else {
-            user.value = usersStore.getUser(route.params.id);
-        }
-    })
+    // onMounted(() => {
+    //     user.value = usersStore.getUser(route.params.id);
+    // })
 
     const onSubmit = async (values, actions) => {
         processing.value = true;

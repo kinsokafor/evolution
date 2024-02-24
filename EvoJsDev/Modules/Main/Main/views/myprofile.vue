@@ -17,10 +17,13 @@
 
     const auth = useAuthStore();
     const config = useConfigStore()
-    const roles = computed(() => config.get(`Auth.roles.${auth.getUser.role}`))
+    const roles = computed(() => {
+        if(auth.getUser.role == undefined) return {}
+        return config.get(`Auth.roles.${auth.getUser.role}`)
+    })
 
     watchEffect(() => {
-      if(roles.value.profile != undefined) {
+      if(roles.value?.profile != undefined) {
         window.location = roles.value.profile
       }
     })
