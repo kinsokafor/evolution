@@ -11,7 +11,7 @@ export class Print {
         extraHead: '', 
         extraCss: '', 
         popTitle: '', 
-        endCallback: null, 
+        endCallback: () => {}, 
         el: '' 
       };
       Object.assign(this.settings, option);
@@ -65,12 +65,18 @@ export class Print {
         }
       });
       for (let i = 0 ; i < document.styleSheets.length; i++) {
-        if (document.styleSheets[i].cssRules || document.styleSheets[i].rules) {
-          let rules = document.styleSheets[i].cssRules || document.styleSheets[i].rules;
-          for (let b = 0 ; b < rules.length; b++) {
-            style += rules[b].cssText;
+        try {
+          if (document.styleSheets[i].cssRules || document.styleSheets[i].rules) {
+            let rules = document.styleSheets[i].cssRules || document.styleSheets[i].rules;
+            for (let b = 0 ; b < rules.length; b++) {
+              style += rules[b].cssText;
+            }
           }
         }
+        catch(err) {
+          console.warn("CORS CSS Omitted: ", document.styleSheets[i])
+        }
+        
       }
       
       if (this.settings.extraCss) {
@@ -84,7 +90,6 @@ export class Print {
     getBody() {
       let ele = this.getFormData(document.querySelector(this.settings.el));
       let htm = ele.outerHTML;
-      console.log('htm', htm);
       return '<body>' + htm + '</body>';
     };
     

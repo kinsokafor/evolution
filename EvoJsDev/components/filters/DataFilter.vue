@@ -45,7 +45,7 @@
         },
         dataCaption: {
             type: String,
-            default: "Data"
+            default: "Print out"
         }
     })
 
