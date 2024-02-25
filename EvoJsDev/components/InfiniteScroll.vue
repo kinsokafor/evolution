@@ -1,7 +1,7 @@
 <template>
     <div>
         <slot :data="output"></slot>
-        <div ref="el">
+        <div ref="el" id="scroll-element">
             <Suspense>
                 <a href="javaScript:void(0)" @click.prevent="load" v-show="state == 'ready'">Load more</a>
                 <template #fallback>
