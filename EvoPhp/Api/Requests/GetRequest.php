@@ -5,6 +5,7 @@ namespace EvoPhp\Api\Requests;
 use EvoPhp\Api\Operations;
 use EvoPhp\Resources\Post;
 use EvoPhp\Resources\User;
+use EvoPhp\Resources\Store;
 use EvoPhp\Resources\Options;
 use EvoPhp\Resources\Records;
 use EvoPhp\Resources\DbTable;
@@ -35,6 +36,37 @@ class GetRequest implements RequestInterface {
             if($request->order_by) $post->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
             http_response_code(200);
             $request->response = $post->execute();
+        }
+        else {
+            http_response_code(422);
+            $request->response = null;
+        }
+    }
+
+    public static function storeTable($request)
+    {
+        $store = new Store;
+        if($request->joinUserAt != null) $store->joinUserAt($request->joinUserAt);
+        if($request->joinPostAt != null) $store->joinPostAt($request->joinPostAt);
+        if($request->joinAt != null && $request->joinTable != null) $store->joinAt($request->joinTable, $request->joinAt);
+        if(isset($request->data['id'])) {
+            $request->response = $store->get($request->data['id']);
+            if($request->response) {
+                http_response_code(200);
+            } else http_response_code(404);
+        } 
+        else if(isset($request->data['type'])) {
+            $type = $request->data['type'];
+            unset($request->data['type']);
+            if($request->isCount) {
+                $store->getCount($type);
+            } else $store->select($type);
+            $store->whereGroup($request->data);
+            if($request->limit) $store->limit($request->limit);
+            if($request->offset) $store->offset($request->offset);
+            if($request->order_by) $store->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
+            http_response_code(200);
+            $request->response = $store->execute()->rows();
         }
         else {
             http_response_code(422);

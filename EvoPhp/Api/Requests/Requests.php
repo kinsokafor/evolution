@@ -156,6 +156,10 @@ class Requests
                 GetRequest::optionsTable($this);
                 break;
 
+            case 'store':
+                GetRequest::storeTable($this);
+                break;
+
             case 'records':
                 GetRequest::recordsTable($this);
                 break;
@@ -175,10 +179,6 @@ class Requests
             $this->offset = (int) $this->data['offset'];
             unset($this->data['offset']);
         }
-        if(isset($this->data['iscount'])) {
-            $this->isCount = true;
-            unset($this->data['iscount']);
-        }
         switch ($this->tableName) {
             case 'post':
                 DeleteRequest::postTable($this);
@@ -186,6 +186,10 @@ class Requests
 
             case 'user':
                 DeleteRequest::usersTable($this);
+                break;
+
+            case 'store':
+                DeleteRequest::storeTable($this);
                 break;
 
             case 'options':
@@ -219,6 +223,11 @@ class Requests
                 PostRequest::optionsTable($this);
                 break;
 
+            case 'store':
+                $this->processFiles("store/");
+                PostRequest::storeTable($this);
+                break;
+
             case 'records':
                 $this->processFiles("records/");
                 PostRequest::recordsTable($this);
@@ -245,6 +254,11 @@ class Requests
             case 'user':
                 $this->processFiles("user/");
                 PutRequest::usersTable($this);
+                break;
+
+            case 'store':
+                $this->processFiles("store/");
+                PutRequest::storeTable($this);
                 break;
 
             case 'options':

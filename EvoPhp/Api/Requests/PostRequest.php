@@ -6,6 +6,7 @@ use EvoPhp\Resources\Post;
 use EvoPhp\Resources\User;
 use EvoPhp\Resources\Options;
 use EvoPhp\Resources\Records;
+use EvoPhp\Resources\Store;
 use EvoPhp\Database\Query;
 use EvoPhp\Api\Operations;
 use EvoPhp\Database\DataType;
@@ -29,6 +30,25 @@ class PostRequest implements RequestInterface {
             } else {
                 http_response_code(201);
                 $request->response = $post->get($postId);
+            }
+        }
+    }
+
+    public static function storeTable($request)
+    {
+        if(!isset($request->data['type'])) {
+            http_response_code(422);
+            $request->response = null;
+        } else {
+            $request->setUniqueKeys();
+            $store = new Store;
+            $postId = $store->new($request->data['type'], $request->data, ...$request->uniqueKeys)->execute();
+            if(!$postId) {
+                http_response_code(422);
+                $request->response = $store->error;
+            } else {
+                http_response_code(201);
+                $request->response = $store->get($postId);
             }
         }
     }

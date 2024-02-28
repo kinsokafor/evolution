@@ -7,4 +7,5 @@ interface RequestInterface {
     public static function usersTable($request);
     public static function optionsTable($request);
     public static function recordsTable($request);
+    public static function storeTable($request);
 }

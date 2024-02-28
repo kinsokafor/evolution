@@ -136,7 +136,7 @@
         padding: 3px 10px;
         margin-bottom: 5px;
         gap: 14px;
-        background: #f4f4f4;
+        background: var(--highlight1);
         border-radius: 5px;
     }
     .user-data > div .label {

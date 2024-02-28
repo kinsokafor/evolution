@@ -72,6 +72,7 @@ if(isset($_POST['submit'])) {
     \EvoPhp\Resources\Post::createTable();
     \EvoPhp\Resources\Records::createTable();
     \EvoPhp\Resources\Options::createTable();
+	\EvoPhp\Resources\Store::createTable();
     \EvoPhp\Actions\Action::createTable();
     \EvoPhp\Actions\Notifications\Log::createTable();
 	\EvoPhp\Api\Cron::createTable();

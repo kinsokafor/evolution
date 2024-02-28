@@ -4,6 +4,7 @@ namespace EvoPhp\Api\Requests;
 
 use EvoPhp\Resources\Post;
 use EvoPhp\Resources\User;
+use EvoPhp\Resources\Store;
 use EvoPhp\Database\Query;
 use EvoPhp\Api\Operations;
 use EvoPhp\Database\DataType;
@@ -28,6 +29,31 @@ class DeleteRequest implements RequestInterface {
                 if($post->error !== "") {
                     http_response_code(422);
                     $request->response = $post->error;
+                } else {
+                    http_response_code(200);
+                    $request->response = null;
+                }
+            }
+            
+        }
+    }
+
+    public static function storeTable($request) {
+        $store = new Store;
+        if(isset($request->data['id'])) {
+            $store->delete($request->data['id'])->execute();
+            http_response_code(200);
+            $request->response = null;
+        }
+        else {
+            if(!isset($request->data['type'])) {
+                http_response_code(422);
+                $request->response = "Please provide post type";
+            } else {
+                $store->delete($request->data['type'])->whereGroup($request->data)->execute();
+                if($store->error !== "") {
+                    http_response_code(422);
+                    $request->response = $store->error;
                 } else {
                     http_response_code(200);
                     $request->response = null;

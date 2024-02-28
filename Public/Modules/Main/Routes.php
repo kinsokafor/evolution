@@ -82,6 +82,39 @@ $router->group('/api/post', function () use ($router) {
     });
 });
 
+$router->group('/api/store', function () use ($router) {
+    $router->get('/', function () {
+        $request = new Requests;
+        $request->store()->auth();
+    });
+    $router->get('/id/{id}', function ($params) {
+        $request = new Requests;
+        $request->store($params)->auth();
+    });
+    $router->get('/type/{type}', function ($params) {
+        $request = new Requests;
+        $request->store($params)->auth();
+    });
+    $router->put('/id/{id}', function ($params) {
+        $request = new Requests;
+        $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
+        $request->store($params)->auth(5,6);
+    });
+    $router->delete('/', function ($params) {
+        $request = new Requests;
+        $request->store($params)->auth(1,2,3);
+    });
+    $router->delete('/id/{id}', function ($params) {
+        $request = new Requests;
+        $request->store($params)->auth(1,2,3);
+    });
+    $router->post('/{type}', function ($params) {
+        $request = new Requests;
+        $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
+        $request->store($params)->auth(1,2,3,4,5,6,7,8,9);
+    });
+});
+
 $router->group('/api/dbtable/{table}', function () use ($router) {
     $router->get('/', function($params){
         $request = new Requests;

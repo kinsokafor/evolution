@@ -4,6 +4,7 @@ namespace EvoPhp\Api\Requests;
 
 use EvoPhp\Resources\Post;
 use EvoPhp\Resources\User;
+use EvoPhp\Resources\Store;
 use EvoPhp\Database\Query;
 use EvoPhp\Api\Operations;
 use EvoPhp\Database\DataType;
@@ -27,6 +28,25 @@ class PutRequest implements RequestInterface {
             } else {
                 http_response_code(200);
                 $request->response = $post->get($request->data['id']);
+            }
+        }
+    }
+
+    public static function storeTable($request) {
+        $store = new Store;
+        if(!isset($request->data['id'])) {
+            http_response_code(422);
+            $request->response = null;
+        }
+        else {
+            $request->setUniqueKeys();
+            $store->update($request->data['id'])->metaSet($request->data)->execute();
+            if($store->error !== "") {
+                http_response_code(422);
+                $request->response = $store->error;
+            } else {
+                http_response_code(200);
+                $request->response = $store->get($request->data['id']);
             }
         }
     }

@@ -370,6 +370,17 @@ class Query extends Database
         return $this;
     }
 
+    public function metaDel(array $data, array|object $oldMeta = []) {
+        $oldMeta = (array) $oldMeta;
+        foreach($data as $col) {
+            if(isset($oldMeta[$col])) {
+                unset($oldMeta[$col]);
+            }
+        }
+        $this->set("meta", json_encode($oldMeta));
+        return $this;
+    }
+
     public function where($column, $value, $type = false, $rel = "LIKE") {
 
         if(strpos($value, ',')) {
@@ -387,7 +398,7 @@ class Query extends Database
         if($this->prependAnd)
             $this->and();
 
-        $this->statement .= " `$column` $rel ?";
+        $this->statement .= " $column $rel ?";
 
         array_push($this->data, $this->_real_escape($value));
 
