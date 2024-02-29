@@ -61,7 +61,7 @@ const getThemeName = async() => {
 }
 
 const test = (str, maxLength) => {
-    str = str.trim().replace(" ", "")
+    str = str.trim().replaceAll(" ", "")
     if(str.length > maxLength) {
         console.error(`Your input cannot be longer than ${maxLength} characters`);
         return false
@@ -144,7 +144,7 @@ const editFile = async (file, data) => {
               return;
             }
             for(var i in data) {
-                fileData = fileData.replace(`<${i}>`, data[i])
+                fileData = fileData.replaceAll(`<${i}>`, data[i])
             }
             // Write the content to the destination file
             fs.writeFile(file, fileData, 'utf8', (err) => {
@@ -222,13 +222,13 @@ const newPlugin = async() => {
         while(!test(pluginPrefix, 3)) {
             pluginPrefix = await readLineAsync("Enter Plugin Prefix?");
         }
-        pluginPrefix = pluginPrefix.trim().replace(" ", "").toUpperCase()
+        pluginPrefix = pluginPrefix.trim().replaceAll(" ", "").toUpperCase()
 
         var entryURI = await readLineAsync("Entry URI?");
         while(!test(entryURI, 20)) {
             entryURI = await readLineAsync("Entry URI?");
         }
-        entryURI = entryURI.trim().replace(" ", "").toLowerCase()
+        entryURI = entryURI.trim().replaceAll(" ", "").toLowerCase()
 
         const entry = pluginPrefix + "Main"
 
