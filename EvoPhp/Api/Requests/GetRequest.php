@@ -50,7 +50,7 @@ class GetRequest implements RequestInterface {
         if($request->joinPostAt != null) $store->joinPostAt($request->joinPostAt);
         if($request->joinAt != null && $request->joinTable != null) $store->joinAt($request->joinTable, $request->joinAt);
         if(isset($request->data['id'])) {
-            $request->response = $store->get($request->data['id']);
+            $request->response = $store->get($request->data['id'])->execute();
             if($request->response) {
                 http_response_code(200);
             } else http_response_code(404);

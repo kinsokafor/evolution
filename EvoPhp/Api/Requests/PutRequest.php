@@ -41,12 +41,12 @@ class PutRequest implements RequestInterface {
         else {
             $request->setUniqueKeys();
             $store->update($request->data['id'])->metaSet($request->data)->execute();
-            if($store->error !== "") {
+            if($store->last_error !== "") {
                 http_response_code(422);
-                $request->response = $store->error;
+                $request->response = $store->last_error;
             } else {
                 http_response_code(200);
-                $request->response = $store->get($request->data['id']);
+                $request->response = $store->get($request->data['id'])->execute();
             }
         }
     }

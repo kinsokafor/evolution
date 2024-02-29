@@ -23,9 +23,9 @@ class Store extends DbTable
 
     private $callback;
 
-    private $error;
+    public $error;
 
-    private $errorCode;
+    public $errorCode;
 
     private $tableCols = ['id', 'type', 'last_altered_by', 'time_altered'];
 
@@ -107,7 +107,7 @@ class Store extends DbTable
             "type" => $type,
             "last_altered_by" => $this->session->getResourceOwner()->user_id,
             "meta" => json_encode($meta)
-        ]);
+        ])->execute();
     }
 
     public function select($type, $column = "*") {
@@ -200,7 +200,7 @@ class Store extends DbTable
         }
         if(gettype($oldMeta) == 'integer') {
             $instance = new self;
-            $res = $instance->get($oldMeta)->execute()->row();
+            $res = $instance->get($oldMeta)->execute();
             if($res == null) {
                 return $this;
             }
@@ -215,7 +215,7 @@ class Store extends DbTable
         }
         if(gettype($oldMeta) == 'integer') {
             $instance = new self;
-            $res = $instance->get($oldMeta)->execute()->row();
+            $res = $instance->get($oldMeta)->execute();
             if($res == null) {
                 return $this;
             }

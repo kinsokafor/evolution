@@ -42,13 +42,13 @@ class PostRequest implements RequestInterface {
         } else {
             $request->setUniqueKeys();
             $store = new Store;
-            $postId = $store->new($request->data['type'], $request->data, ...$request->uniqueKeys)->execute();
+            $postId = $store->new($request->data['type'], $request->data, ...$request->uniqueKeys);
             if(!$postId) {
                 http_response_code(422);
                 $request->response = $store->error;
             } else {
                 http_response_code(201);
-                $request->response = $store->get($postId);
+                $request->response = $store->get($postId)->execute();
             }
         }
     }
