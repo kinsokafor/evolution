@@ -21,7 +21,7 @@ class PutRequest implements RequestInterface {
         }
         else {
             $request->setUniqueKeys();
-            $post->update($request->data['id'], $request->data, ...$request->uniqueKeys);
+            $post->update((int) $request->data['id'], $request->data, ...$request->uniqueKeys);
             if($post->error !== "") {
                 http_response_code(422);
                 $request->response = $post->error;
@@ -40,7 +40,7 @@ class PutRequest implements RequestInterface {
         }
         else {
             $request->setUniqueKeys();
-            $store->update($request->data['id'])->metaSet($request->data)->execute();
+            $store->update((int) $request->data['id'])->metaSet($request->data)->execute();
             if($store->last_error !== "") {
                 http_response_code(422);
                 $request->response = $store->last_error;
@@ -59,7 +59,7 @@ class PutRequest implements RequestInterface {
         }
         else {
             $request->setUniqueKeys();
-            $user->update($request->data['id'], $request->data, ...$request->uniqueKeys);
+            $user->update((int) $request->data['id'], $request->data, ...$request->uniqueKeys);
             if($user->error !== "") {
                 http_response_code(422);
                 $request->response = $user->error;

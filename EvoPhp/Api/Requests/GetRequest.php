@@ -151,6 +151,7 @@ class GetRequest implements RequestInterface {
     public static function dbTable($request) {
         $query = new DbTable;
         $selection = $request->isCount ? "COUNT(*) AS count" : "*";
+        if(isset($request->data['id'])) $request->data['id'] = (int) $request->data['id'];
         $query->select($request->tableName, $selection)->whereGroup($request->data);
         if($request->joinUserAt != null) $query->joinUserAt($request->joinUserAt, ...$request->rightColumns);
         if($request->joinPostAt != null) $query->joinPostAt($request->joinPostAt, ...$request->rightColumns);

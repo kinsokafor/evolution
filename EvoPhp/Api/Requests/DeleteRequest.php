@@ -16,7 +16,7 @@ class DeleteRequest implements RequestInterface {
     public static function postTable($request) {
         $post = new Post;
         if(isset($request->data['id'])) {
-            $post->delete($request->data['id']);
+            $post->delete((int) $request->data['id']);
             http_response_code(200);
             $request->response = null;
         }
@@ -41,7 +41,7 @@ class DeleteRequest implements RequestInterface {
     public static function storeTable($request) {
         $store = new Store;
         if(isset($request->data['id'])) {
-            $store->delete($request->data['id'])->execute();
+            $store->delete((int) $request->data['id'])->execute();
             http_response_code(200);
             $request->response = null;
         }
@@ -66,7 +66,7 @@ class DeleteRequest implements RequestInterface {
     public static function usersTable($request) {
         $user = new User;
         if(isset($request->data['id'])) {
-            $user->delete($request->data['id']);
+            $user->delete((int) $request->data['id']);
             http_response_code(200);
             $request->response = null;
         }
