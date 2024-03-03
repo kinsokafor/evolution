@@ -40,6 +40,10 @@ class Cron
         $self->query->query($statement)->execute();
     }
 
+    public static function timestampToExpression(int|null $timestamp = null) {
+        return date('s i h j n N', $timestamp ?? time());
+    }
+
     public static function test($expression) {
 		$cron = new \Cron\CronExpression($expression);
 		$cron->isDue();
