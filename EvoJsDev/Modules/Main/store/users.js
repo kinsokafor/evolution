@@ -17,7 +17,8 @@ export const useUsersStore = defineStore('useUsersStore', {
             limit: 50,
             offset: 0,
             fetching: false,
-            sent: []
+            sent: [],
+            lastTimeOut: null
         }
     },
     actions: {
@@ -62,7 +63,10 @@ export const useUsersStore = defineStore('useUsersStore', {
                     this.loadFromServer(params)
                 } else {
                     this.offset = 0
-                    setTimeout(() => {
+                    if(this.lastTimeOut != null) {
+                        clearTimeout(this.lastTimeOut)
+                    }
+                    this.lastTimeOut = setTimeout(() => {
                         this.fetching = false
                     }, 60000)
                 }

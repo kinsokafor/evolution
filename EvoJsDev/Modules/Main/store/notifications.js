@@ -11,7 +11,8 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
             processing: false,
             limit: 100,
             offset: 0,
-            firstLoad: false
+            firstLoad: false,
+            lastTimeOut: null
         }
     },
     actions: {
@@ -40,7 +41,10 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
                     this.offset = this.limit + this.offset
                     this.getFromServer(user_id)
                 } else {
-                    setTimeout(()=> {
+                    if(this.lastTimeOut != null) {
+                        clearTimeout(this.lastTimeOut)
+                    }
+                    this.lastTimeOut = setTimeout(()=> {
                         this.firstLoad = false
                     }, 300000);
                     this.offset = 0
