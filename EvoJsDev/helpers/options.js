@@ -3,14 +3,18 @@ import {nonce} from "./functions"
 
 export class Options {
 
+    controller = new AbortController();
+
     async get(option) {
+        const signal = this.controller.signal
         return await axios.get(process.env.EVO_API_URL + "/api/options/"+option, {
             'Access-Control-Allow-Credentials':true,
             headers: {
                 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
-            }
+            },
+            signal
         })
     }
 
@@ -38,6 +42,10 @@ export class Options {
 
     async new(option, value) {
         return await this.update(option, value)
+    }
+
+    abort() {
+        this.controller.abort()
     }
     
 }

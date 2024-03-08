@@ -3,7 +3,7 @@
         <h2>Software Options</h2>
         <div class="row">
             <div class="col-md-6">
-                <div class="card card-primary">
+                <div class="card">
                     <div class="card-header">
                         App Identity
                     </div>
@@ -11,7 +11,7 @@
                         <SetConfig :fields="app_identity"></SetConfig>
                     </div>
                 </div>
-                <div class="card card-primary">
+                <div class="card">
                     <div class="card-header">
                         User registration options
                     </div>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card card-primary">
+                <div class="card">
                     <div class="card-header">
                         Mail options
                     </div>
@@ -160,5 +160,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .card {
+        background-color: var(--highlight1)
+    }
 </style>

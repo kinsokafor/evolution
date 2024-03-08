@@ -115,12 +115,14 @@ export const dragElement = (elmnt, handle = false) => {
 }
 
 export const currencyConverter = async (currency, base = "USD", amount = 1) => {
+
     const convert = (data, currency, base) => {
         if(base in data && currency in data) {
             var rateToBase = data[base];
             var rateToCurrency = data[currency];
             const ret = (rateToCurrency/rateToBase) * amount;
-            return (((ret + Number.EPSILON) * 100).toFixed(6) / 100).toFixed(2)
+            // return (((ret + Number.EPSILON) * 100).toFixed(6) / 100).toFixed(2)
+            return ret;
         } else return "NA"
     }
 
@@ -136,6 +138,7 @@ export const currencyConverter = async (currency, base = "USD", amount = 1) => {
             } else return "failed"
         })
     }
+    
     return await (new Request).post(process.env.EVO_API_URL + "/api/config/all").then(async (r) => {
         let endPoint = r.data.data.currency.endPoint ?? "https://api.exchangerate.host/latest"
         const apiKey = r.data.data.currency.apiKey ?? ""
@@ -221,7 +224,10 @@ export const imageExists = (imageSrc, good, bad) => {
 
 export const findByDottedIndex = (i, obj) => {
 	const arr = i.split('.')
-    return arr.reduce((a, b) =>  a[b], obj)
+    if(!(arr[0] in obj)) return null
+    return arr.reduce((a, b) =>  {
+        return a[b]
+    }, obj)
 }
 
 export const clickToCopyText = (textElementId) => {

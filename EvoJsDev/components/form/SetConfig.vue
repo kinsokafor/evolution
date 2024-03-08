@@ -14,7 +14,7 @@
 <script setup>
     import Button from '@/components/Button.vue'
     import CreateForm from './CreateForm.vue'
-    import { ref, watchEffect } from 'vue'
+    import { ref, watchEffect, onBeforeMount } from 'vue'
     import {useAlertStore} from '@/store/alert'
     import { findByDottedIndex } from '@/helpers'
     import _ from 'lodash';
@@ -44,10 +44,12 @@
         if(config.all == {}) return
         props.fields.forEach(item => {
             const arr = item.name.split('.')
+            var merge = true
             const temp = arr.reduce((a,b,i,ar)=> {
                 let v = null
                 if((i+1) == ar.length) {
                     const vTemp = findByDottedIndex(item.name, config.props)
+                    if(vTemp == null) merge = false;
                     if(vTemp != undefined) {
                         switch(typeof(vTemp)) {
                             case "number":
@@ -62,7 +64,9 @@
                 } else v = "{?}"
                 return a.replace("?", `"${b}":${v}`)
             }, "{?}")
-            initialValues.value = _.merge(initialValues.value, JSON.parse(temp))
+            if(merge) {
+                initialValues.value = _.merge(initialValues.value, JSON.parse(temp))
+            }
         });
     })
 </script>
