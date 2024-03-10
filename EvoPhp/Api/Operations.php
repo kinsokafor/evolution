@@ -326,11 +326,11 @@ class Operations
     }
 
     static public function doAction($action_name, ...$args) {
-        
+        \EvoPhp\Actions\Action::do($action_name, ...$args);
     }
 
-    static public function applyFilters($filter, $subject, ...$args) {
-        return $subject;
+    static public function applyFilters($filter, $var, ...$args) {
+        return \EvoPhp\Actions\Filter::apply($filter, $var, ...$args);
     }
 
     static public function checkAccess(array | string $scope) {

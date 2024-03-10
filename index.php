@@ -11,8 +11,6 @@ if ( !defined('ABSPATH') )
 	define('ABSPATH', realpath(dirname(__FILE__)) . '/');
 
 require_once("EvoPhp/autoload.php");
-// \Public\Modules\TryBet\Classes\Events::refreshMatchData();
 
-// \Public\Modules\Tokens2Wealth\Classes\Migrate::migrateTransactions();
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 ?>
