@@ -33,7 +33,7 @@
 <script setup>
     import { useCreateFormStore } from '@/store/createForm';
     import { ErrorMessage } from 'vee-validate';
-    import { computed, ref, watch } from 'vue'
+    import { computed, ref, watch, watchEffect } from 'vue'
     import '/color-scheme.css'
     import {randomId} from '@/helpers'
     import _ from 'lodash';
@@ -74,21 +74,21 @@
         if(!_.isEqual(fields.value, oldFields.value)) {
             oldFields.value = fields.value
             memo.value = randomId(7)
-            console.log("Yes")
         }
     })
     const adjustableRows = computed(() => props.attrs.adjustableRows == undefined ? true : props.attrs.adjustableRows)
     const initiated = ref(false)
     const control = ref(0)
     const initRows = ref(0)
-    const rows = computed(() => {
+    const rows = ref(1)
+    watchEffect(() => {
         if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0 && !initiated.value) {
             initiated.value = true
             initRows.value = [...Object.values(props.initialValues[props.name])].length
         } else if(!initiated.value) {
             initRows.value = props.attrs.rows
         }
-        return initRows.value + control.value
+        rows.value = initRows.value + control.value
     })
     
     const removeRow = () => {
@@ -118,7 +118,7 @@
         padding: 10px;
     }
     .k-input-group > label ~ div:nth-child(2n+1) {
-        background: #f7f7f798;
+        background: #1d1d1d10;
         border-radius: 12px;
     }
     .collection-btns button {
