@@ -36,7 +36,7 @@
 
     const props = defineProps({
         searchColumns: {
-            type: Object,
+            type: [Object, Array],
             default: {}
         },
         data: {
@@ -101,7 +101,8 @@
         if(search.value != "") {
             if(limit.value == 0) return d.filter(i => {
                 for(var j in props.searchColumns) {
-                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+                    const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
+                    if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
                         return true
                     }
                 }
@@ -109,7 +110,9 @@
             });
             return d.filter(i => {
                 for(var j in props.searchColumns) {
-                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+                    const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
+                    console.log(k)
+                    if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
                         return true
                     }
                 }
