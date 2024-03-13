@@ -29,11 +29,16 @@
     import Table from '@/components/Table.vue';
     import { useFilterStore } from '@/store/filter';
     import {getFullname} from '@/helpers'
-    import config from '/config.json'
+    // import config from '/config.json'
     import male from '@/components/images/male_avatar.svg'
+    import {useConfigStore} from '@/store/config'
+
+    const config = useConfigStore();
+    const auth = computed(() => config.get('Auth'));
 
     const roles = computed(() => {
-        return Object.entries(config.Auth.roles).map(role => {
+        if(auth.value.roles == undefined) return {}
+        return Object.entries(auth.value.roles).map(role => {
                 return {
                     name: role[1].name,
                     value: role[0],
@@ -49,6 +54,7 @@
     const allUsers = computed(() => usersStore.get())
 
     const users = computed(() => {
+        if(auth.value.roles == undefined) return []
         const filters = filterStore.getFilters('usersList')
         const all = allUsers.value
         if(all != undefined) {
@@ -64,7 +70,7 @@
                 return true
             }).map(i => {
                 i.fullname = getFullname(i)
-                i.role_name = config.Auth.roles[i.role]?.name ?? ""
+                i.role_name = auth.value.roles[i.role]?.name ?? ""
                 i.profile_display = "<img src=\""+(i.profile_picture ?? male)+"\" style=\"margin: 0 !important;width: 49px !important;\">"
                 i.link = getLink(i.id, i.role)
                 return i
@@ -81,8 +87,10 @@
     }
 
     const getLink = (id, role) => {
-        if("profile" in config.Auth.roles[role]) {
-            return ("/"+config.Auth.roles[role].profile+"/"+id).replace("//", "/").replace("//", "/");
+        if(role in auth.value.roles) {
+            if("profile" in auth.value.roles[role]) {
+                return ("/"+auth.value.roles[role].profile+"/"+id).replace("//", "/").replace("//", "/");
+            }
         }
         return ("/admin/#/profile/"+id).replace("//", "/").replace("//", "/")
     } 

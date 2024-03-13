@@ -383,7 +383,7 @@ class Query extends Database
 
     public function where($column, $value, $type = false, $rel = "LIKE") {
 
-        if(strpos($value, ',')) {
+        if(strpos($value ?? '', ',')) {
             $value = Operations::trimArray(explode(',', $value));
             if(strstr( $rel, 'NOT' )) {
                 return $this->whereNotIn($column, $type, ...$value);
@@ -629,7 +629,7 @@ class Query extends Database
     public function _real_escape( $string ) {
         parent::__construct();
         if ( $this->connection ) {
-            $escaped = $this->connection->real_escape_string( $string );
+            $escaped = $this->connection->real_escape_string( $string ?? '' );
             mysqli_close($this->connection);
         } else {
             $escaped = addslashes( $string );
