@@ -3,6 +3,7 @@
     "devRoot": "http://localhost:<port>",
     "main_website": "",
     "mode": "development",
+    "timezone": "UTC",
     "salt": "<salt>",
     "Auth": {
       "tokenLifetime": "86400",

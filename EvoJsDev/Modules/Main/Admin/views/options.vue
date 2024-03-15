@@ -123,6 +123,10 @@
             name: 'main_website'
         },
         {
+            label: 'Timezone', 
+            name: 'timezone'
+        },
+        {
             label: 'Address', 
             name: 'address',
             as: 'textarea'

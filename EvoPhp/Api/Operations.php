@@ -387,8 +387,59 @@ class Operations
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         // EXECUTE:
         $result = curl_exec($curl);
-        if(!$result){die("Connection Failure");}
+        if(!$result){
+            if($method == "GET") {
+                $result = file_get_contents($url);
+                if(!$result) die("Connection Failure");
+            } else die("Connection Failure");
+        }
         curl_close($curl);
         return json_decode($result);
+    }
+
+    static public function currencyConverter($currency, $base = "USD", $amount = 1) {
+        $config = new Config;
+
+        $convert = function($data, $currency, $base) use ($amount){
+            $data = (array) $data;
+            if(isset($data[$base]) && isset($data[$currency])) {
+                $rateToBase = $data[$base];
+                $rateToCurrency = $data[$currency];
+                $ret = ($rateToCurrency/$rateToBase) * $amount;
+                return $ret;
+            } else return false;
+        };
+
+        $getFromServer = function($currency, $base, $endPoint, $rateKey, $refreshes) use ($convert) {
+            if($res = self::callAPI($endPoint, [], "GET")) {
+                if($res->result == 'success') {
+                    if(isset($res->$rateKey)) {
+                        $data = (object) [
+                            "rates" => $res->$rateKey,
+                            "expiry" => (time() + ($refreshes * 60 * 60)) * 1000
+                        ];
+                        \EvoPhp\Resources\Records::update("exchange_rates", $data);
+                        return $convert($res->$rateKey, $currency, $base);
+                    } else return false;
+                } else return false;
+            }
+        };
+
+        $endPoint = $config->currency['endPoint'] ?? "https://api.exchangerate.host/latest";
+        $apiKey = $config->currency['apiKey'] ?? "";
+        $rateKey = $config->currency['rateKey'] ?? "rates";
+        $refreshes = $config->currency['refreshes'] ?? 1;
+
+        $endPoint = str_replace(["{key}", "{base}"], [$apiKey, $base], $endPoint);
+        $exrates = \EvoPhp\Resources\Records::get("exchange_rates");
+        
+        if($exrates) {
+            $exrates = (array) $exrates;
+            if((time() * 1000) > $exrates['expiry']) {
+                return $getFromServer($currency, $base, $endPoint, $rateKey, $refreshes);
+            }
+            return $convert($exrates['rates'], $currency, $base);
+        }
+        return $getFromServer($currency, $base, $endPoint, $rateKey, $refreshes);
     }
 }

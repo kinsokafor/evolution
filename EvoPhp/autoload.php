@@ -2,6 +2,7 @@
 	use EvoPhp\Api\Modules;
 	use EvoPhp\Api\Operations;
 	use EvoPhp\Api\EvoRouter;
+	use EvoPhp\Api\Config;
 
 	spl_autoload_register(function($className)
 	{
@@ -12,6 +13,8 @@
 
 	// load dependency files
 	require ABSPATH.'vendor/autoload.php';
+
+	date_default_timezone_set((new Config)->timezone ?? "UTC");
 
 	// load modules
 	$modules = Modules::getModules();

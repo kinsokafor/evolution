@@ -41,23 +41,29 @@ class Cron
     }
 
     public static function timestampToExpression(int|null $timestamp = null) {
-        return date('s i h j n N', $timestamp ?? time());
+        $config = new Config;
+        $timestamp = $timestamp ?? time();
+        $dt = new \DateTime("now", new \DateTimeZone($config->timezone ?? "UTC"));
+        $dt->setTimestamp($timestamp);
+        return date('i H j n *', $dt->getTimestamp());
     }
 
     public static function test($expression) {
+        $config = new Config;
 		$cron = new \Cron\CronExpression($expression);
 		$cron->isDue();
-		echo 'Next run: '.$cron->getNextRunDate()->format('Y-m-d H:i:s').'<br/>';
-		echo 'Previous run: '.$cron->getPreviousRunDate()->format('Y-m-d H:i:s');
+		echo 'Next run: '.$cron->getNextRunDate("now", 0, false, $config->timezone ?? "UTC")->format('Y-m-d H:i:s').'<br/>';
+		echo 'Previous run: '.$cron->getPreviousRunDate("now", 0, false, "UTC")->format('Y-m-d H:i:s');
 	}
 
     public static function schedule($expression, $callback, ...$args) {
+        $config = new Config;
         $self = new self;
         if($self::scheduleExists($expression, $callback, ...$args)) {
             return false;
         }
 		$cron = new \Cron\CronExpression($expression);
-		$next_runtime = $cron->getNextRunDate()->getTimestamp();
+		$next_runtime = $cron->getNextRunDate("now", 0, false, $config->timezone ?? "UTC")->getTimestamp();
 		return $self->query->insert('crontabs', "ssis",
 					[
                         'callback' => $callback, 
@@ -82,10 +88,14 @@ class Cron
     }
 
     public static function executeDueJobs(int $limit = 20) {
+        $config = new Config;
         $self = new self;
+        $timestamp = time();
+        $dt = new \DateTime("now", new \DateTimeZone($config->timezone ?? "UTC"));
+        $dt->setTimestamp($timestamp);
 		$jobs = $self->query->select('crontabs')
                     ->where("status", "active")
-                    ->where("next_runtime", time(), "i", "<")
+                    ->where("next_runtime", $dt->getTimestamp(), "i", "<")
                     ->limit($limit)
                     ->execute()->rows();
 		foreach ($jobs as $job) {
@@ -111,12 +121,13 @@ class Cron
 	}
 
     private function execute($job) {
+        $config = new Config;
 		ignore_user_abort(true);
 		$feedback = "";
 		$status = "success";
         $runtime = time();
 		$cron = new \Cron\CronExpression($job->expression);
-		$next_runtime = $cron->getNextRunDate()->getTimestamp();
+		$next_runtime = $cron->getNextRunDate($config->timezone ?? "UTC")->getTimestamp();
 		$this->query->update('crontabs')
                     ->set('status', 'running')
                     ->where('id', $job->id)->execute();
