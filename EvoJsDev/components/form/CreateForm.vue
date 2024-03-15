@@ -171,7 +171,7 @@
         margin-bottom: 10px;
     }
     .k-input-group label {
-        color: var(--highlight3);
+        color: var(--shadow2);
     }
 
     .k-input-group.linear {
@@ -193,7 +193,7 @@
 
 <style lang="scss">
     .k-input-group label {
-        font-size: 11px;
-        margin-bottom: 0.1rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
     }
 </style>
