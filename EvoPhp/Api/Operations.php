@@ -4,6 +4,7 @@ namespace EvoPhp\Api;
 
 use EvoPhp\Database\Query;
 use EvoPhp\Resources\User;
+use EvoPhp\Database\Session;
 
 class Operations
 {
@@ -441,5 +442,27 @@ class Operations
             return $convert($exrates['rates'], $currency, $base);
         }
         return $getFromServer($currency, $base, $endPoint, $rateKey, $refreshes);
+    }
+
+    public static function getIndex($meta = false) {
+        $session = Session::getInstance();
+        if(isset($session->index)) {
+            return $session->index;
+        }
+        if(!$meta) {
+            $u = $session->getResourceOwner();
+            if(!$u) return "/";
+            $user = new User;
+            $meta = $user->get($u->user_id);
+        }
+        $config = new Config;
+        if(isset($config->Auth["roles"][$meta->role])) {
+            if(isset($config->Auth["roles"][$meta->role]["index"])) {
+                $session->index = $config->Auth["roles"][$meta->role]["index"];
+                return $session->index;
+            }
+        }
+        $session->index = "/";
+        return $session->index;
     }
 }

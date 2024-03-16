@@ -33,7 +33,6 @@ const alertStore = useAlertStore()
 const processing = ref(false)
 const page = ref(1)
 const referrer = document.referrer
-// const hash = parent.location.hash
 const home = process.env.EVO_API_URL
 const index = ref("/")
 
@@ -42,6 +41,7 @@ const redirectTo = computed(() => {
     return index.value
   } else return referrer.replace(home, '/').replace('//', '/')
 })
+
 onMounted(() => {
   authStore.redirect = true
   authStore.loginStatus()
@@ -60,7 +60,7 @@ const handleSubmit = async (values) => {
       index.value = response.data.index
       processing.value = false;
       if(response.data.loginStatus) {
-        window.location = redirectTo.value;
+        window.location = response.data.index;//redirectTo.value;
       } else {
           alertStore.add(response.data.msg, "danger");
       }

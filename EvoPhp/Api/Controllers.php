@@ -108,8 +108,10 @@ abstract class Controllers
             return;
         }
         self::signOut();
+        $config = new Config;
+        $home = isset($config->links) ? $config->links->home ?? "/accounts" : $config->loginLink;
         header("HTTP/1.1 401 Unauthorized");
-        header("Location: /accounts");
+        header("Location: $home");
     }
 
     abstract function getData($data);

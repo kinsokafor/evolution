@@ -142,15 +142,10 @@ class Session
    
     public function destroy()
     {
-        if ( $this->sessionState == self::SESSION_STARTED )
-        {
-            $this->sessionState = !session_destroy();
-            $this->destroyed = true;
-            unset( $_SESSION );
-           
-            return !$this->sessionState;
-        }
-       
-        return FALSE;
+        $this->sessionState = !session_destroy();
+        $this->destroyed = true;
+        unset($_SESSION);
+        
+        return !$this->sessionState;
     }
 }

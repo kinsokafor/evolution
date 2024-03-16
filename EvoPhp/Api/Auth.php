@@ -86,6 +86,7 @@ Trait Auth {
         $query->delete("token")
             ->where("token", $session->accesstoken, "s")
             ->execute();
+        $session->destroy();
         $cookie = new Cookie("nonce");
         $cookie->delete();
         return $existing;
@@ -115,10 +116,15 @@ Trait Auth {
         $cookie = new Cookie("nonce");
         $cookie->setValue($nonce)->setMaxAge($config->Auth["tokenLifetime"])->save();
         $session->accesstoken = $token;
-        $index = $config->Auth["roles"][$meta->role]["index"] ?? "/";
+        $index = Operations::getIndex($meta);
         $action = new Action;
         $action->doAction("evoAfterLogin", $meta);
-        return ['loginStatus' => true, 'token' => $token, 'msg' => 'Login Successful', 'index' => $index];
+        return [
+            'loginStatus' => true, 
+            'token' => $token, 
+            'msg' => 'Login Successful', 
+            'index' => $index
+        ];
     }
 
     protected function getTokenObject($token) {
