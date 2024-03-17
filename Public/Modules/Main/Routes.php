@@ -305,6 +305,14 @@ $router->post('/api/change-user-password', function(){
     });
 });
 
+$router->post('/api/index', function(){
+    $request = new Requests;
+    $params = (array) json_decode(file_get_contents('php://input'), true);
+    $request->evoAction($params)->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($params){
+        return \EvoPhp\Api\Operations::getIndex();
+    });
+});
+
 $router->post('/api/send-email', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
