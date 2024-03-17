@@ -5,6 +5,7 @@
             <slot name="left"></slot>
         </div>
         <div class="col-md-8">
+            <slot name="beforeMenu"></slot>
             <Menu :items="items" container-class="col-md-4"/>
             <slot></slot>
         </div>

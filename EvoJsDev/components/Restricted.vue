@@ -1,6 +1,6 @@
 <template>
     <div class="access-restricted-area">
-        <slot v-if="authStore.getAccess"></slot>
+        <slot v-if="authStore.getAccess" :user="authStore.getUser"></slot>
         <div v-if="!authStore.getAccess && showBackdrop" class="no-access">
             <slot name="message">
                 <div class="security-check">

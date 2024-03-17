@@ -3,6 +3,8 @@ import {nonce} from "./functions"
 
 export class Request {
 
+    root = process.env.EVO_API_URL;
+
     controller = new AbortController();
 
     async get(endpoint) {
