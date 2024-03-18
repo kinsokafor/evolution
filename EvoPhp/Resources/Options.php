@@ -158,7 +158,6 @@ class Options
         $option_name = strtolower($option_name);
         Operations::doAction("before_add_".$option_name, $option_value);
         $ev = $this->evaluateData($option_value);
-        var_dump($ev);
         $args = [
             "option_name" => (string) $option_name,
             "option_value" => (string) $ev->value, 

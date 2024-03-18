@@ -82,7 +82,7 @@ if(isset($_POST['submit'])) {
         "role" => "software_engineer",
         "status" => "active",
         "surname" => $surname,
-        "middle_name" => "",
+        "middle_name" => $middle_name,
         "other_names" => $other_names,
         "email" => $email,
         "password" => $password
