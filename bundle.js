@@ -53,6 +53,7 @@ archive.pipe(output);
 // archive.append(buffer3, { name: 'file3.txt' });
 
 // // append a file
+archive.file('cron.php', { name: 'cron.php' });
 archive.file('index.php', { name: 'index.php' });
 archive.file('Install.php', { name: 'Install.php' });
 if(process.env.npm_config_all != undefined) {
