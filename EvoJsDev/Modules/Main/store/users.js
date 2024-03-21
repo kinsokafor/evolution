@@ -3,6 +3,7 @@ import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
 import { useLocalStorage } from '@vueuse/core'
 import config from '/config.json';
+import {getFullname} from '@/helpers'
 
 import { Users } from '@/helpers';
 
@@ -14,6 +15,7 @@ export const useUsersStore = defineStore('useUsersStore', {
             alertStore: useAlertStore(),
             processing: false,
             usersClass: new Users,
+            format: "SMO",
             limit: 50,
             offset: 0,
             fetching: false,
@@ -38,6 +40,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                     // const meta = JSON.parse(r.data.meta)
                     // delete r.data.meta
                     let i = { ...r.data }
+                    i.fullname = getFullname(i, this.format)
                     const index = this.data.findIndex(j => j.id == i.id)
                     if (index == -1) {
                         this.data = [...this.data, i]
@@ -48,6 +51,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                     }
                 } else {
                     r.data.forEach(i => {
+                        i.fullname = getFullname(i, this.format)
                         const index = this.data.findIndex(j => j.id == i.id)
                         if (index == -1) {
                             this.data = [...this.data, i]
