@@ -166,7 +166,9 @@ class GetRequest implements RequestInterface {
             if($request->offset) $query->offset($request->offset);
             if($request->order_by) $query->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
             http_response_code(200);
-            $request->response = $query->execute()->rows();
+            if($request->isCount) {
+                $request->response = $query->execute()->row()->count;
+            } else $request->response = $query->execute()->rows();
         }
     }
 }
