@@ -9,7 +9,18 @@
             @setPage="setPage"
             @print="print">
             <div class="search">
-                <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
+                <div>
+                    <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
+                </div>
+                <div class="btn-group mt-2">
+                    <button 
+                        v-for="filter in quickFilters" 
+                        :key="filter.key"
+                        class="btn btn-outline-secondary btn-sm"
+                        :class="{active: (filters[filter.key] == filter.value)}"
+                        @click.prevent="toggleFilter(filter)"
+                    >{{filter.label}}</button>
+                </div>
             </div>
         </data-filter-tools>
         <div id="dataprint">
@@ -33,6 +44,7 @@
     import {computed, ref} from 'vue'
     import { appData, Print } from '@/helpers'
     import DataFilterTools from './DataFilterTools.vue';
+    import _ from 'lodash'
 
     const props = defineProps({
         searchColumns: {
@@ -46,6 +58,19 @@
         dataCaption: {
             type: String,
             default: "Print out"
+        },
+        quickFilters: {
+            type: Array,
+            default: [],
+            validator(value, props) {
+                let valid = true
+                value.forEach(i => {
+                    if(i?.label == undefined) valid = false 
+                    if(i?.key == undefined) valid = false 
+                    if(i?.value == undefined) valid = false 
+                })
+                return valid
+            }
         }
     })
 
@@ -65,6 +90,21 @@
         }
         return max;
     })
+
+    const filters = ref({});
+
+    const toggleFilter = (filter) => {
+        if(filter.key in filters.value) {
+            if(filters.value[filter.key] == filter.value) {
+                delete filters.value[filter.key]
+            } else {
+                filters.value[filter.key] = filter.value
+            }
+            
+        } else {
+            filters.value[filter.key] = filter.value
+        }
+    }
 
     const pageArray = computed(() => {
         var items = [1]
@@ -93,13 +133,24 @@
 
     const computedData = computed(() => {
         var d = [...props.data]
+        
+        if(!_.isEmpty(filters.value)) {
+            d = d.filter(i => {
+                let t = true
+                for(var k in filters.value) {
+                    if(i[k] != filters.value[k]) t = false
+                }
+                return t
+            })
+        }
+        
         if(sortBy.value !== null) {
             d.sort(dynamicSort(sortBy.value))
         }
         var end = page.value * limit.value
         var start = (page.value - 1) * limit.value;
         if(search.value != "") {
-            if(limit.value == 0) return d.filter(i => {
+            d = d.filter(i => {
                 for(var j in props.searchColumns) {
                     const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
                     if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
@@ -108,17 +159,8 @@
                 }
                 return false
             });
-            return d.filter(i => {
-                for(var j in props.searchColumns) {
-                    const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
-                    console.log(k)
-                    if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                        return true
-                    }
-                }
-                return false
-            }).slice(start, end)
         }
+        
         if(limit.value == 0) return d;
         return d.slice(start, end)
     })

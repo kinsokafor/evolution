@@ -4,13 +4,13 @@
             <div class="mb-2">
                 <div class="btn-group">
                     <button 
-                        class="btn btn-primary btn-sm"
+                        class="btn btn-secondary btn-sm"
                         v-for="index in pageArray"
                         :key="index"
                         @click="$emit('setPage', index)"
                         :class="{active: page == index}"
                         >{{ index }}</button>
-                    <button class="btn btn-default btn-sm mr-3" @click="$emit('print')">Print</button>
+                    <button class="btn btn-outline-secondary btn-sm mr-3" @click="$emit('print')">Print</button>
                 </div>
                 
             </div>

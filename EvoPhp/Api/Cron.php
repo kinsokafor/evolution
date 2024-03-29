@@ -98,7 +98,6 @@ class Cron
                     ->where("next_runtime", $dt->getTimestamp(), "i", "<")
                     ->limit($limit)
                     ->execute()->rows();
-                    var_dump($jobs);
 		foreach ($jobs as $job) {
             $self->query->update('crontabs')
                     ->set('status', 'in queue')
