@@ -26,6 +26,27 @@ Trait Auth {
 
     static public function encrypt($verb) {
         $config = new Config;
+        if($config->hashing != NULL) {
+            $test = explode("::", $config->hashing);
+            try {
+                if(Operations::count($test) > 1) {
+                    list($class, $method) = $test;
+                    if(method_exists($class, $method)) {
+                        return call_user_func(array($class, $method), $verb);
+                    } else {
+                        return SHA1(md5($verb.$config->salt.$verb));
+                    }
+                } else {
+                    if(function_exists($config->hashing)) {
+                        return call_user_func($config->hashing, $verb);
+                    } else {
+                        return SHA1(md5($verb.$config->salt.$verb));
+                    }
+                }
+            } catch (\Exception $feedback) {
+                return SHA1(md5($verb.$config->salt.$verb));
+            }
+        }
         return SHA1(md5($verb.$config->salt.$verb));
     }
 

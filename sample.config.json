@@ -5,6 +5,7 @@
     "mode": "development",
     "timezone": "UTC",
     "salt": "<salt>",
+    "hashing": null,
     "Auth": {
       "tokenLifetime": "86400",
       "roles": {
