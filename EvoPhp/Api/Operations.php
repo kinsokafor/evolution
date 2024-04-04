@@ -361,8 +361,11 @@ class Operations
         if ((bool)$return) return $export; else echo $export;
     }
 
-    static public function callAPI($url, $data = [], $method = "POST", $apiKey = "APIKEY: 111111111111111111111", $contentType = "application/json"){
+    static public function callAPI($url, $data = [], $method = "POST", $headers = "APIKEY: 111111111111111111111", $contentType = "application/json"){
         $curl = curl_init();
+        if(gettype($headers) == 'string') {
+            $headers = [$headers];
+        } 
         switch ($method){
             case "POST":
                 curl_setopt($curl, CURLOPT_POST, 1);
@@ -381,17 +384,44 @@ class Operations
         // OPTIONS:
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            $apiKey,
             'Content-Type: '.$contentType,
+            ...$headers
         ));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         // EXECUTE:
         $result = curl_exec($curl);
+        $err = curl_error($curl);
         if(!$result){
             if($method == "GET") {
-                $result = file_get_contents($url);
-                if(!$result) die("Connection Failure");
+                $config = new Config;
+                $arrDev=array(
+                    "ssl"=>array(
+                        "verify_peer"=>false,
+                        "verify_peer_name"=>false,
+                    ),
+                    "http" => array(
+                        "method" => "GET",
+                        "header" => $headers
+                    )
+                );
+                $arrLive=array(
+                    "http" => array(
+                        "method" => "GET",
+                        "header" => $headers
+                    )
+                );
+                $context = $config->mode == "development" ? stream_context_create($arrDev) : stream_context_create($arrLive);
+                try {
+                    $result = file_get_contents($url, false, $context);
+                    if(!$result) {
+                        throw new \Exception("Connection failure");
+                    }
+                } catch(\Exception $e) {
+                    echo "cURL Error #:" . $err ."<br/>";
+                    echo "file_get_contents Error #:". $e->getMessage();
+                }
+                
             } else die("Connection Failure");
         }
         curl_close($curl);
