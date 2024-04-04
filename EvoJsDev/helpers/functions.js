@@ -2,6 +2,7 @@ import axios from "axios";
 import { Base64 } from "./base64";
 import { Request } from "./request";
 import { Records } from "./records";
+import _ from "lodash";
 
 export const randomId = (length) => {
     var result           = '';
@@ -242,4 +243,26 @@ export const numberWithCommas = (x) => {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
+}
+
+export const storeGetter = (state, data, loader, params = {}, exclude = {}) => {
+    let tempParams = {...params};
+    exclude.forEach(i => {
+        delete tempParams[i]
+    })
+    if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
+        state.lastParams = tempParams;
+        loader(tempParams)
+    }
+    const r = data.filter(i => {
+        let test = true;
+        for (var k in params) {
+            if(typeof params[k] == "string") {
+                test = new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+            }
+            else if (k in i && params[k] != i[k]) test = false
+        }
+        return test
+    })
+    return r
 }
