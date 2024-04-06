@@ -3,6 +3,8 @@ import { Base64 } from "./base64";
 import { Request } from "./request";
 import { Records } from "./records";
 import _ from "lodash";
+import male from '../components/images/male_avatar.svg'
+import female from '../components/images/female_avatar.svg'
 
 export const randomId = (length) => {
     var result           = '';
@@ -200,16 +202,16 @@ export const getFullname = (data, format = 'SMO') => {
     format.forEach(i => {
         switch(i) {
             case "S":
-                fullname += data.surname+" " ?? ""
+                fullname += (data.surname ?? "") + " "
                 break;
             case "M":
-                fullname += data.middle_name+" " ?? ""
+                fullname += (data.middle_name ?? "") + " "
                 break;
             case "T":
-                fullname += data.title+" " ?? ""
+                fullname += (data.title ?? "") + " "
                 break;
             case "O":
-                fullname += data.other_names+" " ?? ""
+                fullname += (data.other_names ?? "") + " "
                 break;
         }
     })
@@ -221,6 +223,37 @@ export const imageExists = (imageSrc, good, bad) => {
     img.src = imageSrc;
     img.onload = good; 
     img.onerror = bad; 
+}
+
+export const getProfilePicture = (data) => {
+    const getTemp = () => {
+        switch(data?.gender) {
+            case "female":
+            case "Female":
+            return female
+                break;
+            default:
+            return male
+                break;
+        }
+    }
+    if(data?.profile_picture == undefined) {
+        return new Promise((resolve, reject) => {
+            resolve(getTemp())
+        })
+    }
+    const profilePicture = data?.profile_picture.charAt(0) == "/" ?  data?.profile_picture : (String(data?.profile_picture).search("http") == -1 ? "/"+data?.profile_picture : data?.profile_picture);
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.src = profilePicture
+        img.onload = () => {
+            resolve(profilePicture)
+        }
+        img.onerror = () => {
+            console.log("Error")
+            resolve(getTemp())
+        }
+    })
 }
 
 export const findByDottedIndex = (i, obj) => {

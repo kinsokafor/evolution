@@ -35,11 +35,9 @@
 </template>
 
 <script setup>
-    import {ref, computed} from 'vue'
+    import {ref, computed, watchEffect} from 'vue'
     import { useUsersStore } from '@/Modules/Main/store/users'
-    import {isEmpty, imageExists} from '@/helpers'
-    import male from '../images/male_avatar.svg'
-    import female from '../images/female_avatar.svg'
+    import {isEmpty, getProfilePicture} from '@/helpers'
 
     const usersStore = useUsersStore()
     const props = defineProps({
@@ -62,30 +60,12 @@
         return realUser.value
     })
 
-    const tempImg = ref("#")
+    const userImg = ref("#")
 
-    const userImg = computed(() => {
-        const setTemp = () => {
-            switch(user.value.gender) {
-                case "female":
-                case "Female":
-                tempImg.value = female
-                    break;
-                default:
-                tempImg.value = male
-                    break;
-            }
-        }
-        if(user.value.profile_picture == undefined) {
-            setTemp()
-            return tempImg.value
-        }
-        imageExists(user.value.profile_picture, () => {
-            tempImg.value = user.value.profile_picture
-        }, () => {
-            setTemp()
+    watchEffect(() => {
+        getProfilePicture(user.value).then(r => {
+            userImg.value = r
         })
-        return tempImg.value
     })
 </script>
 

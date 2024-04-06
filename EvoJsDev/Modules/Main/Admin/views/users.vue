@@ -31,6 +31,7 @@
     import {getFullname} from '@/helpers'
     // import config from '/config.json'
     import male from '@/components/images/male_avatar.svg'
+    import female from '@/components/images/female_avatar.svg'
     import {useConfigStore} from '@/store/config'
 
     const config = useConfigStore();
@@ -53,6 +54,20 @@
 
     const allUsers = computed(() => usersStore.get())
 
+    const getTemp = (data) => {
+        switch(data?.gender) {
+            case "female":
+            case "Female":
+            return female
+                break;
+            default:
+            return male
+                break;
+        }
+    }
+
+    
+
     const users = computed(() => {
         if(auth.value.roles == undefined) return []
         const filters = filterStore.getFilters('usersList')
@@ -71,7 +86,13 @@
             }).map(i => {
                 i.fullname = getFullname(i)
                 i.role_name = auth.value.roles[i.role]?.name ?? ""
-                i.profile_display = "<img src=\""+(i.profile_picture ?? male)+"\" style=\"margin: 0 !important;width: 49px !important;\">"
+                let profile = "#"
+                if(i?.profile_picture == undefined) {
+                    profile = getTemp(i)
+                } else {
+                    profile = i?.profile_picture.charAt(0) == "/" ?  i?.profile_picture : (String(i?.profile_picture).search("http") == -1 ? "/"+i?.profile_picture : i?.profile_picture);
+                }
+                i.profile_display = `<img src="${profile}" style="margin: 0 !important;width: 49px !important;">`
                 i.link = getLink(i.id, i.role)
                 return i
             })
