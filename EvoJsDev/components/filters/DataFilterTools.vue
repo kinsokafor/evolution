@@ -14,8 +14,8 @@
                 </div>
                 
             </div>
-            <div class="mb-4">
-                <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
+            <div class="mb-2">
+                <select class="limit" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
                     <option :value="20">20</option>
                     <option :value="50">50</option>
                     <option :value="75">75</option>
@@ -24,7 +24,7 @@
                     <option :value="500">500</option>
                     <option :value="0">All</option>
                 </select>
-                <em> showing {{ computedData.length }} of {{ data.length }} records on page {{ page }}</em>
+                <em><small> showing {{ computedData.length }} of {{ data.length }} records on page {{ page }}</small></em>
             </div>
         </div>
         <slot></slot>
@@ -44,5 +44,10 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .limit {
+        background: transparent;
+        border: 1px solid #e1dede;
+        border-radius: 5px;
+        padding: 1px 10px;
+    }
 </style>

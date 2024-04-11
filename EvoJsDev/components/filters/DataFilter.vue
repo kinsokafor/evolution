@@ -12,11 +12,11 @@
                 <div>
                     <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
                 </div>
-                <div class="btn-group mt-2">
+                <div class="filters-container">
                     <button 
                         v-for="filter in quickFilters" 
                         :key="filter.key"
-                        class="btn btn-outline-secondary btn-sm"
+                        class="filter-btn text-nowrap"
                         :class="{active: (filters[filter.key] == filter.value)}"
                         @click.prevent="toggleFilter(filter)"
                     >{{filter.label}}</button>
@@ -153,8 +153,10 @@
             d = d.filter(i => {
                 for(var j in props.searchColumns) {
                     const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
-                    if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                        return true
+                    if(k in i) {
+                        if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+                            return true
+                        }
                     }
                 }
                 return false
@@ -205,8 +207,50 @@
     .tools {
         display: flex;
         justify-content: space-between;
+        flex-direction: column;
         .controls div {
             margin-bottom: 5px;
         }
     }
+    .search {
+        .filters-container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            justify-content: start;
+            gap: 3px;
+            margin-top: 7px;
+            margin-bottom: 9px;
+            .filter-btn {
+                border: none;
+                padding: 1.4px 8px 5px;
+                line-height: 1;
+                font-size: 11px;
+                text-transform: lowercase;
+                border-radius: 10px;
+                background-color: var(--highlight3);
+                color: var(--highlight1);
+            }
+            .filter-btn.active {
+                background-color: var(--color2);
+            }
+        }
+    }
+     /* Extra small devices (phones, 600px and down) */
+    @media only screen and (max-width: 600px) {}
+
+    /* Small devices (portrait tablets and large phones, 600px and up) */
+    @media only screen and (min-width: 600px) {}
+
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 768px) {
+        .tools {
+            flex-direction: row;
+        }
+    }
+
+    /* Large devices (laptops/desktops, 992px and up) */
+    @media only screen and (min-width: 992px) {}
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {} 
 </style>

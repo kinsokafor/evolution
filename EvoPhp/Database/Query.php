@@ -356,8 +356,18 @@ class Query extends Database
         return $this;
     }
 
-    public function metaSet(array|object $data, array $tableCols = [], array|object $oldMeta = []) {
+    public function metaSet(
+            array|object $data, 
+            array $tableCols = [], 
+            array|object|int $oldMeta = [], 
+            NULL|string $table = NULL) 
+        {
         $data = (array) $data;
+        if(gettype($oldMeta) == "integer" && $table != NULL) {
+            $instance = new self;
+            $r = $instance->select($table)->where("id", (int) $oldMeta, 'i')->execute()->row();
+            $oldMeta = $r != null ? json_decode($r->meta) : [];
+        }
         $oldMeta = (array) $oldMeta;
         $data = array_merge($oldMeta, $data);
         foreach($tableCols as $col) {
@@ -370,7 +380,16 @@ class Query extends Database
         return $this;
     }
 
-    public function metaDel(array $data, array|object $oldMeta = []) {
+    public function metaDel(
+            array $data, 
+            array|object|int $oldMeta = [], 
+            NULL|string $table = NULL) 
+        {
+        if(gettype($oldMeta) == "integer" && $table != NULL) {
+            $instance = new self;
+            $r = $instance->select($table)->where("id", (int) $oldMeta, 'i')->execute()->row();
+            $oldMeta = $r != null ? json_decode($r->meta) : [];
+        }
         $oldMeta = (array) $oldMeta;
         foreach($data as $col) {
             if(isset($oldMeta[$col])) {

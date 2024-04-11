@@ -284,6 +284,9 @@ export const storeGetter = (state, data, loader, params = {}, exclude = {}) => {
         delete tempParams[i]
     })
     if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
+        if(state.lastTimeOut != null) {
+            clearTimeout(state.lastTimeOut);
+        }
         state.lastParams = tempParams;
         loader(tempParams)
     }
