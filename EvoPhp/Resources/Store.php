@@ -19,8 +19,6 @@ class Store extends DbTable
 
     public $session;
 
-    private $cachedId;
-
     private $callback;
 
     public $error;
@@ -188,39 +186,22 @@ class Store extends DbTable
         return parent::orderBy($column, $order);
     }
 
-    public function update($id) {
-        $this->cachedId = $id;
+    public function update($table = "store") {
         return parent::update("store")->set('time_altered', date('Y-m-d h:i:s'))
-        ->set('last_altered_by', $this->session->getResourceOwner()->user_id);
+        ->set('last_altered_by', $this->session->getResourceOwner() ? $this->session->getResourceOwner()->user_id : 0);
     }
 
-    public function metaSet(array|object $data, array $tableCols = [], array|object|int $oldMeta = []) {
-        if(empty($oldMeta)) {
-            $oldMeta = $this->cachedId;
-        }
-        if(gettype($oldMeta) == 'integer') {
-            $instance = new self;
-            $res = $instance->get($oldMeta)->execute();
-            if($res == null) {
-                return $this;
-            }
-            $oldMeta = json_decode($res->meta);
-        }
-        return parent::metaSet($data, $this->tableCols, $oldMeta)->where('id', $this->cachedId);
+    public function metaSet(
+        array|object $data, 
+        array $tableCols = [], 
+        array|object|int $oldMeta = [], 
+        NULL|string $table = "store") {
+        return parent::metaSet($data, $this->tableCols, $oldMeta, "store");
     }
 
-    public function metaDel(array|object $data, array|object|int $oldMeta = []) {
-        if(empty($oldMeta)) {
-            $oldMeta = $this->cachedId;
-        }
-        if(gettype($oldMeta) == 'integer') {
-            $instance = new self;
-            $res = $instance->get($oldMeta)->execute();
-            if($res == null) {
-                return $this;
-            }
-            $oldMeta = json_decode($res->meta);
-        }
-        return parent::metaDel($data, $oldMeta)->where('id', $this->cachedId);
+    public function metaDel(array $data, 
+        array|object|int $oldMeta = [], 
+        NULL|string $table = "store") {
+        return parent::metaDel($data, $oldMeta, "store");
     }
 }

@@ -133,8 +133,8 @@
         users.update(user.value.id, values).then(function(response){
             processing.value = false;
             alertStore.add("Profile updated", "success");
-            if(usersStore.users.length > 0) {
-                usersStore.users = usersStore.users.map(obj => {
+            if(usersStore.data.length > 0) {
+                usersStore.data = usersStore.data.map(obj => {
                     if (obj.id == user.value.id) {
                         return {...obj, ...response.data}
                     }

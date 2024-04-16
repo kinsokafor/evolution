@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, computed } from 'vue';
+    import { computed } from 'vue';
     import Croppie from '@/components/croppie/Croppie.vue';
 
     const filteredAttr = computed(() => {

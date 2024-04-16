@@ -361,7 +361,7 @@ class Requests
             $res = (new Files)->processFile($file);
             if($res) {
                 $this->data[$key] = $res;
-            } else $this->data[$key] = "";
+            } else $this->data[$key] = $this->data[$key] ?? "";
             unset($this->data['file_attachments']);
         }
     }

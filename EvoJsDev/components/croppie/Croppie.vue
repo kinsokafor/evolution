@@ -7,7 +7,7 @@
         <label class="cabinet" :id="'cabinet-' + instance" v-if="preview">
             <figure>
                 <img 
-                    :src="value ?? defaultImage" 
+                    :src="value != undefined ? getImageLink(value) : defaultImage" 
                     class="gambar img-responsive img-thumbnail croppie-image" 
                     :id="'croppie-output-' + instance"/>
                 <figcaption><i class="fas fa-camera"></i></figcaption>
@@ -20,9 +20,9 @@
                 accepts="image/*"/>
         </label>
 		<div class="croppie-pannel" :id="'cropImagePop' + instance" v-else>
-			<div class="croppie-pannel-dialog" style="width: {{boundarywidth + 40}}px; ">
+			<div class="croppie-pannel-dialog" :style="`width: ${boundarywidth + 40}px`">
 			    <div class="croppie-pannel-content">
-				<div class="croppie-pannel-body" style="min-width: {{boundarywidth + 40}}px; ">
+				<div class="croppie-pannel-body" :style="`min-width: ${boundarywidth + 40}px`">
 		            <div :id="'croppie-preview-' + instance" class="croppie-preview"></div>
 		            <div class="croppie-controls">
 						<div class="btn-group">
@@ -177,10 +177,14 @@
     watchEffect(() => {
         if(meta.value.dirty == false) {
             if(croppie.value != null) {
-                value.value = ""
+                value.value = undefined
             }
         }
     })
+
+    const getImageLink = (imgLink) => {
+        return imgLink.charAt(0) == "/" ?  imgLink : ((String(imgLink).search("http") == -1 && String(imgLink).search("data:")) ? "/"+imgLink : imgLink);
+    }
 </script>
 
 <style lang="scss" scoped>

@@ -12,5 +12,6 @@ if ( !defined('ABSPATH') )
 
 require_once("EvoPhp/autoload.php");
 
-$router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+// $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+var_dump(\Public\Modules\Tokens2Wealth\Classes\Accounts::createAccount(6, 'special', true));
 ?>
