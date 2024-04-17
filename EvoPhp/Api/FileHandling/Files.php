@@ -87,7 +87,9 @@ class Files {
 
         $this->fs->mkdir(Path::canonicalize($path));
         
-        $saveAs = $saveAs == "" ? $file['name'] : $saveAs.".".$this->mimeToExtension($file['type']);
+        list($fName, $ext) = explode(".", $file['name']);
+
+        $saveAs = $saveAs == "" ? substr($fName, 0, 27)."-".rand(1, 999999).".".$ext : $saveAs.".".$this->mimeToExtension($file['type']);
 
         $path = Path::canonicalize($path ."/". $saveAs);
 
