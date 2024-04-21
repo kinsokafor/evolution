@@ -9,14 +9,14 @@
                 <thead>
                     <tr>
                         <th>SN</th>
-                        <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{column}}</th>
+                        <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{getHeading(column)}}</th>
                         <th v-if="actions.length > 0">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(row, index) in outputData" :key="row.id">
                         <td>{{index + ((page - 1) * limit) + 1}}</td>
-                        <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(row[index], row.link)"></td>
+                        <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(dcolumn, row[index], row)"></td>
                         <td v-if="actions.length > 0">
                             <div class="actions-container">
                                 <span v-for="action in getActions(actions, row)" :key="action.name">
@@ -142,13 +142,24 @@
         return d.slice(start, end)
     })
 
-    const getContent = (content, link) => {
-        if(link == undefined) return content;
-        return `<a href="${link ?? '#'}">${content}</a>`
+    const getContent = (column, content, row) => {
+        if(typeof column == "object") {
+            if(typeof column?.processor == "function") {
+                content = column.processor.call(row)
+            }
+        }
+        if(row?.link == undefined) return content;
+        return `<a href="${row?.link ?? '#'}">${content}</a>`
     }
 
-    function getIndex(index) {
-        return props.serialNumber + index;
+    const getHeading = (column) => {
+        if(typeof column == "string") {
+            return column;
+        }
+        else if(typeof column == "object") {
+            return column?.heading ?? ""
+        }
+        else return ""
     }
 
     function getActions(actions, row) {

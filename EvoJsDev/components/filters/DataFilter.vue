@@ -71,6 +71,10 @@
                 })
                 return valid
             }
+        },
+        filters: {
+            type: Object,
+            default: {}
         }
     })
 
@@ -91,7 +95,7 @@
         return max;
     })
 
-    const filters = ref({});
+    const filters = ref(props.filters);
 
     const toggleFilter = (filter) => {
         if(filter.key in filters.value) {

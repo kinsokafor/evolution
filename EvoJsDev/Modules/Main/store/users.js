@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
-import { useLocalStorage } from '@vueuse/core'
+import { useSessionStorage } from '@vueuse/core'
 import config from '/config.json';
 import {getFullname} from '@/helpers'
 
@@ -10,7 +10,7 @@ import { Users } from '@/helpers';
 export const useUsersStore = defineStore('useUsersStore', {
     state: () => {
         return {
-            data: useLocalStorage(`${config.salt}evo-users`, []),
+            data: useSessionStorage(`${config.salt}evo-users`, []),
             filterStore: useFilterStore(),
             alertStore: useAlertStore(),
             processing: false,

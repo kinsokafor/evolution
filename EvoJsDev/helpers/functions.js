@@ -250,7 +250,6 @@ export const getProfilePicture = (data) => {
             resolve(profilePicture)
         }
         img.onerror = () => {
-            console.log("Error")
             resolve(getTemp())
         }
     })

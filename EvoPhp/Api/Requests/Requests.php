@@ -104,7 +104,7 @@ class Requests
         }
     }
 
-    private function get() {                        
+    private function get() {                    
         if(isset($this->data['limit'])) {
             $this->limit = (int) $this->data['limit'];
             unset($this->data['limit']);
