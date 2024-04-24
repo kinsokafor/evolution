@@ -1,26 +1,35 @@
 <template>
-    <div>
-        <loading :active=processing 
-            :can-cancel="true" 
-            :is-full-page=false>
-        </loading>
-        <component :is="template" v-bind="$props" :count="count"></component>
+    <div class="main-counter-container">
+        <div class="counter-container animate__animated animate__flipInX" :class="layoutStyle">
+            <div class="count">
+                <small>{{prefix}}</small>{{ count }}<small>{{surfix}}</small>
+            </div>
+            <div class="count-title animate__animated animate__bounceIn">
+                {{ title }}
+            </div>
+            <div class="count-icon" v-if="iconClass != ''">
+                <FontAwesomeIcon :icon="iconClass"></FontAwesomeIcon>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-    import { onMounted, ref, onUnmounted } from 'vue'
-    import Loading from 'vue3-loading-overlay';
-    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import {Request} from '@/helpers'
-    import { useLocalStorage } from '@vueuse/core'
-    import DefaultCounterCard from './DefaultCounterCard.vue';
+    import { library } from '@fortawesome/fontawesome-svg-core'
+    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+    import {fas} from '@fortawesome/free-solid-svg-icons'
+    import { fab } from '@fortawesome/free-brands-svg-icons';
+    import { far } from '@fortawesome/free-regular-svg-icons';
+    import "animate.css"
 
-    const req = new Request
+    library.add(fas, far, fab)
 
     const props = defineProps({
-        endPoint: String,
+        count: {
+            type: Number,
+            default: 0,
+        },
         title: {
             type: String,
             default: ""
@@ -52,46 +61,8 @@
         prefix: {
             type: String,
             default: ""
-        },
-        template: {
-            type: Object,
-            default: DefaultCounterCard
-        },
-        link: {
-            type: [String, Boolean],
-            default: false
         }
     })
-
-    /*list of available themes are
-        default
-    */
-    const count = ref(useLocalStorage(`${props.endPoint}-count`, 0));
-    const link = new URL(process.env.EVO_API_URL + "/" + props.endPoint);
-    link.searchParams.append("iscount", 1);
-    const nextRun = ref(useLocalStorage(`${props.endPoint}-nextrun`, 0))
-    const processing = ref(false)
-
-    onMounted( () => {
-        const nowTime = new Date().getTime();
-        if(nowTime > nextRun.value) {
-            getCount().then(r => {
-                nextRun.value = nowTime + (props.interval * 1000)
-            });
-        }
-    })
-
-    onUnmounted(() => {
-        req.abort()
-    })
-
-    const getCount = async () => {
-        processing.value = true
-        return req.get(link).then(r => {
-            count.value = r.data;
-            processing.value = false
-        })
-    }
 </script>
 
 <style lang="scss" scoped>

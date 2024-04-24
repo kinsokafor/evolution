@@ -363,7 +363,11 @@ class Query extends Database
             NULL|string $table = NULL) 
         {
         $data = (array) $data;
-        if(gettype($oldMeta) == "integer" && $table != NULL) {
+        if(gettype($oldMeta) == "integer") {
+            if($table == NULL) {
+                list(, $table) = explode(" ", $this->statement);
+                $table = str_replace("`", "", $table);
+            }
             $instance = new self;
             $r = $instance->select($table)->where("id", (int) $oldMeta, 'i')->execute()->row();
             $oldMeta = $r != null ? json_decode($r->meta) : [];
