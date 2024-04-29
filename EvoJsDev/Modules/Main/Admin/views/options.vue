@@ -41,9 +41,12 @@
     import SetConfig from '@/components/form/SetConfig.vue'
     import { computed } from 'vue'
     import config from "/config.json"
+    import {useConfigStore} from "@/store/config"
+
+    const store = useConfigStore()
 
     const roles = computed(() => {
-        return Object.entries(config.Auth.roles).map(role => {
+        return Object.entries(store.get("Auth.roles")).map(role => {
                 return {
                     name: role[1].name,
                     value: role[0],
@@ -51,6 +54,9 @@
                 }
             })
     })
+
+    const height = computed(() => store.get("logoHeight") ?? 69);
+    const width = computed(() => store.get("logoWidth") ?? 200);
 
     const registration_options = computed(() => [
         {
@@ -84,7 +90,7 @@
             options: roles.value
         }
     ])
-    const mail_options = [
+    const mail_options = computed(() => [
         {
             label: "Activate SMTP", 
             name: "activate_smtp",
@@ -112,8 +118,8 @@
             class: "pr-2 pl-2",
             layout: "linear"
         }
-    ]
-    const app_identity = [
+    ])
+    const app_identity = computed(() => [
         {
             label: 'App Name', 
             name: 'site_name'
@@ -153,14 +159,22 @@
             label: "Site logo",
             name: "logo",
             as: "croppie",
-            enableResize: true
+            enableResize: true,
+            viewport: {
+                width: width.value,
+                height: height.value
+            },
+            boundary: {
+                width: width.value + 20,
+                height: height.value + 20
+            }
         },
         {
             label: "Site icon",
             name: "favicon",
             as: "croppie"
         }
-    ]
+    ])
 </script>
 
 <style lang="scss" scoped>

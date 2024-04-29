@@ -353,4 +353,8 @@ $router->get('/test-template/{template}', function($params){
     $controller->testTemplate($params)->auth(1)->template("no_theme")->setData(['pageTitle' => "Template - ".$params['template']]);
 });
 
+$router->get('/migrate-users', function(){
+    \EvoPhp\Resources\MigrateUser::migrate();
+});
+
 ?>

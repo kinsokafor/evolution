@@ -59,7 +59,7 @@ export const useConfigStore = defineStore('useConfigStore', {
             const p = state.all
             return (key) => {
                 if(_.isEmpty(p)) {
-                    return ""
+                    return null
                 }
                 return findByDottedIndex(key, p);
             }

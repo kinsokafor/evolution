@@ -109,5 +109,7 @@
       }
     },
     "logo": null,
+    "logoWidth": 200,
+    "logoHeight": 69,
     "hosted_logo": null
   }
