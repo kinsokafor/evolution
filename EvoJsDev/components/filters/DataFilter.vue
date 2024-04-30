@@ -17,7 +17,7 @@
                         v-for="filter in quickFilters" 
                         :key="filter.key"
                         class="filter-btn text-nowrap"
-                        :class="{active: (filters[filter.key] == filter.value)}"
+                        :class="{active: (selFilters[filter.key] == filter.value)}"
                         @click.prevent="toggleFilter(filter)"
                     >{{filter.label}}</button>
                 </div>
@@ -41,7 +41,7 @@
     import { dynamicSort } from '@/helpers';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import {computed, ref} from 'vue'
+    import {computed, ref, onUnmounted} from 'vue'
     import { appData, Print } from '@/helpers'
     import DataFilterTools from './DataFilterTools.vue';
     import _ from 'lodash'
@@ -95,18 +95,22 @@
         return max;
     })
 
-    const filters = ref(props.filters);
+    const selFilters = ref(props.filters);
+
+    onUnmounted(() => {
+        selFilters.value = {}
+    })
 
     const toggleFilter = (filter) => {
-        if(filter.key in filters.value) {
-            if(filters.value[filter.key] == filter.value) {
-                delete filters.value[filter.key]
+        if(filter.key in selFilters.value) {
+            if(selFilters.value[filter.key] == filter.value) {
+                delete selFilters.value[filter.key]
             } else {
-                filters.value[filter.key] = filter.value
+                selFilters.value[filter.key] = filter.value
             }
             
         } else {
-            filters.value[filter.key] = filter.value
+            selFilters.value[filter.key] = filter.value
         }
     }
 
@@ -138,11 +142,11 @@
     const computedData = computed(() => {
         var d = [...props.data]
         
-        if(!_.isEmpty(filters.value)) {
+        if(!_.isEmpty(selFilters.value)) {
             d = d.filter(i => {
                 let t = true
-                for(var k in filters.value) {
-                    if(i[k] != filters.value[k]) t = false
+                for(var k in selFilters.value) {
+                    if(i[k] != selFilters.value[k]) t = false
                 }
                 return t
             })

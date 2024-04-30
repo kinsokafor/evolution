@@ -38,13 +38,9 @@ class User
 
     public $session;
 
-    public $num_args;
-
     public $resultIds;
 
     public $result;
-
-    private $init;
 
     private $tableCols = ["id", "username", "email", "password", "date_created", "meta"];
 
@@ -110,11 +106,6 @@ class User
         if(method_exists($this, $callback)) {
             return $this->$callback();
         }
-    }
-
-    private function resetQuery() {
-        $this->args = [];
-        $this->num_args = 0;
     }
 
     public function new($meta = array(), ...$unique_keys) {
@@ -291,6 +282,8 @@ class User
                 ->where($selectColumn, $selector, $selectorType)
                 ->execute()->row();
         
+        if($res == NULL) return $res;
+        
         $meta = self::merge($res);
         
         return $this->processJoinRequest($meta);
@@ -303,28 +296,24 @@ class User
     }
 
     public function deleteUser() {
-        $this->resetQuery();
         $this->getUser();
         $this->resourceType = "deleteUserByMetaData";
         return $this;
     }
 
     public function getUser() {
-        $this->resetQuery();
         $this->resourceType = "getUserByMetaData";
         $this->query->select("users");
         return $this;
     }
 
     public function getCount() {
-        $this->resetQuery();
         $this->query->select("users", "COUNT(id) as count");
         $this->resourceType = "getUserCountByMetaData";
         return $this;
     }
 
     public function getIds() {
-        $this->resetQuery();
         $this->query->select("users", "id");
         $this->resourceType = "getUserIdsByMetaData";
         return $this;

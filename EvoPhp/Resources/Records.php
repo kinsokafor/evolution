@@ -175,4 +175,14 @@ class Records
         $this->query->insert("records", $types, $args)->execute();
     }
 
+    public static function delete($record_name) {
+        $self = new self;
+        $self->deleteRecord($record_name);
+    }
+
+    public function deleteRecord($record_name) {
+        $this->query->delete("records")->where("record_name", $record_name)->execute();
+        $this->session->{"recordTS_".$record_name} = 0;
+    }
+
 }

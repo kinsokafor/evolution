@@ -175,4 +175,14 @@ class Options
         $this->query->insert("options", $types, $args)->execute();
     }
 
+    public static function delete($option_name) {
+        $self = new self;
+        $self->deleteOption($option_name);
+    }
+
+    public function deleteOption($option_name) {
+        $this->query->delete("options")->where("option_name", $option_name)->execute();
+        $this->session->{"optionTS_".$option_name} = 0;
+    }
+
 }

@@ -25,7 +25,7 @@
             </component>
         </slot>
         <slot :values="values"></slot>
-        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes" :disabled="!meta.valid">Submit</Button></slot>
+        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes">Submit</Button></slot>
     </form>
 </template>
 
@@ -98,15 +98,15 @@
     // computed properties
 
     const getRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.condition == true))
+        return getFields.value.filter(field => (field.column == 'right'))
     });
 
     const getLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.condition == true))
+        return getFields.value.filter(field => (field.column == 'left'))
     })
 
     const getCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.condition == true))
+        return getFields.value.filter(field => (field.column == 'center'))
     })
 
     const getFields = computed(() => {
@@ -140,7 +140,7 @@
                     break;
             }
             return field;
-        })
+        }).filter(i => i.condition == true)
     })
 
     const formLayout = computed(() => {
