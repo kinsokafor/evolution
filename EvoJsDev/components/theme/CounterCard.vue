@@ -60,6 +60,10 @@
         link: {
             type: [String, Boolean],
             default: false
+        },
+        method: {
+            type: String,
+            default: "get"
         }
     })
 
@@ -87,10 +91,22 @@
 
     const getCount = async () => {
         processing.value = true
-        return req.get(link).then(r => {
-            count.value = r.data;
-            processing.value = false
-        })
+        switch (props.method.toLowerCase()) {
+            case "post":
+                return req.post(link).then(r => {
+                    count.value = r.data;
+                    processing.value = false
+                })
+            break;
+
+            default:
+                return req.get(link).then(r => {
+                    count.value = r.data;
+                    processing.value = false
+                })
+            break
+        }
+        
     }
 </script>
 
