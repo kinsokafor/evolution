@@ -164,7 +164,8 @@ class Notifications
         return $this;
     }
 
-    public function mail() {
+    public function mail(string|NULL $mailer = NULL) {
+        $this->mail->mailer = $mailer;
         $mail = $this->mail->send($this);
         $this->error = $mail->error;
         return $this;

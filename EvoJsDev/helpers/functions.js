@@ -304,3 +304,9 @@ export const storeGetter = (state, data, loader, params = {}, exclude = {}) => {
 
 export const titleCase = (s) =>
   s.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
+
+export const timeStampToDate = (timestamp) => {
+    const d = new Date(parseInt(timestamp) * 1000);
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`
+}

@@ -139,7 +139,8 @@ class User
             "password" => $generatedUserName,
             "surname" => "",
             "other_names" => "",
-            "email" => ""
+            "email" => "",
+            "country_code" => ""
         ];
 
         $meta = array_merge($default, $meta);
