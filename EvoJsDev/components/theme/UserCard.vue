@@ -67,12 +67,12 @@
     const getProfileLink = computed(() => {
         if(user.value.role == undefined) return "#"
         if("profile" in config.Auth.roles[user.value.role]) {
-            return ("/"+config.Auth.roles[user.value.role].profile+"/"+props.userId).replace("//", "/").replace("//", "/");
+            return ("/"+config.Auth.roles[user.value.role].profile+"/"+user.value?.id).replace("//", "/").replace("//", "/");
         }
-        if(currentUser.value != undefined && currentUser.value.id == props.userId) {
+        if(currentUser.value != undefined && currentUser.value.id == user.value?.id) {
             return "/#/profile"
         }
-        return ("/admin/#/profile/"+props.userId).replace("//", "/").replace("//", "/")
+        return ("/admin/#/profile/"+user.value?.id).replace("//", "/").replace("//", "/")
     })
 </script>
 

@@ -12,21 +12,21 @@
 <script setup>
     import UserData from '@/components/theme/UserData.vue'
     import { useAuthStore } from '@/store/auth';
-    import { watchEffect, computed } from 'vue';
-    import {useConfigStore} from '@/store/config'
+    // import { watchEffect, computed } from 'vue';
+    // import {useConfigStore} from '@/store/config'
 
     const auth = useAuthStore();
-    const config = useConfigStore()
-    const roles = computed(() => {
-        if(auth.getUser.role == undefined) return {}
-        return config.get(`Auth.roles.${auth.getUser.role}`)
-    })
+    // const config = useConfigStore();
+    // const roles = computed(() => {
+    //     if(auth.getUser.role == undefined) return {}
+    //     return config.get(`Auth.roles.${auth.getUser.role}`)
+    // })
 
-    watchEffect(() => {
-      if(roles.value?.profile != undefined) {
-        window.location = roles.value.profile
-      }
-    })
+    // watchEffect(() => {
+    //   if(roles.value?.profile != undefined) {
+    //     window.location = roles.value.profile
+    //   }
+    // })
 
 </script>
 

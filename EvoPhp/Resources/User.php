@@ -174,7 +174,7 @@ class User
 
         $otherMeta = array_diff_key($meta, array_flip($this->tableCols));
 
-        $user_id = $this->query->insert('users', 'sssi', 
+        $user_id = $this->query->insert('users', 'sssis', 
             [
                 'username' => (string) $meta['username'], 
                 'email' => $meta['email'], 

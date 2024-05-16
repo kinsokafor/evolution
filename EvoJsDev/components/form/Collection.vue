@@ -115,11 +115,11 @@
     //     left: 0;
     // }
     .k-input-group > label ~ div {
-        padding: 10px;
+        padding: 4px 10px;
     }
     .k-input-group > label ~ div:nth-child(2n+1) {
-        background: #1d1d1d10;
-        border-radius: 12px;
+        background: rgba(29, 29, 29, 0.01);
+        border-radius: 6px;
     }
     .collection-btns button {
         border: none;

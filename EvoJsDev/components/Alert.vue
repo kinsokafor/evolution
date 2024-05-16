@@ -4,7 +4,7 @@
             v-for="(alert, index) in alertStore['get'+position]" 
             :key="index" 
             :class="'alert-'+alert.bg+' evo-'+alert.bg" 
-            class="alert"
+            class="alert animate__animated animate__jello"
             @click="alertStore.close(alert.key)"
             >{{alert.message}}</div>
         </div>
@@ -13,6 +13,7 @@
 <script setup>
     import { useAlertStore } from '@/store/alert';
     const alertStore = useAlertStore();
+    import "animate.css";
     
     const positions = [
         "TopRight",

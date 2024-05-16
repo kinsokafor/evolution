@@ -60,7 +60,7 @@ const handleSubmit = async (values) => {
       index.value = response.data.index
       processing.value = false;
       if(response.data.loginStatus) {
-        window.location = response.data.index;//redirectTo.value;
+        window.location = response.data.index;
       } else {
           alertStore.add(response.data.msg, "danger");
       }

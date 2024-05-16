@@ -1,6 +1,6 @@
 <template>
     <div class="k-input-group" :class="layout">
-        <label :for="name" class="label">{{ label }}</label>
+        <label :for="name" class="label" v-if="label != ''">{{ label }}</label>
         <Field :as="as" :id="name" :name="name" v-bind="getAttributes" v-slot="{value}">
             <option disabled value="">Select {{ label }}</option>
             <option 

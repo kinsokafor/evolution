@@ -329,7 +329,7 @@ $router->post('/api/send-email', function(){
 // Main ROUTES
 $router->get('/', function(){
     $controller = new MainController;
-    $controller->{'Main/index'}()->auth(1,2,3,4,5,6,7,8,9)->setData(['pageTitle' => "Profile Control"]);
+    $controller->{'Main/index'}()->auth(1,2,3,4,5,6,7,8,9,10)->setData(['pageTitle' => "Profile Control"]);
 });
 
 $router->get('/accounts', function($params){
