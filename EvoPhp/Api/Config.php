@@ -32,6 +32,11 @@ class Config
         $this->data[$prop] = $value;
     }
 
+    public function __isset($prop)
+    {
+        return isset($this->data[$prop]);
+    }
+
     private function reload($file = null) {
         if (!$this->json->exists()) {
             $myfile = fopen($file, "w") or die("Unable to open file!");
