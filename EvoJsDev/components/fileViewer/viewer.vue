@@ -1,13 +1,19 @@
 <template>
     <div>
         <ListItem v-for="item in filesArr" :key="item" class="file">
-            {{ getName(item) }}
+            <p>{{ getName(item) }}</p>
             <template #right>
-                <a :href="item" download class="download-btn">
-                    <FontAwesomeIcon icon="fas fa-download"/>
-                </a>
+                <div class="d-flex">
+                    <a href="javaScript:void(0)" class="download-btn" @click.prevent="pushModal(imageTemplate, {img: item})">
+                        <FontAwesomeIcon icon="fas fa-eye"/>
+                    </a>
+                    <a :href="item" download class="download-btn">
+                        <FontAwesomeIcon icon="fas fa-download"/>
+                    </a>
+                </div>
             </template>
         </ListItem>
+        
     </div>
 </template>
 
@@ -17,6 +23,8 @@
     import { library } from '@fortawesome/fontawesome-svg-core'
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import {fas} from '@fortawesome/free-solid-svg-icons'
+    import {pushModal} from "jenesius-vue-modal";
+    import imageTemplate from './imageTemplate.vue'
 
     library.add(fas)
 
@@ -46,15 +54,19 @@
         text-transform: lowercase;
     }
     .download-btn {
-        color: white;
-        background: var(--color1);
+        color: var(--shadow2);
+        background: var(--highlight2);
         display: flex;
         border-radius: 50px;
         width: 27px;
         height: 27px;
         justify-content: center;
         align-items: center;
-        transition: 0.5s linear;
+        transition: 0.2s linear;
+    }
+    .d-flex {
+        display: flex;
+        gap: 5px;
     }
     @keyframes changeColor {
         0% {
@@ -74,8 +86,7 @@
         }
     }
     .download-btn:hover {
-        color: var(--highlight2);
-        scale: 1.05;
-        animation: changeColor-36d79186 infinite 2s alternate;
+        color: var(--shadow1);
+        animation: changeColor infinite 0.5s alternate;
     }
 </style>

@@ -57,11 +57,15 @@
         gap: 5px;
     }
     .list-item-container {
-        padding: 6px 10px;
+        padding: 15px 10px;
         margin-bottom: 15px;
         box-shadow: 0px 8px 10px -10px rgba(97, 89, 89, 0.3607843137);
         border-radius: 3px;
         border: 1px solid rgba(0, 0, 0, 0.031);
+        // .list-right {
+        //     display: flex;
+        //     flex-direction: column;
+        // }
     }
     .list-item-container .list-right {
         text-align:right;

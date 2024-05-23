@@ -8,6 +8,8 @@ class DbTable extends Query
 {
     use JoinRequest;
 
+    use Meta;
+
     public function __construct() {
         parent::__construct();
     }
