@@ -139,7 +139,12 @@ export const useUsersStore = defineStore('useUsersStore', {
         get: (state) => {
             const data = state.data
             return (params = {}) => {
-                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
+                if('id' in params) {
+                    if(state.sent.findIndex(i => i == params.id) == -1) {
+                        state.sent.push(params.id)
+                        state.loadFromServer(params)
+                    }
+                } else if (!state.fetching || !_.isEqual(params, state.lastParams)) {
                     state.lastParams = params;
                     state.processing = true;
                     state.loadFromServer(params)

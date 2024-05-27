@@ -19,7 +19,7 @@ class Store extends DbTable
 
     public $session;
 
-    private $callback;
+    protected $callback;
 
     public $error;
 
