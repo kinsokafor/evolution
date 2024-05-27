@@ -1,20 +1,14 @@
 <template>
     <div>
-        <loading :active=processing 
-            :can-cancel="true" 
-            :is-full-page=false>
-        </loading>
         <component :is="template" v-bind="$props" :count="count"></component>
     </div>
 </template>
 
 <script setup>
     import { onMounted, ref, onUnmounted } from 'vue'
-    import Loading from 'vue3-loading-overlay';
-    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
     import {Request} from '@/helpers'
-    import { useLocalStorage } from '@vueuse/core'
+    import { useSessionStorage } from '@vueuse/core'
     import DefaultCounterCard from './DefaultCounterCard.vue';
 
     const req = new Request
@@ -70,16 +64,15 @@
     /*list of available themes are
         default
     */
-    const count = ref(useLocalStorage(`${props.endPoint}-count`, 0));
+    const count = ref(useSessionStorage(`${props.endPoint}-count`, 0));
     const link = new URL(process.env.EVO_API_URL + "/" + props.endPoint);
     link.searchParams.append("iscount", 1);
-    const nextRun = ref(useLocalStorage(`${props.endPoint}-nextrun`, 0))
-    const processing = ref(false)
+    const nextRun = ref(0);
 
-    onMounted( () => {
+    onMounted( async () => {
         const nowTime = new Date().getTime();
         if(nowTime > nextRun.value) {
-            getCount().then(r => {
+            await getCount().then(r => {
                 nextRun.value = nowTime + (props.interval * 1000)
             });
         }
@@ -90,19 +83,17 @@
     })
 
     const getCount = async () => {
-        processing.value = true
         switch (props.method.toLowerCase()) {
             case "post":
-                return req.post(link).then(r => {
+                return await req.post(link).then(r => {
                     count.value = r.data;
-                    processing.value = false
                 })
             break;
 
             default:
-                return req.get(link).then(r => {
+                return await req.get(link).then(r => {
                     count.value = r.data;
-                    processing.value = false
+
                 })
             break
         }

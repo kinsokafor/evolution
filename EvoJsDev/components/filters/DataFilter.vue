@@ -41,7 +41,7 @@
     import { dynamicSort } from '@/helpers';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import {computed, ref, onUnmounted} from 'vue'
+    import {computed, ref, onMounted} from 'vue'
     import { appData, Print } from '@/helpers'
     import DataFilterTools from './DataFilterTools.vue';
     import _ from 'lodash'
@@ -97,7 +97,7 @@
 
     const selFilters = ref(props.filters);
 
-    onUnmounted(() => {
+    onMounted(() => {
         selFilters.value = {}
     })
 

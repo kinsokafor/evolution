@@ -66,7 +66,7 @@ class GetRequest implements RequestInterface {
             if($request->offset) $store->offset($request->offset);
             if($request->order_by) $store->orderBy($request->order_by, $request->order ? $request->order : 'ASC');
             http_response_code(200);
-            $request->response = $store->execute()->rows();
+            $request->response = $store->execute();
         }
         else {
             http_response_code(422);
