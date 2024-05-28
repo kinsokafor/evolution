@@ -326,6 +326,15 @@ $router->post('/api/send-email', function(){
     });
 });
 
+//Tests user access by password
+$router->post('/api/test-access', function($params){
+    $request = new Requests;
+    $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
+    $request->evoAction()->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($params) {
+        return \EvoPhp\Api\Operations::testAccess($params['password']);
+    });
+});
+
 // Main ROUTES
 $router->get('/', function(){
     $controller = new MainController;

@@ -3,6 +3,7 @@ import dashboard from '../views/dashboard.vue'
 import myprofile from '../views/myprofile.vue'
 import notifications from '../views/notifications.vue'
 import changePassword from '../views/change-password.vue'
+import ChangeProfilePicture from '../views/ChangeProfilePicture.vue'
 import NotFound from '@/components/NotFound.vue'
 
 const router = createRouter({
@@ -25,6 +26,12 @@ const router = createRouter({
             name: 'Change Password', 
             component: changePassword, 
             meta: {title: "Change Password | Home"}
+        },
+        {
+            path: '/change-profile-picture', 
+            name: 'ChangeProfilePicture', 
+            component: ChangeProfilePicture, 
+            meta: {title: "Change Profile Picture | Home"}
         },
         {
             path: '/notifications', 

@@ -52,7 +52,6 @@
     import { useField } from 'vee-validate'
     import img from './images/croppie-default.gif'
 
-    var croppie = ref(null);
     var image = ref(null);
     const instance = ref(randomId(8));
     var preview = ref(true);
@@ -123,6 +122,8 @@
         }
     })
 
+    let c = null
+
     onMounted(() => {
         defaultImage.value = props.default !== "" ? props.default : process.env.EVO_API_URL+img;
     })
@@ -132,7 +133,7 @@
     const setUpCroppie = () => {
         let id = "croppie-preview-" + instance.value
         let el = document.getElementById(id);
-        croppie.value = new Croppie(el, {
+        c = new Croppie(el, {
             viewport: props.viewport,
             boundary: props.boundary,
             showZoomer: props.showZoomer,
@@ -141,8 +142,8 @@
             enableExif: props.enableExif,
             enableResize: props.enableResize,
             mouseWheelZoom: props.mouseWheelZoom
-        })
-        croppie.value.bind({
+        });
+        c.bind({
             url: image.value
         })
     }
@@ -160,15 +161,15 @@
     }
 
     const rotateLeft = () => {
-        croppie.value.rotate(90)
+        c.rotate(90)
     }
 
     const rotateRight = () => {
-        croppie.value.rotate(-90)
+        c.rotate(-90)
     }
 
     const crop = () => {
-        croppie.value.result().then(result => {
+        c.result().then(result => {
             preview.value = true
             value.value = result
         })
@@ -176,7 +177,7 @@
 
     watchEffect(() => {
         if(meta.value.dirty == false) {
-            if(croppie.value != null) {
+            if(c != null) {
                 value.value = undefined
             }
         }

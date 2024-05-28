@@ -495,4 +495,12 @@ class Operations
         $session->index = "/";
         return $session->index;
     }
+
+    public static function testAccess($password) {
+        $session = Session::getInstance();
+        $id = $session->getResourceOwner()->user_id;
+        $user = new User;
+        $meta = $user->get($id);
+        return self::encrypt($password) == $meta->password;
+    }
 }

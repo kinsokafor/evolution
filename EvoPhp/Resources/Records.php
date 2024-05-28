@@ -135,7 +135,7 @@ class Records
 
     public function updateRecord($record_name, $record_value) {
         $record_name = strtolower($record_name);
-        Operations::doAction("before_update_".$record_name, $record_value);
+        $record_value = Operations::applyFilters("before_update_".$record_name, $record_value);
         $existing_record = $this->getRecord($record_name);
         if($existing_record !== NULL) {
             //update record

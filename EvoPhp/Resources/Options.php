@@ -135,7 +135,7 @@ class Options
 
     public function updateOption($option_name, $option_value) {
         $option_name = strtolower($option_name);
-        Operations::doAction("before_update_".$option_name, $option_value);
+        $option_value = Operations::applyFilters("before_update_".$option_name, $option_value);
         $existing_option = $this->getOption($option_name);
         if($existing_option !== NULL) {
             //update option
