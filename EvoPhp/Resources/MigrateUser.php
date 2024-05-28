@@ -97,7 +97,6 @@ final class MigrateUser
         $dbTable = new DbTable;
         $v = $dbTable->select("users", "id")->where("meta", "null")->limit(20)->execute()->rows();
         if(Operations::count($v)) {
-            $user = new User;
             foreach($v as $vv) {
                 $meta = $self->get($vv->id);
                 if($meta == false) $meta = [];
@@ -105,6 +104,7 @@ final class MigrateUser
                     "id", "username", "email", "password", "meta", "date_created"
                 ])->where("id", $vv->id)->execute();
             }
+            echo "Done 20. Please refresh.";
         } else {
             echo "Done!!!";
         }
