@@ -87,7 +87,7 @@
     const search = ref("")
 
     const pageSize = computed(() => {
-        let l = props.data.length ?? 0
+        let l = filteredData.value.length ?? 0
         const max = limit.value == 0 ? 1 : Math.ceil(l/limit.value)
         if(page.value > max && l != 0) {
             page.value = max
@@ -139,19 +139,22 @@
         return items
     })
 
-    const computedData = computed(() => {
+    const filteredData = computed(() => {
         var d = [...props.data]
-        
         if(!_.isEmpty(selFilters.value)) {
-            d = d.filter(i => {
+            return d.filter(i => {
                 let t = true
                 for(var k in selFilters.value) {
                     if(i[k] != selFilters.value[k]) t = false
                 }
                 return t
             })
-        }
-        
+        } else return d
+    })
+
+    const computedData = computed(() => {
+        var d = filteredData.value
+
         if(sortBy.value !== null) {
             d.sort(dynamicSort(sortBy.value))
         }
