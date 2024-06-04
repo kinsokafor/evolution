@@ -30,7 +30,11 @@
     const alertStore = useAlertStore();
     const processing = ref(false);
     const usersStore = useUsersStore();
-    const user = computed(() => usersStore.getUser(route.params.id));
+    const user = computed(() => {
+        let u = {...usersStore.getUser(route.params.id)}
+        delete u?.password
+        return u
+    });
 
     const roles = computed(() => {
         return Object.entries(config.Auth.roles).map(role => {
