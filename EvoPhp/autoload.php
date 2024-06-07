@@ -27,4 +27,8 @@
 			}
 		}
 	}
+
+	if(\EvoPhp\Resources\Records::get("cronjobsonline") === true) {
+		\EvoPhp\Api\Cron::executeDueJobs(5);
+	}
 ?>
