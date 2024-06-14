@@ -4,7 +4,11 @@
             :can-cancel="true" 
             :is-full-page=false>
         </loading>
-        <data-filter :search-columns="columns" :data="data" v-slot="{outputData, page, limit}">
+        <data-filter 
+            :search-columns="columns" 
+            :data="data" v-slot="{outputData, page, limit}" 
+            :quick-filters="quickFilters"
+            :sort-by="sortBy">
             <table :class="tableClass">
                 <thead>
                     <tr>
@@ -68,6 +72,19 @@
         data: {
             type: Array,
             default: []
+        },
+        quickFilters: {
+            type: Array,
+            default: [],
+            validator(value, props) {
+                let valid = true
+                value.forEach(i => {
+                    if(i?.label == undefined) valid = false 
+                    if(i?.key == undefined) valid = false 
+                    if(i?.value == undefined) valid = false 
+                })
+                return valid
+            }
         }
     })
 
@@ -113,34 +130,34 @@
         return items
     })
 
-    const computedData = computed(() => {
-        var d = [...props.data]
-        if(sortBy.value !== null) {
-            d.sort(dynamicSort(sortBy.value))
-        }
-        var end = page.value * limit.value
-        var start = (page.value - 1) * limit.value;
-        if(search.value != "") {
-            if(limit.value == 0) return d.filter(i => {
-                for(var j in props.columns) {
-                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                        return true
-                    }
-                }
-                return false
-            });
-            return d.filter(i => {
-                for(var j in props.columns) {
-                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                        return true
-                    }
-                }
-                return false
-            }).slice(start, end)
-        }
-        if(limit.value == 0) return d;
-        return d.slice(start, end)
-    })
+    // const computedData = computed(() => {
+    //     var d = [...props.data]
+    //     if(sortBy.value !== null) {
+    //         d.sort(dynamicSort(sortBy.value))
+    //     }
+    //     var end = page.value * limit.value
+    //     var start = (page.value - 1) * limit.value;
+    //     if(search.value != "") {
+    //         if(limit.value == 0) return d.filter(i => {
+    //             for(var j in props.columns) {
+    //                 if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+    //                     return true
+    //                 }
+    //             }
+    //             return false
+    //         });
+    //         return d.filter(i => {
+    //             for(var j in props.columns) {
+    //                 if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+    //                     return true
+    //                 }
+    //             }
+    //             return false
+    //         }).slice(start, end)
+    //     }
+    //     if(limit.value == 0) return d;
+    //     return d.slice(start, end)
+    // })
 
     const getContent = (column, content, row) => {
         if(typeof column == "object") {
@@ -205,17 +222,17 @@
         }
     }
 
-    const setPage = (index) => {
-        if(index == "<") {
-            page.value = pageArray.value[pageArray.value.findIndex(i => i == "<")+1]-1
-            return
-        }
-        if(index == ">") {
-            page.value = pageArray.value[pageArray.value.findIndex(i => i == ">")-1]+1
-            return
-        }
-        page.value = index
-    }
+    // const setPage = (index) => {
+    //     if(index == "<") {
+    //         page.value = pageArray.value[pageArray.value.findIndex(i => i == "<")+1]-1
+    //         return
+    //     }
+    //     if(index == ">") {
+    //         page.value = pageArray.value[pageArray.value.findIndex(i => i == ">")-1]+1
+    //         return
+    //     }
+    //     page.value = index
+    // }
 </script>
 
 <style lang="scss" scoped>

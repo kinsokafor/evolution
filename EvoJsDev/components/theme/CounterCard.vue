@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component :is="template" v-bind="$props" :count="count"></component>
+        <component :is="template" v-bind="$props" :count="parseInt(count)"></component>
     </div>
 </template>
 

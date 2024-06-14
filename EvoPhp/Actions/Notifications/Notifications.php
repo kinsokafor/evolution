@@ -95,6 +95,7 @@ class Notifications
             case "array":
                 if(Operations::count($receiver)) :
                     foreach($receiver as $r) :
+                        set_time_limit(60);
                         if(gettype($r) == "object") :
                             $name = Operations::getFullname($r);
                             $email = $r->email ?? "";
@@ -115,7 +116,18 @@ class Notifications
                             else if(Operations::validatePhoneNumber($r)) {
                                 $this->add(false, "", "", $r);
                             }
-                            else {}
+                            else {
+                                $user = new User;
+                                $meta = $user->get($receiver);
+                                if($meta) {
+                                    $name = Operations::getFullname($meta);
+                                    $email = $meta->email ?? "";
+                                    $phone = $meta->phone ?? "";
+                                    $id = $meta->id;
+                                } else {
+                                    break;
+                                }
+                            }
                         else:
                             $name = Operations::getFullname($receiver);
                             $email = $receiver['email'] ?? "";

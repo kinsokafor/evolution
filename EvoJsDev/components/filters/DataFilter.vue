@@ -4,7 +4,7 @@
             :pageArray="pageArray" 
             :page="page" 
             :computedData="computedData" 
-            :data="data"
+            :data="filteredData"
             v-model="limit"
             @setPage="setPage"
             @print="print">
@@ -30,7 +30,7 @@
             :pageArray="pageArray" 
             :page="page" 
             :computedData="computedData" 
-            :data="data"
+            :data="filteredData"
             v-model="limit"
             @setPage="setPage"
             @print="print"></data-filter-tools>
@@ -41,8 +41,8 @@
     import { dynamicSort } from '@/helpers';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import {computed, ref, onMounted} from 'vue'
-    import { appData, Print } from '@/helpers'
+    import {computed, ref, watchEffect} from 'vue'
+    import { appData, Print, linkParams } from '@/helpers'
     import DataFilterTools from './DataFilterTools.vue';
     import _ from 'lodash'
 
@@ -75,10 +75,12 @@
         filters: {
             type: Object,
             default: {}
+        },
+        sortBy: {
+            type: [String, null],
+            default: null
         }
     })
-
-    const sortBy = ref(null)
 
     const limit = ref(50)
 
@@ -97,8 +99,9 @@
 
     const selFilters = ref(props.filters);
 
-    onMounted(() => {
-        selFilters.value = {}
+    watchEffect(() => {
+        const hrefFilters = linkParams()
+        selFilters.value = {...hrefFilters, ...props.filters}
     })
 
     const toggleFilter = (filter) => {
@@ -145,7 +148,9 @@
             return d.filter(i => {
                 let t = true
                 for(var k in selFilters.value) {
-                    if(i[k] != selFilters.value[k]) t = false
+                    if(props.quickFilters.findIndex(j => j.key == k) != -1) {
+                        if(i[k] != selFilters.value[k]) t = false
+                    }
                 }
                 return t
             })
@@ -155,8 +160,8 @@
     const computedData = computed(() => {
         var d = filteredData.value
 
-        if(sortBy.value !== null) {
-            d.sort(dynamicSort(sortBy.value))
+        if(props.sortBy !== null) {
+            d.sort(dynamicSort(props.sortBy))
         }
         var end = page.value * limit.value
         var start = (page.value - 1) * limit.value;

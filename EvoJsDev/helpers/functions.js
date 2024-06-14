@@ -310,3 +310,17 @@ export const timeStampToDate = (timestamp) => {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`
 }
+
+export const linkParams = (href = null) => {
+    if(href == null) href = window.location.href
+    const paramsStrings = href.split("?")[1] ?? ""
+    const paramsArr = paramsStrings.split("&");
+    let result = {};
+    paramsArr.forEach(i => {
+        let temp = i.split("=")
+        if(temp[0] != undefined && temp[1] != undefined) {
+            result[temp[0]] = temp[1]
+        }
+    })
+    return result;
+}

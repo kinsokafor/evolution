@@ -1,7 +1,7 @@
 <template>
     <div>
         <input type="text" v-if="enableSearch" v-model="searchQuery" class="search-menu mb-4" placeholder="search for...">
-        <div :class="parentContainerClass" class="k-menu">
+        <div :class="parentContainerClass" class="k-menu" v-if="!_.isEmpty(searchedMenu)">
             <slot name="header">
                 <div :class="titleContainerClass" class="k-menu-header" v-if="title !== ''">
                     <h3>{{title}}</h3>
@@ -19,6 +19,7 @@
     import MenuButton from './MenuButton.vue';
     import {useAuthStore} from '@/store/auth';
     import { computed, ref, watchEffect } from 'vue';
+    import _ from 'lodash'
 
     const auth = useAuthStore();
     const searchQuery = ref("")
@@ -52,7 +53,15 @@
         enableSearch: {
             type: Boolean,
             default: true
+        },
+        search: {
+            type: String,
+            default: ""
         }
+    })
+
+    watchEffect(() => {
+        searchQuery.value = props.search
     })
 
     const menuItems = ref([])
