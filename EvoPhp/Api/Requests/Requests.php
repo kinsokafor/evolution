@@ -383,11 +383,6 @@ class Requests
         } else {
             http_response_code(401);
             $this->response = NULL;
-            self::signOut();
-            $config = new Config;
-            $home = isset($config->links) ? $config->links['home'] ?? "/accounts" : $config->loginLink;
-            header("HTTP/1.1 401 Unauthorized");
-            header("Location: $home");
         }
     	echo json_encode($this->response);
     }

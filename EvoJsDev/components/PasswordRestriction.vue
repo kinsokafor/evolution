@@ -3,7 +3,8 @@
         <slot></slot>
     </div>
     <div v-else class="block-access">
-        <div class="input-group">
+        <label for="">Password</label>
+        <div class="input-group d-flex">
             <input type="password" v-model="password" class="form-control" placeholder="Enter your password to continue" />
             <button class="btn btn-success" @click.prevent="testAccess">
                 <div class="animate__animated animate__infinite animate__headShake">
@@ -62,7 +63,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         min-height: 200px;
+    }
+    .d-flex {
+        display: flex;
     }
     input::placeholder {
         font-style: italic;
