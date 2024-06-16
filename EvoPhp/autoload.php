@@ -27,8 +27,9 @@
 			}
 		}
 	}
-
-	if(\EvoPhp\Resources\Records::get("cronjobsonline") !== true) {
-		\EvoPhp\Api\Cron::executeDueJobs(5);
+	if(file_exists("Database/Config.php")) {
+		if(\EvoPhp\Resources\Records::get("cronjobsonline") !== true) {
+			\EvoPhp\Api\Cron::executeDueJobs(5);
+		}
 	}
 ?>
