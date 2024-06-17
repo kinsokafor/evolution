@@ -44,7 +44,7 @@ final class MigrateUser
             return false;
         }
         $meta = array_map(function($v){
-            switch ($v->data_type) {
+            switch ($v->data_type ?? "string") {
                 case "int":
                 case "intege":
                 case "integer":

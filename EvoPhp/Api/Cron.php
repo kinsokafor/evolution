@@ -76,9 +76,9 @@ class Cron
     public static function scheduleExists($expression, $callback, ...$args) {
         $self = new self;
         $res = $self->query->select('crontabs', 'COUNT(*) AS count')
-            ->where('callback', $callback)
-            ->where('expression', $expression)
-            ->where('args', json_encode($args))
+            ->where('callback', $callback, 's')
+            ->where('expression', $expression, 's')
+            ->where('args', json_encode($args), 's')
             ->execute()->row();
         return $res->count == 0 ? false : true;
     }
