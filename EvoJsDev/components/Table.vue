@@ -31,6 +31,10 @@
                             </div>
                         </td>
                     </tr>
+                    <tr v-if="outputData.length == 0">
+                        <td :colspan="(Object.keys(columns).length + 1)"><em>Nothing found...</em></td>
+                        <td v-if="actions.length > 0"></td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     
