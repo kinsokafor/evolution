@@ -6,9 +6,10 @@ import _ from "lodash";
 import male from '../components/images/male_avatar.svg'
 import female from '../components/images/female_avatar.svg'
 
-export const randomId = (length) => {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+export const randomId = (length, characters = "") => {
+    var result = '';
+    if(characters == "")
+        characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
     for ( var i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));

@@ -280,6 +280,41 @@ $router->post('/api/loginStatus', function(){
     });
 });
 
+$router->group('/api/recover-password/', function () use ($router) {
+    $router->post('/check-email', function(){
+        $request = new Requests;
+        $params = (array) json_decode(file_get_contents('php://input'), true);
+        $request->evoAction($params)->auth()->execute(function() use ($params){
+            $user = new \EvoPhp\Resources\User;
+            $meta = $user->get($params['email']);
+            if($meta == NULL) {
+                http_response_code(400);
+                return "E-mail is not linked to any profile";
+            }
+            $message = "Your verification code for password recovery initiated is ".$params['code'];
+            $message = \EvoPhp\Api\Operations::applyFilters("recover_password_message", $message, $params['code']);
+            $not = new \EvoPhp\Actions\Notifications\Notifications($message, "Password Recovery");
+            $not->to($meta)->template()->mail();
+            if($not->error !== "") {
+                http_response_code(400);
+                return $not->error;
+            }
+            return $meta->id;
+        });
+    });
+
+    $router->post('/change', function(){
+        $request = new Requests;
+        $params = (array) json_decode(file_get_contents('php://input'), true);
+        $request->evoAction($params)->auth()->execute(function() use ($params){
+            $user = new \EvoPhp\Resources\User;
+            $user->update((int) $params['id'], [
+                "password" => $params["password"]
+            ]);
+        });
+    });
+});
+
 $router->post('/api/doaction', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
