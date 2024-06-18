@@ -81,7 +81,7 @@ class User
 
     public static function maintainTable() {
         $self = new self;
-        $statement = "ALTER TABLE user ADD 
+        $statement = "ALTER TABLE users ADD 
                         (
                             meta JSON NOT NULL
                         )";

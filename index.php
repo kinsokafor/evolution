@@ -13,5 +13,4 @@ if ( !defined('ABSPATH') )
 require_once("EvoPhp/autoload.php");
 
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
-// \Public\Modules\Tokens2Wealth\Classes\Shares::bulkCredit(1, 250000, "Bulk credit");
 ?>

@@ -320,7 +320,7 @@ export const linkParams = (href = null) => {
     paramsArr.forEach(i => {
         let temp = i.split("=")
         if(temp[0] != undefined && temp[1] != undefined) {
-            result[temp[0]] = temp[1]
+            result[temp[0]] = decodeURIComponent(temp[1])
         }
     })
     return result;

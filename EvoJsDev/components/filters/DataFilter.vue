@@ -1,4 +1,5 @@
 <template>
+    {{selFilters}}
     <div class="data-filters">
         <data-filter-tools 
             :pageArray="pageArray" 
