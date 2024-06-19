@@ -632,6 +632,12 @@ class Query extends Database
             if($this->statement !== "") {
                 $error .= "\nSTATEMENT: \t\t\t\t\"".$this->statement."\"";
             }
+            if(Operations::count($this->data)) {
+                ob_start();
+                print_r($this->data);
+                $data = ob_get_clean();
+                $error .= "\nData: \t\t\t\t".$data;
+            }
             $error .= "\n";
             $fp = fopen($file, 'a');//opens file in append mode  
             fwrite($fp, $error.PHP_EOL); 
