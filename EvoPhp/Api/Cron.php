@@ -135,7 +135,8 @@ class Cron
         $args = json_decode($job->args);
         $upd = $this->query->update('crontabs')
                     ->set("next_runtime", $next_runtime)
-                    ->set("exact_last_runtime", $runtime);
+                    ->set("exact_last_runtime", $runtime)
+                    ->halt();
         try {
             if(Operations::count($test) > 1) {
                 list($class, $method) = $test;

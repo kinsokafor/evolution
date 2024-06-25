@@ -474,9 +474,9 @@ class Operations
         return $getFromServer($currency, $base, $endPoint, $rateKey, $refreshes);
     }
 
-    public static function getIndex($meta = false) {
+    public static function getIndex($meta = false, $cache = true) {
         $session = Session::getInstance();
-        if(isset($session->index)) {
+        if(isset($session->index) && $cache) {
             return $session->index;
         }
         if(!$meta) {

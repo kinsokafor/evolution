@@ -2,6 +2,11 @@
     <div class="row">
         <div class="col-md-4 profile-block">
             <UserData :user-id="id" />
+            <hr>
+            <Reatricted access="1,2">
+                <template #message><slot></slot></template>
+                <a class="btn btn-primary" :href="`/login-as/${id}`">Login to profile</a>
+            </Reatricted>
             <slot name="left"></slot>
         </div>
         <div class="col-md-8">

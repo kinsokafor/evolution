@@ -91,6 +91,18 @@ Trait Auth {
         return $instance->createToken($meta, $scope);
     }
 
+    public static function pushLogin($meta) {
+        if(Operations::checkAccess([1,2])) {
+            $instance = new self;
+            $instance->resourceOwner = $meta;
+            $instance->authorizationState = true;
+            $scope = $instance->getScope($meta->role);
+            return $instance->createToken($meta, $scope);
+        } else {
+            die("Wrong access");
+        }
+    }
+
     public function getScope($role) {
         $config = new Config;
         $roles = $config->Auth["roles"];
