@@ -171,7 +171,8 @@ class Cron
 	}
 
     public function isCancelled($id) {
-		$r = $this->query->select('crontabs', 'COUNT(id) AS cancelled')
+        $query = new Query;
+		$r = $query->select('crontabs', 'COUNT(id) AS cancelled')
             ->where('id', $id)->where('status', 'cancelled')->execute()->row();
         return $r->cancelled > 0 ? true : false;
 	}
