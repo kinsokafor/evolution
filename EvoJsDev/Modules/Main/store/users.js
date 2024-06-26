@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
-import { useLocalStorage } from '@vueuse/core'
+import { useSessionStorage } from '@vueuse/core'
 import config from '/config.json';
 import {getFullname, storeGetter} from '@/helpers'
 
@@ -10,7 +10,7 @@ import { Users } from '@/helpers';
 export const useUsersStore = defineStore('useUsersStore', {
     state: () => {
         return {
-            data: useLocalStorage(`${config.salt}evo-users`, []),
+            data: useSessionStorage(`${config.salt}evo-users`, []),
             filterStore: useFilterStore(),
             alertStore: useAlertStore(),
             processing: false,
@@ -149,10 +149,28 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         get: (state) => {
             const data = state.data
-            return (params = {}, ...exclude) => {
-                return storeGetter(state, data, (tempParams) => {
-                    state.loadFromServer(tempParams)
-                }, params, exclude)
+            return (params = {}) => {
+                if('id' in params) {
+                    if(state.sent.findIndex(i => i == params.id) == -1) {
+                        state.sent.push(params.id)
+                        state.loadFromServer(params)
+                    }
+                } else if (!state.fetching || !_.isEqual(params, state.lastParams)) {
+                    state.lastParams = params;
+                    state.processing = true;
+                    state.loadFromServer(params)
+                }
+                const r = data.filter(i => {
+                    for (var k in params) {
+                        if(typeof params[k] == "string") {
+                            return new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+                        }
+                        if (k in i && params[k] != i[k]) return false
+                        return true
+                    }
+                    return true
+                })
+                return r
             }
         },
         getUser: (state) => {

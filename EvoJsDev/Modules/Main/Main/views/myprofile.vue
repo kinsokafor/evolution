@@ -4,6 +4,8 @@
             <UserData :user-id="auth.getUser.id" :data="auth.getUser" />
         </div>
         <div class="col-md-8">
+            <slot name="beforeMenu"></slot>
+            <Menu :items="items" container-class="col-md-4"/>
             <slot></slot>
         </div>
     </div>
@@ -12,21 +14,33 @@
 <script setup>
     import UserData from '@/components/theme/UserData.vue'
     import { useAuthStore } from '@/store/auth';
-    import { watchEffect, computed } from 'vue';
-    import {useConfigStore} from '@/store/config'
+    import Menu from '@/components/menu/Menu.vue'
+    import { computed } from 'vue';
 
     const auth = useAuthStore();
-    const config = useConfigStore()
-    const roles = computed(() => {
-        if(auth.getUser.role == undefined) return {}
-        return config.get(`Auth.roles.${auth.getUser.role}`)
-    })
 
-    watchEffect(() => {
-      if(roles.value?.profile != undefined) {
-        window.location = roles.value.profile
-      }
+    const props = defineProps({
+        menu: {
+            type: Object,
+            default: []
+        }
     })
+    
+    const items = computed(() => [
+        {
+            link: `/#/change-password`,
+            label: 'Change Password',
+            iconClass: 'fa-key',
+            isRouter: false
+        },
+        {
+            link: `/#/change-profile-picture`,
+            label: 'Change Profile Picture',
+            iconClass: 'fa-image',
+            isRouter: false
+        },    
+        ...props.menu]
+    )
 
 </script>
 

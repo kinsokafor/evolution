@@ -16,6 +16,8 @@ class Mails
      */
     public $mail;
 
+    public $mailer = NULL;
+
     public $Host;
 
     public $Port;
@@ -69,7 +71,7 @@ class Mails
     }
 
     private function setMailer() {
-        $mailer = Options::get("mailer");
+        $mailer = ($this->mailer == NULL) ? Options::get("mailer") : $this->mailer;
         if($mailer) :
             $callback = "set".ucwords($mailer);
             if(method_exists($this, $callback)) :

@@ -474,9 +474,9 @@ class Operations
         return $getFromServer($currency, $base, $endPoint, $rateKey, $refreshes);
     }
 
-    public static function getIndex($meta = false) {
+    public static function getIndex($meta = false, $cache = true) {
         $session = Session::getInstance();
-        if(isset($session->index)) {
+        if(isset($session->index) && $cache) {
             return $session->index;
         }
         if(!$meta) {
@@ -494,5 +494,13 @@ class Operations
         }
         $session->index = "/";
         return $session->index;
+    }
+
+    public static function testAccess($password) {
+        $session = Session::getInstance();
+        $id = $session->getResourceOwner()->user_id;
+        $user = new User;
+        $meta = $user->get($id);
+        return self::encrypt($password) == $meta->password;
     }
 }

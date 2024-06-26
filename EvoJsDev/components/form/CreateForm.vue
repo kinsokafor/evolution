@@ -4,11 +4,9 @@
             :can-cancel="true" 
             :is-full-page=false></loading>
         <slot name="fields" :fields="getFields" :values="values">
-            <component
-                :is="formLayout"
-            >
+            <component :is="formLayout('top')" >
                 <template v-slot>
-                    <DisplayFields :fields="getFields" :values="values" :initial-values="initialValues"/>
+                    <DisplayFields :fields="getTopFields" :values="values" :initial-values="initialValues"/>
                 </template>
 
                 <template #left>
@@ -23,9 +21,94 @@
                     <DisplayFields :fields="getRightFields" :values="values" :initial-values="initialValues"/>
                 </template>
             </component>
+            <component :is="formLayout('topAfter')" >
+                <template v-slot>
+                    <DisplayFields :fields="getTopAfterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #left>
+                    <DisplayFields :fields="getLeftAfterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #center>
+                    <DisplayFields :fields="getCenterAfterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #right>
+                    <DisplayFields :fields="getRightAfterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+            </component>
+            <component :is="formLayout('middle')" >
+                <template v-slot>
+                    <DisplayFields :fields="getMiddleFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #left>
+                    <DisplayFields :fields="getMiddleLeftFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #center>
+                    <DisplayFields :fields="getMiddleCenterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #right>
+                    <DisplayFields :fields="getMiddleRightFields" :values="values" :initial-values="initialValues"/>
+                </template>
+            </component>
+            <component :is="formLayout('middleAfter')" >
+                <template v-slot>
+                    <DisplayFields :fields="getMiddleAfterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #left>
+                    <DisplayFields :fields="getMiddleAfterLeftFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #center>
+                    <DisplayFields :fields="getMiddleAfterCenterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #right>
+                    <DisplayFields :fields="getMiddleAfterRightFields" :values="values" :initial-values="initialValues"/>
+                </template>
+            </component>
+            <component :is="formLayout('bottom')" >
+                <template v-slot>
+                    <DisplayFields :fields="getBottomFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #left>
+                    <DisplayFields :fields="getBottomLeftFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #center>
+                    <DisplayFields :fields="getBottomCenterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #right>
+                    <DisplayFields :fields="getBottomRightFields" :values="values" :initial-values="initialValues"/>
+                </template>
+            </component>
+            <component :is="formLayout('bottomAfter')" >
+                <template v-slot>
+                    <DisplayFields :fields="getBottomAfterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #left>
+                    <DisplayFields :fields="getBottomAfterLeftFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #center>
+                    <DisplayFields :fields="getBottomAfterCenterFields" :values="values" :initial-values="initialValues"/>
+                </template>
+
+                <template #right>
+                    <DisplayFields :fields="getBottomAfterRightFields" :values="values" :initial-values="initialValues"/>
+                </template>
+            </component>
         </slot>
         <slot :values="values"></slot>
-        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes" :disabled="!meta.valid">Submit</Button></slot>
+        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes">Submit</Button></slot>
     </form>
 </template>
 
@@ -54,8 +137,16 @@
             default: {}
         },
         columns: {
-            type: Number,
-            default: 1
+            type: [Number, Object],
+            default: 1,
+            validator(value, props) {
+                if(typeof value == 'object') {
+                    Object.keys(value).forEach(i => {
+                        if (["top", "middle", "bottom", "topAfter", "middleAfter", "bottomAfter"].indexOf(i) == -1) return false
+                    })
+                    return true
+                } else return true
+            }
         },
         buttonAttributes: {
             type: Object,
@@ -97,17 +188,112 @@
 
     // computed properties
 
+    //top fields
     const getRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.condition == true))
+        return getFields.value.filter(field => (field.column == 'right' && field.position == 'top'))
     });
 
     const getLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.condition == true))
+        return getFields.value.filter(field => (field.column == 'left' && field.position == 'top'))
     })
 
     const getCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.condition == true))
+        return getFields.value.filter(field => (field.column == 'center' && field.position == 'top'))
     })
+
+    const getTopFields = computed(() => {
+        return getFields.value.filter(field => (field.position == 'top'))
+    })
+
+    //top fields
+    const getRightAfterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'right' && field.position == 'topAfter'))
+    });
+
+    const getLeftAfterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'left' && field.position == 'topAfter'))
+    })
+
+    const getCenterAfterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'center' && field.position == 'topAfter'))
+    })
+
+    const getTopAfterFields = computed(() => {
+        return getFields.value.filter(field => (field.position == 'topAfter'))
+    })
+    //top after fields ends
+
+    //middle fields
+    const getMiddleRightFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'right' && field.position == 'middle'))
+    });
+
+    const getMiddleLeftFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'left' && field.position == 'middle'))
+    })
+
+    const getMiddleCenterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'center' && field.position == 'middle'))
+    })
+
+    const getMiddleFields = computed(() => {
+        return getFields.value.filter(field => (field.position == 'middle'))
+    })
+    //middle fields ends
+
+    //middle fields
+    const getMiddleAfterRightFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'right' && field.position == 'middleAfter'))
+    });
+
+    const getMiddleAfterLeftFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'left' && field.position == 'middleAfter'))
+    })
+
+    const getMiddleAfterCenterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'center' && field.position == 'middleAfter'))
+    })
+
+    const getMiddleAfterFields = computed(() => {
+        return getFields.value.filter(field => (field.position == 'middleAfter'))
+    })
+    //middle fields ends
+
+    //bottom fields
+    const getBottomRightFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'right' && field.position == 'bottom'))
+    });
+
+    const getBottomLeftFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'left' && field.position == 'bottom'))
+    })
+
+    const getBottomCenterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'center' && field.position == 'bottom'))
+    })
+
+    const getBottomFields = computed(() => {
+        return getFields.value.filter(field => (field.position == 'bottom'))
+    })
+    //bottom fields ends
+
+    //bottom fields
+    const getBottomAfterRightFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'right' && field.position == 'bottomAfter'))
+    });
+
+    const getBottomAfterLeftFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'left' && field.position == 'bottomAfter'))
+    })
+
+    const getBottomAfterCenterFields = computed(() => {
+        return getFields.value.filter(field => (field.column == 'center' && field.position == 'bottomAfter'))
+    })
+
+    const getBottomAfterFields = computed(() => {
+        return getFields.value.filter(field => (field.position == 'bottomAfter'))
+    })
+    //bottom fields ends
 
     const getFields = computed(() => {
         
@@ -120,7 +306,8 @@
                 class: "form-control",
                 layout: field.linear == true ? "linear" : field.layout ?? "",
                 column: "left",
-                condition: true
+                condition: true,
+                position: "top"
             }
             field = {...defaultField, ...field}
             if(field['as'] == 'input') {
@@ -140,24 +327,31 @@
                     break;
             }
             return field;
-        })
+        }).filter(i => i.condition == true)
     })
 
-    const formLayout = computed(() => {
-            switch (props.columns) {
-                case 2:
-                        return DoubleColumn
-                    break;
+    const formLayout = (position = 'top') => {
+        const columns = function() {
+            if(typeof props.columns == "object") {
+                if(props.columns[position] == undefined) {
+                    return 1;
+                } else return parseInt(props.columns[position])
+            } else return props.columns
+        }
+        switch (columns()) {
+            case 2:
+                    return DoubleColumn
+                break;
 
-                case 3:
-                        return TripleColumn
-                    break;
-            
-                default:
-                        return SingleColumn
-                    break;
-            }
-        })
+            case 3:
+                    return TripleColumn
+                break;
+        
+            default:
+                    return SingleColumn
+                break;
+        }
+    }
 </script>
 
 <style lang="scss">

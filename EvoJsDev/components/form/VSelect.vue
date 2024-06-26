@@ -94,5 +94,10 @@
         .vs__selected {
             margin: 0px 2px 0 !important;
         }
+        .vs__clear {
+            line-height: normal;
+            display: flex;
+            opacity: 0.3;
+        }
     }
 </style>

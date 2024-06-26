@@ -135,7 +135,7 @@ class Options
 
     public function updateOption($option_name, $option_value) {
         $option_name = strtolower($option_name);
-        Operations::doAction("before_update_".$option_name, $option_value);
+        $option_value = Operations::applyFilters("before_update_".$option_name, $option_value);
         $existing_option = $this->getOption($option_name);
         if($existing_option !== NULL) {
             //update option
@@ -173,6 +173,16 @@ class Options
             $types .= "s";
         }
         $this->query->insert("options", $types, $args)->execute();
+    }
+
+    public static function delete($option_name) {
+        $self = new self;
+        $self->deleteOption($option_name);
+    }
+
+    public function deleteOption($option_name) {
+        $this->query->delete("options")->where("option_name", $option_name)->execute();
+        $this->session->{"optionTS_".$option_name} = 0;
     }
 
 }

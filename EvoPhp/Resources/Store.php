@@ -19,7 +19,7 @@ class Store extends DbTable
 
     public $session;
 
-    private $callback;
+    protected $callback;
 
     public $error;
 
@@ -103,7 +103,7 @@ class Store extends DbTable
         
         return parent::insert("store", "sis", [
             "type" => $type,
-            "last_altered_by" => $this->session->getResourceOwner()->user_id,
+            "last_altered_by" => $this->session->getResourceOwner() != NULL ? $this->session->getResourceOwner()->user_id : 0,
             "meta" => json_encode($meta)
         ])->execute();
     }

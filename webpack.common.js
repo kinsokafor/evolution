@@ -12,6 +12,13 @@ module.exports = {
         },
         alias: {
             '@': path.resolve(__dirname, 'EvoJsDev/'),
+            '@components': path.resolve(__dirname, 'EvoJsDev/components/'),
+            '@form': path.resolve(__dirname, 'EvoJsDev/components/form/'),
+            '@theme': path.resolve(__dirname, 'EvoJsDev/components/theme/'),
+            '@filter': path.resolve(__dirname, 'EvoJsDev/components/filters/'),
+            '@menu': path.resolve(__dirname, 'EvoJsDev/components/menu/'),
+            '@module': path.resolve(__dirname, 'EvoJsDev/Modules/'),
+            '@main': path.resolve(__dirname, 'EvoJsDev/Modules/Main/'),
             'jquery$': jQueryPath,
         }
     },
@@ -51,7 +58,7 @@ module.exports = {
                 use: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(png|jpe?g|gif|svg)$/i,
+                test: /\.(png|jpe?g|gif|svg|webp)$/i,
                 loader: 'file-loader',
                 options: {
                     publicPath: '/Public/dist/images/',

@@ -4,7 +4,7 @@
             :pageArray="pageArray" 
             :page="page" 
             :computedData="computedData" 
-            :data="data"
+            :data="filteredData"
             v-model="limit"
             @setPage="setPage"
             @print="print">
@@ -17,7 +17,7 @@
                         v-for="filter in quickFilters" 
                         :key="filter.key"
                         class="filter-btn text-nowrap"
-                        :class="{active: (filters[filter.key] == filter.value)}"
+                        :class="{active: (selFilters[filter.key] == filter.value)}"
                         @click.prevent="toggleFilter(filter)"
                     >{{filter.label}}</button>
                 </div>
@@ -30,7 +30,7 @@
             :pageArray="pageArray" 
             :page="page" 
             :computedData="computedData" 
-            :data="data"
+            :data="filteredData"
             v-model="limit"
             @setPage="setPage"
             @print="print"></data-filter-tools>
@@ -41,8 +41,8 @@
     import { dynamicSort } from '@/helpers';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
-    import {computed, ref} from 'vue'
-    import { appData, Print } from '@/helpers'
+    import {computed, ref, watchEffect} from 'vue'
+    import { appData, Print, linkParams } from '@/helpers'
     import DataFilterTools from './DataFilterTools.vue';
     import _ from 'lodash'
 
@@ -71,10 +71,16 @@
                 })
                 return valid
             }
+        },
+        filters: {
+            type: Object,
+            default: {}
+        },
+        sortBy: {
+            type: [String, null],
+            default: null
         }
     })
-
-    const sortBy = ref(null)
 
     const limit = ref(50)
 
@@ -83,7 +89,7 @@
     const search = ref("")
 
     const pageSize = computed(() => {
-        let l = props.data.length ?? 0
+        let l = filteredData.value.length ?? 0
         const max = limit.value == 0 ? 1 : Math.ceil(l/limit.value)
         if(page.value > max && l != 0) {
             page.value = max
@@ -91,18 +97,23 @@
         return max;
     })
 
-    const filters = ref({});
+    const selFilters = ref(props.filters);
+
+    watchEffect(() => {
+        const hrefFilters = linkParams()
+        selFilters.value = {...hrefFilters, ...props.filters}
+    })
 
     const toggleFilter = (filter) => {
-        if(filter.key in filters.value) {
-            if(filters.value[filter.key] == filter.value) {
-                delete filters.value[filter.key]
+        if(filter.key in selFilters.value) {
+            if(selFilters.value[filter.key] == filter.value) {
+                delete selFilters.value[filter.key]
             } else {
-                filters.value[filter.key] = filter.value
+                selFilters.value[filter.key] = filter.value
             }
             
         } else {
-            filters.value[filter.key] = filter.value
+            selFilters.value[filter.key] = filter.value
         }
     }
 
@@ -131,21 +142,26 @@
         return items
     })
 
-    const computedData = computed(() => {
+    const filteredData = computed(() => {
         var d = [...props.data]
-        
-        if(!_.isEmpty(filters.value)) {
-            d = d.filter(i => {
+        if(!_.isEmpty(selFilters.value)) {
+            return d.filter(i => {
                 let t = true
-                for(var k in filters.value) {
-                    if(i[k] != filters.value[k]) t = false
+                for(var k in selFilters.value) {
+                    if(props.quickFilters.findIndex(j => j.key == k) != -1) {
+                        if(i[k] != selFilters.value[k]) t = false
+                    }
                 }
                 return t
             })
-        }
-        
-        if(sortBy.value !== null) {
-            d.sort(dynamicSort(sortBy.value))
+        } else return d
+    })
+
+    const computedData = computed(() => {
+        var d = filteredData.value
+
+        if(props.sortBy !== null) {
+            d.sort(dynamicSort(props.sortBy))
         }
         var end = page.value * limit.value
         var start = (page.value - 1) * limit.value;

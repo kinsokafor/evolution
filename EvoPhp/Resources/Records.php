@@ -135,7 +135,7 @@ class Records
 
     public function updateRecord($record_name, $record_value) {
         $record_name = strtolower($record_name);
-        Operations::doAction("before_update_".$record_name, $record_value);
+        $record_value = Operations::applyFilters("before_update_".$record_name, $record_value);
         $existing_record = $this->getRecord($record_name);
         if($existing_record !== NULL) {
             //update record
@@ -173,6 +173,16 @@ class Records
             $types .= "s";
         }
         $this->query->insert("records", $types, $args)->execute();
+    }
+
+    public static function delete($record_name) {
+        $self = new self;
+        $self->deleteRecord($record_name);
+    }
+
+    public function deleteRecord($record_name) {
+        $this->query->delete("records")->where("record_name", $record_name)->execute();
+        $this->session->{"recordTS_".$record_name} = 0;
     }
 
 }

@@ -4,19 +4,27 @@
             :can-cancel="true" 
             :is-full-page=false>
         </loading>
-        <data-filter :search-columns="columns" :data="data" v-slot="{outputData, page, limit}">
+        <data-filter 
+            :search-columns="columns" 
+            :data="data" v-slot="{outputData, page, limit}" 
+            :quick-filters="quickFilters"
+            :sort-by="sortBy">
+            <slot name="before"></slot>
             <table :class="tableClass">
                 <thead>
+                    <slot name="row-head-before" :cols="Object.keys(columns).length"></slot>
                     <tr>
                         <th>SN</th>
-                        <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{column}}</th>
+                        <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{getHeading(column)}}</th>
                         <th v-if="actions.length > 0">Actions</th>
                     </tr>
+                    <slot name="row-head-after" :cols="Object.keys(columns).length"></slot>
                 </thead>
                 <tbody>
+                    <slot name="row-body-before" :cols="Object.keys(columns).length"></slot>
                     <tr v-for="(row, index) in outputData" :key="row.id">
                         <td>{{index + ((page - 1) * limit) + 1}}</td>
-                        <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(row[index], row.link)"></td>
+                        <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(dcolumn, row[index], row)"></td>
                         <td v-if="actions.length > 0">
                             <div class="actions-container">
                                 <span v-for="action in getActions(actions, row)" :key="action.name">
@@ -27,11 +35,17 @@
                             </div>
                         </td>
                     </tr>
+                    <tr v-if="outputData.length == 0">
+                        <td :colspan="(Object.keys(columns).length + 1)"><em>Nothing found...</em></td>
+                        <td v-if="actions.length > 0"></td>
+                    </tr>
+                    <slot name="row-body-after" :cols="Object.keys(columns).length"></slot>
                 </tbody>
                 <tfoot>
-                    
+                    <slot name="row-foot" :cols="Object.keys(columns).length"></slot>
                 </tfoot>
             </table>
+            <slot name="after"></slot>
         </data-filter>
     </div>
 </template>
@@ -68,6 +82,19 @@
         data: {
             type: Array,
             default: []
+        },
+        quickFilters: {
+            type: Array,
+            default: [],
+            validator(value, props) {
+                let valid = true
+                value.forEach(i => {
+                    if(i?.label == undefined) valid = false 
+                    if(i?.key == undefined) valid = false 
+                    if(i?.value == undefined) valid = false 
+                })
+                return valid
+            }
         }
     })
 
@@ -113,42 +140,53 @@
         return items
     })
 
-    const computedData = computed(() => {
-        var d = [...props.data]
-        if(sortBy.value !== null) {
-            d.sort(dynamicSort(sortBy.value))
-        }
-        var end = page.value * limit.value
-        var start = (page.value - 1) * limit.value;
-        if(search.value != "") {
-            if(limit.value == 0) return d.filter(i => {
-                for(var j in props.columns) {
-                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                        return true
-                    }
-                }
-                return false
-            });
-            return d.filter(i => {
-                for(var j in props.columns) {
-                    if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                        return true
-                    }
-                }
-                return false
-            }).slice(start, end)
-        }
-        if(limit.value == 0) return d;
-        return d.slice(start, end)
-    })
+    // const computedData = computed(() => {
+    //     var d = [...props.data]
+    //     if(sortBy.value !== null) {
+    //         d.sort(dynamicSort(sortBy.value))
+    //     }
+    //     var end = page.value * limit.value
+    //     var start = (page.value - 1) * limit.value;
+    //     if(search.value != "") {
+    //         if(limit.value == 0) return d.filter(i => {
+    //             for(var j in props.columns) {
+    //                 if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+    //                     return true
+    //                 }
+    //             }
+    //             return false
+    //         });
+    //         return d.filter(i => {
+    //             for(var j in props.columns) {
+    //                 if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
+    //                     return true
+    //                 }
+    //             }
+    //             return false
+    //         }).slice(start, end)
+    //     }
+    //     if(limit.value == 0) return d;
+    //     return d.slice(start, end)
+    // })
 
-    const getContent = (content, link) => {
-        if(link == undefined) return content;
-        return `<a href="${link ?? '#'}">${content}</a>`
+    const getContent = (column, content, row) => {
+        if(typeof column == "object") {
+            if(typeof column?.processor == "function") {
+                content = column.processor.call(row)
+            }
+        }
+        if(row?.link == undefined) return content;
+        return `<a href="${row?.link ?? '#'}">${content}</a>`
     }
 
-    function getIndex(index) {
-        return props.serialNumber + index;
+    const getHeading = (column) => {
+        if(typeof column == "string") {
+            return column;
+        }
+        else if(typeof column == "object") {
+            return column?.heading ?? ""
+        }
+        else return ""
     }
 
     function getActions(actions, row) {
@@ -194,17 +232,17 @@
         }
     }
 
-    const setPage = (index) => {
-        if(index == "<") {
-            page.value = pageArray.value[pageArray.value.findIndex(i => i == "<")+1]-1
-            return
-        }
-        if(index == ">") {
-            page.value = pageArray.value[pageArray.value.findIndex(i => i == ">")-1]+1
-            return
-        }
-        page.value = index
-    }
+    // const setPage = (index) => {
+    //     if(index == "<") {
+    //         page.value = pageArray.value[pageArray.value.findIndex(i => i == "<")+1]-1
+    //         return
+    //     }
+    //     if(index == ">") {
+    //         page.value = pageArray.value[pageArray.value.findIndex(i => i == ">")-1]+1
+    //         return
+    //     }
+    //     page.value = index
+    // }
 </script>
 
 <style lang="scss" scoped>

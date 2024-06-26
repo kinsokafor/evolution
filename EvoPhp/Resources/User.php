@@ -17,6 +17,8 @@ class User
 {
     use Auth;
 
+    use Meta;
+
     use JoinRequest;
 
     use DataType;
@@ -36,13 +38,11 @@ class User
 
     public $session;
 
-    public $num_args;
-
     public $resultIds;
 
     public $result;
 
-    private $init;
+    private $tableCols = ["id", "username", "email", "password", "date_created", "meta"];
 
     public function __construct()
     {
@@ -62,22 +62,10 @@ class User
             username VARCHAR(30) NOT NULL,
             email VARCHAR(50) NOT NULL,
             password TEXT NOT NULL,
-            date_created TEXT NOT NULL
+            date_created TEXT NOT NULL,
+            meta JSON NOT NULL
         )";
         $self->query->query($statement)->execute();
-
-        $statement = "CREATE TABLE IF NOT EXISTS user_meta (
-                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                user_id BIGINT NOT NULL,
-                meta_name TEXT NOT NULL,
-                meta_value LONGTEXT NOT NULL,
-                data_type VARCHAR(6) DEFAULT 'string',
-                meta_int BIGINT NOT NULL DEFAULT 0,
-                meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
-                meta_blob BLOB NOT NULL
-                )";
-        $self->query->query($statement)->execute();
-
 
         $statement = "CREATE TABLE IF NOT EXISTS token (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -93,12 +81,9 @@ class User
 
     public static function maintainTable() {
         $self = new self;
-        $statement = "ALTER TABLE user_meta ADD 
+        $statement = "ALTER TABLE users ADD 
                         (
-                            data_type VARCHAR(6) DEFAULT 'string',
-                            meta_int BIGINT(20) NOT NULL DEFAULT 0,
-                            meta_double DOUBLE(20,4) NOT NULL DEFAULT 0,
-                            meta_blob BLOB NOT NULL
+                            meta JSON NOT NULL
                         )";
         $self->query->query($statement)->execute();
 
@@ -115,9 +100,6 @@ class User
     }
 
     public function execute() {
-        if($this->num_args == 0) {
-            $this->where("status", ["active", "inactive"]);
-        }
         if ($this->resourceType === NULL) return;
 
         $callback = $this->resourceType;
@@ -126,18 +108,7 @@ class User
         }
     }
 
-    private function addArgument($meta_name, $meta_value) {
-        $this->args[$meta_name] = $meta_value;
-        $this->num_args = Operations::count($this->args);
-    }
-
-    private function resetQuery() {
-        $this->args = [];
-        $this->num_args = 0;
-    }
-
     public function new($meta = array(), ...$unique_keys) {
-        $this->resetQuery();
 
         if(is_object($meta)) {
             $meta = (array) $meta;
@@ -168,7 +139,8 @@ class User
             "password" => $generatedUserName,
             "surname" => "",
             "other_names" => "",
-            "email" => ""
+            "email" => "",
+            "country_code" => ""
         ];
 
         $meta = array_merge($default, $meta);
@@ -200,12 +172,15 @@ class User
 			return false;
 		}
 
-        $user_id = $this->query->insert('users', 'sssi', 
+        $otherMeta = array_diff_key($meta, array_flip($this->tableCols));
+
+        $user_id = $this->query->insert('users', 'sssis', 
             [
                 'username' => (string) $meta['username'], 
                 'email' => $meta['email'], 
                 'password' => $meta['password'], 
-                'date_created' => time()
+                'date_created' => time(),
+                'meta' => json_encode($otherMeta)
             ]
         )->execute();
 
@@ -213,7 +188,6 @@ class User
         unset($meta['password']);
 
         if($user_id) {
-            $this->addMeta($user_id, $meta);
             $action = new Action;
             $action->doAction("evoAfterSignUp", $user_id);
             return $user_id;
@@ -223,58 +197,7 @@ class User
 
     }
 
-    public function addMeta($user_id, $meta) {
-        if(!Operations::count($meta)) {
-            return false;
-        }
-        foreach ($meta as $key => $value) {
-            switch (gettype($value)) {
-                case "boolean":
-                        $value = $value ? 1 : 0;
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "meta_blob" => "", "data_type" => "boolea"];
-                        $types = "ississ";
-                    break;
-
-                case "integer":
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_int" => $value, "meta_blob" => "", "data_type" => "int"];
-                        $types = "ississ";
-                    break;
-
-                case "double":
-                case "float":
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_double" => $value, "meta_blob" => "", "data_type" => "double"];
-                        $types = "issdss";
-                    break;
-
-                case "array":
-                        $value = Operations::serialize($value);
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => "", "data_type" => "array"];
-                        $types = "issss";
-                    break;
-
-                case "object":
-                        $value = (array) $value;
-                        $value = Operations::serialize($value);
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => "", "data_type" => "object"];
-                        $types = "issss";
-                    break;
-
-                case "blob":
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => $value, "data_type" => "blob"];
-                        $types = "issbs";
-                    break;
-
-                default:
-                        $value = ["user_id" => $user_id, "meta_name" => $key, "meta_value" => (string) $value, "meta_blob" => "", "data_type" => "string"];
-                        $types = "issss";
-                    break;
-            }
-            $this->query->insert('user_meta', $types, $value)->execute();
-        }
-    }
-
     public function update($selector, $meta, ...$unique_keys) {
-        $this->resetQuery();
         
         if(is_object($meta)) {
             $meta = (array) $meta;
@@ -307,81 +230,17 @@ class User
                 return false;
             }
         }
-        $this->query->update("users");
-        $toUpdate = false;
-        if(isset($meta['email'])) {
-            $this->query->set("email", $meta['email'], "s");
-            $toUpdate = true;
-            unset($meta['email']);
-        }
+
         if(isset($meta['password'])) {
-            $password = self::encrypt($meta['password']);
-            $this->query->set("password", $password, "s");
-            $toUpdate = true;
-            unset($meta['password']);
-        }
-        if($toUpdate) {
-            $this->query->where("id", $existing->id, "i")->execute();
+            $meta['password'] = $this->encrypt($meta['password']);
         }
 
-		if (isset($meta['user_id'])) unset($meta['user_id']);
+        $this->query->update("users")
+                ->metaSet($meta, $this->tableCols, $existing->id)
+                ->where("id", $existing->id)
+                ->execute();
 
-        foreach($meta as $key => $value) {
-            $res = $this->query->select("user_meta", "COUNT(*) AS count")
-                    ->where("meta_name", $key)
-                    ->where("user_id", $existing->id, "i")
-                    ->execute()->rows();
-            if($res[0]->count > 0) {
-                $this->updateMeta($existing->id, $key, $value);
-            } else {
-                $this->insertMeta($existing->id, $key, $value);
-            }
-        }
         return true;
-    }
-
-    private function insertMeta($id, $meta, $value) {
-        $this->addMeta($id, [$meta => $value]);
-    }
-
-    private function updateMeta($id, $meta, $value) {
-        $this->query = new Query;
-        $query = $this->query->update("user_meta");
-        switch (gettype($value)) {
-            case "boolean":
-                    $value = $value ? 1 : 0;
-                    $query->set("meta_value", (string) $value)->set("data_type", "boolean")->set("meta_int", $value, "i");
-                break;
-
-            case "integer":
-                    $query->set("meta_value", (string) $value)->set("data_type", "int")->set("meta_int", $value, "i");
-                break;
-
-            case "double":
-            case "float":
-                    $query->set("meta_value", (string) $value)->set("data_type", "double")->set("meta_double", $value, "d");
-                break;
-
-            case "array":
-                    $value = Operations::serialize($value);
-                    $query->set("meta_value", (string) $value)->set("data_type", "array");
-                break;
-
-            case "object":
-                    $value = (array) $value;
-                    $value = Operations::serialize($value);
-                    $query->set("meta_value", (string) $value)->set("data_type", "object");
-                break;
-
-            case "blob":
-                    $query->set("meta_value", (string) $value)->set("data_type", "blob")->set("meta_blob", $value, "b");
-                break;
-
-            default:
-                    $query->set("meta_value", (string) $value)->set("data_type", "string");
-                break;
-        }
-        $query->where('user_id', $id, "i")->where("meta_name", $meta)->execute();
     }
 
     public function generateUsername(array $meta = []) {
@@ -405,7 +264,7 @@ class User
     public function get($selector) {
 
         if(gettype($selector) === "integer") {
-            $selectColumn = "user_id";
+            $selectColumn = "id";
             $selector = $selector;
             $selectorType = "i";
         } else {
@@ -419,127 +278,62 @@ class User
                 $selectorType = "s";
             }
         }
+
+        $res = $this->query->select("users")
+                ->where($selectColumn, $selector, $selectorType)
+                ->execute()->row();
         
+        if($res == NULL) return $res;
         
-        $stmt = "SELECT DISTINCT meta_name, meta_value, data_type, meta_int, meta_double, meta_blob, username, email, users.id, password, date_created
-            FROM user_meta 
-            LEFT JOIN users ON users.id = user_meta.user_id
-            WHERE user_id IN (SELECT id FROM users WHERE $selectColumn = ?)
-            ORDER BY meta_value ASC";
-
-        $res = $this->query->query($stmt, $selectorType, $selector)->execute()->rows("OBJECT_K");
-        if(empty($res)) {
-            $this->error = "User not found";
-            $this->errorCode = 500;
-            return false;
-        }
-        $meta = array_map(function($v){
-            switch ($v->data_type) {
-                case "int":
-                case "intege":
-                case "integer":
-                case "number":
-                    return $v->meta_int;
-                    break;
-
-                case "boolean":
-                case "boolea":
-                    return ($v->meta_int === 0) ? false : true;
-                    break;
-
-                case "double":
-                case "float":
-                    return $v->meta_double;
-                    break;
-
-                case "blob":
-                    return $v->meta_blob;
-                    break;
-
-                case "array":
-                    return Operations::unserialize($v->meta_value);
-                    break;
-
-                case "object":
-                    return (object) Operations::unserialize($v->meta_value);
-                    break;
-
-                default:
-                    $meta_value = htmlspecialchars_decode($v->meta_value);
-                    return Operations::removeslashes($meta_value); 
-                    break;
-            }
-            
-        }, $res);
-        $meta['email'] = $res['role']->email;
-        $meta['username'] = $res['role']->username;
-        $meta['password'] = $res['role']->password;
-        $meta['date_created'] = $res['role']->date_created;
-        $meta['id'] = $res['role']->id;
-        $meta = (object) $meta;
+        $meta = self::merge($res);
+        
         return $this->processJoinRequest($meta);
     }
 
     public function delete($userId) {
-        $this->resetQuery();
         $this->query->delete("users")->where("id", $userId, "i")->execute();
-        $this->query->delete("user_meta")->where("user_id", $userId, "i")->execute();
         $files = new Files;
         $files->deleteDir("Uploads/$userId");
     }
 
     public function deleteUser() {
-        $this->resetQuery();
         $this->getUser();
         $this->resourceType = "deleteUserByMetaData";
         return $this;
     }
 
     public function getUser() {
-        $this->resetQuery();
         $this->resourceType = "getUserByMetaData";
-        $this->query->select("user_meta", "user_id");
-        $this->query->statement .= " WHERE";
-        $this->query->hasWhere = true;
-        $this->query->ready = true;
-        $this->init = true;
+        $this->query->select("users");
         return $this;
     }
 
     public function getCount() {
-        $this->resetQuery();
-        $this->getUser();
+        $this->query->select("users", "COUNT(id) as count");
         $this->resourceType = "getUserCountByMetaData";
         return $this;
     }
 
     public function getIds() {
-        $this->resetQuery();
-        $this->getUser();
+        $this->query->select("users", "id");
         $this->resourceType = "getUserIdsByMetaData";
         return $this;
     }
 
-    public function where($meta_name, $meta_value, $type = "s", $rel = "LIKE") {
-        if(!$this->init) {
-            $this->query->or();
-        } else $this->init = false;
-        $this->query->openGroup()->where("meta_name", $meta_name);
-        if(gettype($meta_value) == 'string' && strpos($meta_value, ',')) {
-            $meta_value = Operations::trimArray(explode(',', $meta_value));
+    public function isMeta($column) {
+        return !in_array($column, $this->tableCols);
+    }
+
+    public function where($column, $value, $type = "s", $rel = "LIKE") {
+        if($this->isMeta($column)) {
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
         }
-        if(is_array($meta_value)) {
-           if(strstr( $rel, 'NOT' )) {
-                $this->query->whereNotIn("meta_value", $type, ...$meta_value);
-            } else {
-                $this->query->whereIn("meta_value", $type, ...$meta_value); 
-            }
+        if(is_array($value)) {
+            $this->query->whereIn($column, $this->evaluateData($value[0] ?? "")->valueType, $rel);
         } else {
-           $this->query->where("meta_value", $meta_value, $type, $rel);
+            $this->query->where($column, $value, $type = false, $rel);
         }
-        $this->query->closeGroup();
-        $this->addArgument($meta_name, $meta_value);
-        $this->query->ready = false;
+        
         return $this;
     }
 
@@ -557,7 +351,34 @@ class User
         return $this;
     }
 
+    public function whereIn($column, $type, ...$values) {
+        if($this->isMeta($column)) {
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+        }
+        $this->query->whereIn($column, $type, ...$values);
+        return $this;
+    }
+
+    public function whereNotIn($column, $type, ...$values) {
+        if($this->isMeta($column)) {
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+        }
+        $this->query->whereNotIn($column, $type, ...$values);
+        return $this;
+    }
+    
+    public function whereBetween($column, $v1, $v2, $type = false) {
+        if($this->isMeta($column)) {
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+        }
+        $this->query->whereBetween($column, $v1, $v2, $type);
+        return $this;
+    }
+
     public function orderBy($column, $order = 'ASC') {
+        if($this->isMeta($column)) {
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+        }
         $this->query->orderBy($column, $order);
         return $this;
     }
@@ -573,28 +394,22 @@ class User
     }
 
     private function getUserByMetaData() {
-        $this->query->groupBy("user_id")->having("COUNT(user_id) = ?", "i", $this->num_args);
-        $this->query->ready = true;
-        $this->resultIds = $this->query->execute()->rows();
+        $this->result = $this->query->execute()->rows();
         $this->result = array_map(function($v){
-            return $this->get($v->user_id);
-        }, $this->resultIds);
+            return $this::merge($v);
+        }, $this->result);
         return $this->result;
     }
 
     private function getUserCountByMetaData() {
-        $this->query->groupBy("user_id")->having("COUNT(user_id) = ?", "i", $this->num_args);
-        $this->query->ready = true;
-        $this->resultIds = $this->query->execute()->rows();
-        return Operations::count($this->resultIds);
+        $this->result = $this->query->execute()->row();
+        return $this->result->count;
     }
 
     private function getUserIdsByMetaData() {
-        $this->query->groupBy("user_id")->having("COUNT(user_id) = ?", "i", $this->num_args);
-        $this->query->ready = true;
         $this->resultIds = $this->query->execute()->rows();
         $this->result = array_map(function($v){
-            return $v->user_id;
+            return $v->id;
         }, $this->resultIds);
         return $this->result;
     }

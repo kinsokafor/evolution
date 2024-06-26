@@ -9,7 +9,7 @@ use EvoPhp\Api\FileHandling\Files;
 // use EvoPhp\Resources\User;
 // use EvoPhp\Resources\Options;
 // use EvoPhp\Resources\Records;
-// use EvoPhp\Api\Config;
+use EvoPhp\Api\Config;
 
 class Requests
 {
@@ -72,13 +72,13 @@ class Requests
         endif;
         $this->tableName = $name;
         if($this->requestHeaders->requestMethod == 'get' && Operations::count($_GET)) {
-            $this->data = array_merge($this->data, $_GET);
+            $this->data = array_merge($this->data, array_map(array($this, 'uriDecode'), $_GET));
         }
         else if($this->requestHeaders->requestMethod == 'delete' && Operations::count($_GET)) {
-            $this->data = array_merge($this->data, $_GET);
+            $this->data = array_merge($this->data, array_map(array($this, 'uriDecode'), $_GET));
         }
         else if($this->requestHeaders->requestMethod == 'post' && Operations::count($_POST)) {
-            $this->data = array_merge($this->data, (array) json_decode(file_get_contents("php://input"), true));
+            $this->data = array_merge($this->data, array_map(array($this, 'uriDecode'), (array) json_decode(file_get_contents("php://input"), true)));
         }
         if(isset($args[0])) {
         	$this->data = array_merge($this->data, $args[0]);
@@ -88,8 +88,12 @@ class Requests
 
     protected function setData($data) {
         if(Operations::count($data)) {
-            $this->data = array_merge($this->data, $data);
+            $this->data = array_merge($this->data, array_map(array($this, 'uriDecode'), $data));
         }
+    }
+
+    protected function uriDecode($value) {
+        return rawurldecode($value);
     }
 
     protected function auth(...$accessLevel) {
@@ -104,7 +108,7 @@ class Requests
         }
     }
 
-    private function get() {                        
+    private function get() {                    
         if(isset($this->data['limit'])) {
             $this->limit = (int) $this->data['limit'];
             unset($this->data['limit']);

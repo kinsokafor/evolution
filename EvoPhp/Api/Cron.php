@@ -76,9 +76,9 @@ class Cron
     public static function scheduleExists($expression, $callback, ...$args) {
         $self = new self;
         $res = $self->query->select('crontabs', 'COUNT(*) AS count')
-            ->where('callback', $callback)
-            ->where('expression', $expression)
-            ->where('args', json_encode($args))
+            ->where('callback', $callback, 's')
+            ->where('expression', $expression, 's')
+            ->where('args', json_encode($args), 's')
             ->execute()->row();
         return $res->count == 0 ? false : true;
     }
@@ -135,7 +135,8 @@ class Cron
         $args = json_decode($job->args);
         $upd = $this->query->update('crontabs')
                     ->set("next_runtime", $next_runtime)
-                    ->set("exact_last_runtime", $runtime);
+                    ->set("exact_last_runtime", $runtime)
+                    ->halt();
         try {
             if(Operations::count($test) > 1) {
                 list($class, $method) = $test;
@@ -170,7 +171,8 @@ class Cron
 	}
 
     public function isCancelled($id) {
-		$r = $this->query->select('crontabs', 'COUNT(id) AS cancelled')
+        $query = new Query;
+		$r = $query->select('crontabs', 'COUNT(id) AS cancelled')
             ->where('id', $id)->where('status', 'cancelled')->execute()->row();
         return $r->cancelled > 0 ? true : false;
 	}

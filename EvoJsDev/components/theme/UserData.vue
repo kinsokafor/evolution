@@ -118,6 +118,7 @@
         gap: 14px;
         background: var(--highlight1);
         border-radius: 5px;
+        justify-content: space-between;
     }
     .user-data > div .label {
         width: 200px;

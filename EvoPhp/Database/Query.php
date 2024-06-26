@@ -363,7 +363,11 @@ class Query extends Database
             NULL|string $table = NULL) 
         {
         $data = (array) $data;
-        if(gettype($oldMeta) == "integer" && $table != NULL) {
+        if(gettype($oldMeta) == "integer") {
+            if($table == NULL) {
+                list(, $table) = explode(" ", $this->statement);
+                $table = str_replace("`", "", $table);
+            }
             $instance = new self;
             $r = $instance->select($table)->where("id", (int) $oldMeta, 'i')->execute()->row();
             $oldMeta = $r != null ? json_decode($r->meta) : [];
@@ -627,6 +631,12 @@ class Query extends Database
             $error = date("d-m-Y h:i:sA")."\t".$error;
             if($this->statement !== "") {
                 $error .= "\nSTATEMENT: \t\t\t\t\"".$this->statement."\"";
+            }
+            if(Operations::count($this->data)) {
+                ob_start();
+                print_r($this->data);
+                $data = ob_get_clean();
+                $error .= "\nData: \t\t\t\t".$data;
             }
             $error .= "\n";
             $fp = fopen($file, 'a');//opens file in append mode  

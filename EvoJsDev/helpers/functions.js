@@ -6,9 +6,10 @@ import _ from "lodash";
 import male from '../components/images/male_avatar.svg'
 import female from '../components/images/female_avatar.svg'
 
-export const randomId = (length) => {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+export const randomId = (length, characters = "") => {
+    var result = '';
+    if(characters == "")
+        characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
     for ( var i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -250,7 +251,6 @@ export const getProfilePicture = (data) => {
             resolve(profilePicture)
         }
         img.onerror = () => {
-            console.log("Error")
             resolve(getTemp())
         }
     })
@@ -305,3 +305,23 @@ export const storeGetter = (state, data, loader, params = {}, exclude = {}) => {
 
 export const titleCase = (s) =>
   s.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
+
+export const timeStampToDate = (timestamp) => {
+    const d = new Date(parseInt(timestamp) * 1000);
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`
+}
+
+export const linkParams = (href = null) => {
+    if(href == null) href = window.location.href
+    const paramsStrings = href.split("?")[1] ?? ""
+    const paramsArr = paramsStrings.split("&");
+    let result = {};
+    paramsArr.forEach(i => {
+        let temp = i.split("=")
+        if(temp[0] != undefined && temp[1] != undefined) {
+            result[temp[0]] = decodeURIComponent(temp[1])
+        }
+    })
+    return result;
+}

@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-    import Restricted from '@/components/Restricted.vue'
     import CreateForm from '@/components/form/CreateForm.vue'
     import { isRequired, isPassword, nonce } from '@/helpers'
     import { ref } from 'vue';

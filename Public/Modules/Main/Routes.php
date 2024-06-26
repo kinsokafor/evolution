@@ -1,5 +1,6 @@
-<?php  
+<?php
 
+use EvoPhp\Api\Operations;
 use Public\Modules\Main\MainController;
 use EvoPhp\Api\Requests\Requests;
 use EvoPhp\Database\Session;
@@ -280,6 +281,41 @@ $router->post('/api/loginStatus', function(){
     });
 });
 
+$router->group('/api/recover-password/', function () use ($router) {
+    $router->post('/check-email', function(){
+        $request = new Requests;
+        $params = (array) json_decode(file_get_contents('php://input'), true);
+        $request->evoAction($params)->auth()->execute(function() use ($params){
+            $user = new \EvoPhp\Resources\User;
+            $meta = $user->get($params['email']);
+            if($meta == NULL) {
+                http_response_code(400);
+                return "E-mail is not linked to any profile";
+            }
+            $message = "Your verification code for password recovery initiated is ".$params['code'];
+            $message = \EvoPhp\Api\Operations::applyFilters("recover_password_message", $message, $params['code']);
+            $not = new \EvoPhp\Actions\Notifications\Notifications($message, "Password Recovery");
+            $not->to($meta)->template()->mail();
+            if($not->error !== "") {
+                http_response_code(400);
+                return $not->error;
+            }
+            return $meta->id;
+        });
+    });
+
+    $router->post('/change', function(){
+        $request = new Requests;
+        $params = (array) json_decode(file_get_contents('php://input'), true);
+        $request->evoAction($params)->auth()->execute(function() use ($params){
+            $user = new \EvoPhp\Resources\User;
+            $user->update((int) $params['id'], [
+                "password" => $params["password"]
+            ]);
+        });
+    });
+});
+
 $router->post('/api/doaction', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
@@ -326,10 +362,19 @@ $router->post('/api/send-email', function(){
     });
 });
 
+//Tests user access by password
+$router->post('/api/test-access', function($params){
+    $request = new Requests;
+    $params = array_merge($params, (array) json_decode(file_get_contents('php://input'), true));
+    $request->evoAction()->auth(1,2,3,4,5,6,7,8,9)->execute(function() use ($params) {
+        return \EvoPhp\Api\Operations::testAccess($params['password']);
+    });
+});
+
 // Main ROUTES
 $router->get('/', function(){
     $controller = new MainController;
-    $controller->{'Main/index'}()->auth(1,2,3,4,5,6,7,8,9)->setData(['pageTitle' => "Profile Control"]);
+    $controller->{'Main/index'}()->auth(1,2,3,4,5,6,7,8,9,10)->setData(['pageTitle' => "Profile Control"]);
 });
 
 $router->get('/accounts', function($params){
@@ -353,4 +398,18 @@ $router->get('/test-template/{template}', function($params){
     $controller->testTemplate($params)->auth(1)->template("no_theme")->setData(['pageTitle' => "Template - ".$params['template']]);
 });
 
+$router->get('/login-as/{id}', function($params){
+    $user = new \EvoPhp\Resources\User();
+    $meta = $user->get((int) $params['id']);
+    if($meta == NULL) {
+        header("Location: /logout");
+    }
+    \EvoPhp\Resources\User::pushLogin($meta);
+    $index = Operations::getIndex($meta, false);
+    header("Location: $index");
+});
+
+$router->get('/migrate-users', function(){
+    \EvoPhp\Resources\MigrateUser::migrate();
+});
 ?>
