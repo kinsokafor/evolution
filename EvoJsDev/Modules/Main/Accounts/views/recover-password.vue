@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{ code }}
         <div class="alert alert-info" v-if="stage == 2">
             Check your email for verification code
         </div>

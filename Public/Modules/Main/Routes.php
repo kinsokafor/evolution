@@ -1,5 +1,6 @@
-<?php  
+<?php
 
+use EvoPhp\Api\Operations;
 use Public\Modules\Main\MainController;
 use EvoPhp\Api\Requests\Requests;
 use EvoPhp\Database\Session;
@@ -397,8 +398,18 @@ $router->get('/test-template/{template}', function($params){
     $controller->testTemplate($params)->auth(1)->template("no_theme")->setData(['pageTitle' => "Template - ".$params['template']]);
 });
 
+$router->get('/login-as/{id}', function($params){
+    $user = new \EvoPhp\Resources\User();
+    $meta = $user->get((int) $params['id']);
+    if($meta == NULL) {
+        header("Location: /logout");
+    }
+    \EvoPhp\Resources\User::pushLogin($meta);
+    $index = Operations::getIndex($meta, false);
+    header("Location: $index");
+});
+
 $router->get('/migrate-users', function(){
     \EvoPhp\Resources\MigrateUser::migrate();
 });
-
 ?>

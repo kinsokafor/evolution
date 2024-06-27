@@ -9,15 +9,19 @@
             :data="data" v-slot="{outputData, page, limit}" 
             :quick-filters="quickFilters"
             :sort-by="sortBy">
+            <slot name="before"></slot>
             <table :class="tableClass">
                 <thead>
+                    <slot name="row-head-before" :cols="Object.keys(columns).length"></slot>
                     <tr>
                         <th>SN</th>
                         <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{getHeading(column)}}</th>
                         <th v-if="actions.length > 0">Actions</th>
                     </tr>
+                    <slot name="row-head-after" :cols="Object.keys(columns).length"></slot>
                 </thead>
                 <tbody>
+                    <slot name="row-body-before" :cols="Object.keys(columns).length"></slot>
                     <tr v-for="(row, index) in outputData" :key="row.id">
                         <td>{{index + ((page - 1) * limit) + 1}}</td>
                         <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(dcolumn, row[index], row)"></td>
@@ -35,11 +39,13 @@
                         <td :colspan="(Object.keys(columns).length + 1)"><em>Nothing found...</em></td>
                         <td v-if="actions.length > 0"></td>
                     </tr>
+                    <slot name="row-body-after" :cols="Object.keys(columns).length"></slot>
                 </tbody>
                 <tfoot>
-                    
+                    <slot name="row-foot" :cols="Object.keys(columns).length"></slot>
                 </tfoot>
             </table>
+            <slot name="after"></slot>
         </data-filter>
     </div>
 </template>

@@ -3,7 +3,7 @@ import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
 import { useSessionStorage } from '@vueuse/core'
 import config from '/config.json';
-import {getFullname} from '@/helpers'
+import {getFullname, storeGetter} from '@/helpers'
 
 import { Users } from '@/helpers';
 
@@ -20,7 +20,9 @@ export const useUsersStore = defineStore('useUsersStore', {
             offset: 0,
             fetching: false,
             sent: [],
-            lastTimeOut: null
+            lastTimeOut: null,
+            loaded: [],
+            u: new Users
         }
     },
     actions: {
@@ -30,8 +32,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                 if (params[k] == undefined) return;
             }
             this.fetching = true;
-            const u = new Users;
-            u.get({
+            this.u.get({
                 limit: this.limit,
                 offset: this.offset,
                 ...params
@@ -41,6 +42,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                     // delete r.data.meta
                     let i = { ...r.data }
                     i.fullname = getFullname(i, this.format)
+                    this.loaded.push(i?.id)
                     const index = this.data.findIndex(j => j.id == i.id)
                     if (index == -1) {
                         this.data = [...this.data, i]
@@ -82,8 +84,7 @@ export const useUsersStore = defineStore('useUsersStore', {
         async enable(row, index) {
             this.processing = true;
             index = this.data.findIndex(i => i.id == row.id)
-            const u = new Users;
-            await u.update(row.id, {
+            await this.u.update(row.id, {
                 "status" : "active",
                 "id": row.id
             }).then(response => {
@@ -98,8 +99,7 @@ export const useUsersStore = defineStore('useUsersStore', {
         async disable(row, index) {
             this.processing = true;
             index = this.data.findIndex(i => i.id == row.id)
-            const u = new Users;
-            await u.update(row.id, {
+            await this.u.update(row.id, {
                 "status" : "inactive",
                 "id": row.id
             }).then(response => {
@@ -114,11 +114,14 @@ export const useUsersStore = defineStore('useUsersStore', {
         async deleteUser(row, index) {
             this.processing = true;
             index = this.data.findIndex(i => i.id == row.id)
-            const u = new Users;
-            await u.delete({
+            await this.u.delete({
                 "status" : "inactive",
                 "id": row.id
             }).then(response => {
+                const index = this.loaded.findIndex(x => x.id == row.id);
+                if(index != -1) {
+                    this.loaded.splice(index, 1)
+                }
                 this.processing = false;
                 delete this.data[index]
                 this.alertStore.add("Done", "success");
@@ -126,6 +129,14 @@ export const useUsersStore = defineStore('useUsersStore', {
                 this.alertStore.add(response.message, "danger");
                 this.processing = false;
             });
+        },
+        abort() {
+            this.u.abort()
+            this.fetching = false;
+            this.offset = 0;
+            if(this.lastTimeOut != null) {
+                clearTimeout(this.lastTimeOut)
+            }
         }
     },
     getters: {
@@ -164,7 +175,11 @@ export const useUsersStore = defineStore('useUsersStore', {
         },
         getUser: (state) => {
             return (id) => {
-                return state.get({id: id})[0] ?? {}
+                if(state.loaded.findIndex(i => i == id) == -1) {
+                    state.abort()
+                    return state.get({id: id})[0] ?? {}
+                }
+                return state.data.find(i => i.id == id);
             }
         }
     }
