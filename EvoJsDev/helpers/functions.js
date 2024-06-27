@@ -325,3 +325,5 @@ export const linkParams = (href = null) => {
     })
     return result;
 }
+
+export const leadingZero = (num) => `0${num}`.slice(-2);
