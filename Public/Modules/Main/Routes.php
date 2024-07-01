@@ -379,6 +379,7 @@ $router->get('/', function(){
 
 $router->get('/accounts', function($params){
     $controller = new MainController;
+    $controller::signOut();
     $controller->{'Accounts/index'}($params)->auth()->template("login")->setData(['pageTitle' => "Login"]);
 }); 
 
