@@ -5,6 +5,7 @@ namespace EvoPhp\Actions\Notifications;
 use EvoPhp\Resources\Options;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 /**
  * summary
@@ -88,14 +89,15 @@ class Mails
 		$emailAddress = ($option = Options::get("company_email")) ? $option : $this->From;
 		$this->mail->AddAddress($emailAddress, "No Reply");
 		$this->mail->SMTPAuth = true;
-		$this->mail->SMTPSecure = 'ssl';
+        // $this->mail->SMTPSecure = "tls";
 		$this->mail->Host = $this->Host;
 		$this->mail->Port = $this->Port;
 		$this->mail->Username = $this->Username;
 		$this->mail->Password = $this->Password;
-		$this->mail->From = $this->From;
-		$this->mail->FromName = $this->FromName;
+        $this->mail->setFrom($this->From, $this->FromName);
+        $this->mail->addReplyTo($this->From, $this->FromName);
 		$this->mail->IsHTML(true);
+ 		// $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
     }
 
     public function send($notificationObject) {
