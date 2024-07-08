@@ -278,7 +278,7 @@ export const numberWithCommas = (x) => {
     return parts.join(".");
 }
 
-export const storeGetter = (state, data, loader, params = {}, exclude = {}) => {
+export const storeGetter = (state, data, loader, params = {}, exclude = []) => {
     let tempParams = {...params};
     exclude.forEach(i => {
         delete tempParams[i]

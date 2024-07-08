@@ -28,6 +28,15 @@ Trait JoinRequest {
         return $this;
     }
 
+    public function joinStoreAt($column, ...$responseColumns) {
+        if($column == "" || $column == null) return $this;
+        $this->joinRequests['store'] = [
+            'column' => $column,
+            'responseColumns' => $responseColumns
+        ];
+        return $this;
+    }
+
     public function joinAt($table, $column, ...$responseColumns) {
         if($column == "" || $column == null) return $this;
         if($table == 'users')
@@ -62,6 +71,23 @@ Trait JoinRequest {
                 case 'post':
                     $post = new Post;
                     $res = $post->get($result->{$data['column']});
+                    if($res) {
+                        if(Operations::count($data['responseColumns'])) {
+                            foreach($data['responseColumns'] as $column) {
+                                if(isset($res->{$column}))
+                                    $result->{$column} = $res->{$column};
+                            } 
+                        } else {
+                            $result = (object) array_merge(
+                                (array) $res, (array) $result);
+                        }
+                        return $result;
+                    } else return $result;
+                    break;
+
+                case 'store':
+                    $store = new Store;
+                    $res = $store->get($result->{$data['column']})->execute();
                     if($res) {
                         if(Operations::count($data['responseColumns'])) {
                             foreach($data['responseColumns'] as $column) {

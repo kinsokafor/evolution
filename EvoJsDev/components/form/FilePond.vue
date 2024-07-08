@@ -2,16 +2,18 @@
     <div class="mb-4">
         <input type="file" :name="`input-${name}`" ref="myFile" :id="id"/>
         <small>{{ attrs.hint ?? "" }}</small>
+        <viewer :files="defaultFiles"></viewer>
     </div>
 </template>
 
 <script setup>
     import * as FilePond from 'filepond';
     import 'filepond/dist/filepond.min.css';
-    import { onMounted, ref, inject, watchEffect } from 'vue';
+    import { onMounted, ref, inject, watchEffect, computed } from 'vue';
     import {nonce,randomId} from '@/helpers';
     import { useField } from 'vee-validate'
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+    import viewer from '@/components/fileViewer/viewer.vue'
 
     const id = randomId(8)
     const myFile = ref(null)
@@ -41,6 +43,12 @@
             default: "input"
         },
         initialValues: Object
+    })
+
+    const defaultFiles = computed(() => {
+        if(props.initialValues[props.name] != undefined) {
+            return props.initialValues[props.name]
+        } else return []
     })
 
     const { value, setErrors, setValue } = useField(props.name, props.attrs.rules ?? '')
@@ -95,6 +103,14 @@
                     ondata: null,
                 }
             },
+            files: [
+                {
+                    source: props.initialValues[props.name],
+                    options: {
+                        type: 'local',
+                    }
+                },
+            ],
             labelIdle: `Drag & drop ${props.label} or <u>Browse</u>`,
             acceptedFileTypes: acceptedFileTypes ?? "application/pdf",
             ...attrs
