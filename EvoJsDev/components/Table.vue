@@ -1,62 +1,69 @@
 <template>
     <div :class="containerClass">
-        <loading :active=processing 
-            :can-cancel="true" 
-            :is-full-page=false>
-        </loading>
-        <data-filter 
-            :search-columns="columns" 
-            :data="data" v-slot="{outputData, page, limit}" 
-            :quick-filters="quickFilters"
-            :sort-by="sortBy">
-            <slot name="before"></slot>
-            <table :class="tableClass">
-                <thead>
-                    <slot name="row-head-before" :cols="Object.keys(columns).length"></slot>
-                    <tr>
-                        <th>SN</th>
-                        <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{getHeading(column)}}</th>
-                        <th v-if="actions.length > 0">Actions</th>
-                    </tr>
-                    <slot name="row-head-after" :cols="Object.keys(columns).length"></slot>
-                </thead>
-                <tbody>
-                    <slot name="row-body-before" :cols="Object.keys(columns).length"></slot>
-                    <tr v-for="(row, index) in outputData" :key="row.id">
-                        <td>{{index + ((page - 1) * limit) + 1}}</td>
-                        <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(dcolumn, row[index], row)"></td>
-                        <td v-if="actions.length > 0">
-                            <div class="actions-container">
-                                <span v-for="action in getActions(actions, row)" :key="action.name">
-                                    <a class="action-btn" :href="getUrl(action, row)" v-if="action.type == 'link'">{{action.name}}</a>
-                                    <router-link class="action-btn" :to="getUrl(action, row)" v-if="action.type == 'router-link'">{{action.name}}</router-link>
-                                    <a class="action-btn" href="#" v-if="action.type == 'action'" @click.prevent="$emit(action.callback, row, index)">{{action.name}}</a>
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr v-if="outputData.length == 0">
-                        <td :colspan="(Object.keys(columns).length + 1)"><em>Nothing found...</em></td>
-                        <td v-if="actions.length > 0"></td>
-                    </tr>
-                    <slot name="row-body-after" :cols="Object.keys(columns).length"></slot>
-                </tbody>
-                <tfoot>
-                    <slot name="row-foot" :cols="Object.keys(columns).length"></slot>
-                </tfoot>
-            </table>
-            <slot name="after"></slot>
-        </data-filter>
+        <restricted access="">
+            <template #message>
+                <span></span>
+            </template>
+            <loading :active=processing 
+                :can-cancel="true" 
+                :is-full-page=false>
+            </loading>
+            <data-filter 
+                :search-columns="columns" 
+                :data="data" v-slot="{outputData, page, limit}" 
+                :quick-filters="quickFilters"
+                :sort-by="sortBy">
+                <slot name="before"></slot>
+                <table :class="tableClass">
+                    <thead>
+                        <slot name="row-head-before" :cols="Object.keys(columns).length"></slot>
+                        <tr>
+                            <th>SN</th>
+                            <th v-for="(column, index) in columns" :key="column" @click="setSortBy(index)">{{getHeading(column)}}</th>
+                            <th v-if="useActions.length > 0">Actions</th>
+                        </tr>
+                        <slot name="row-head-after" :cols="Object.keys(columns).length"></slot>
+                    </thead>
+                    <tbody>
+                        <slot name="row-body-before" :cols="Object.keys(columns).length"></slot>
+                        <tr v-for="(row, index) in outputData" :key="row.id">
+                            <td>{{index + ((page - 1) * limit) + 1}}</td>
+                            <td v-for="(dcolumn, index) in columns" :key="dcolumn" v-html="getContent(dcolumn, row[index], row)"></td>
+                            <td v-if="useActions.length > 0">
+                                <div class="actions-container">
+                                    <span v-for="action in getActions(useActions, row)" :key="action.name">
+                                        <a class="action-btn" :href="getUrl(action, row)" v-if="action.type == 'link'">{{action.name}}</a>
+                                        <router-link class="action-btn" :to="getUrl(action, row)" v-if="action.type == 'router-link'">{{action.name}}</router-link>
+                                        <a class="action-btn" href="#" v-if="action.type == 'action'" @click.prevent="$emit(action.callback, row, index)">{{action.name}}</a>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-if="outputData.length == 0">
+                            <td :colspan="(Object.keys(columns).length + 1)"><em>Nothing found...</em></td>
+                            <td v-if="actions.length > 0"></td>
+                        </tr>
+                        <slot name="row-body-after" :cols="Object.keys(columns).length"></slot>
+                    </tbody>
+                    <tfoot>
+                        <slot name="row-foot" :cols="Object.keys(columns).length"></slot>
+                    </tfoot>
+                </table>
+                <slot name="after"></slot>
+            </data-filter>
+        </restricted>
     </div>
 </template>
 
 <script setup>
-    import { dynamicSort } from '@/helpers';
+    import {useAuthStore} from '@/store/auth'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import "/color-scheme.css";
     import {computed, ref} from 'vue'
     import DataFilter from './filters/DataFilter.vue';
+
+    const auth = useAuthStore();
 
     const props = defineProps({
         tableClass: {
@@ -104,7 +111,15 @@
 
     const page = ref(1)
 
-    const search = ref("")
+    const useActions = computed(() => {
+        return props.actions.filter(i => {
+            var access = i.access ?? [];
+            if(typeof(access) == "string") {
+                access = auth.toArray(access)
+            }
+            return auth.testAccess(access)
+        })
+    })
 
     const pageSize = computed(() => {
         let l = props.data.length ?? 0
@@ -114,60 +129,6 @@
         }
         return max;
     })
-
-    const pageArray = computed(() => {
-        var items = [1]
-        if(page.value >= 1 && page.value <= 4) {
-            for (let i = 2; i <= (pageSize.value < 4 ? pageSize.value : 4); i++) {
-                items.push(i)
-            }
-        } else items.push("<")
-        for(let i = (pageSize.value - 7) > page.value ? page.value : pageSize.value - 7; i <= (page.value + 3); i++) {
-            if(pageSize.value > 4 && i > 4 && i < (pageSize.value - 4) && (pageSize.value - 4) > page.value) {
-                items.push(i)
-            }
-        }
-        if((pageSize.value - 4) <= page.value) {
-            for (let i = (pageSize.value - 4); i <= pageSize.value; i++) {
-                if(i > 4) {
-                    items.push(i)
-                }
-            }
-        } else {
-            items.push(">")
-            items.push(pageSize.value)
-        }
-        return items
-    })
-
-    // const computedData = computed(() => {
-    //     var d = [...props.data]
-    //     if(sortBy.value !== null) {
-    //         d.sort(dynamicSort(sortBy.value))
-    //     }
-    //     var end = page.value * limit.value
-    //     var start = (page.value - 1) * limit.value;
-    //     if(search.value != "") {
-    //         if(limit.value == 0) return d.filter(i => {
-    //             for(var j in props.columns) {
-    //                 if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-    //                     return true
-    //                 }
-    //             }
-    //             return false
-    //         });
-    //         return d.filter(i => {
-    //             for(var j in props.columns) {
-    //                 if(i[j].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-    //                     return true
-    //                 }
-    //             }
-    //             return false
-    //         }).slice(start, end)
-    //     }
-    //     if(limit.value == 0) return d;
-    //     return d.slice(start, end)
-    // })
 
     const getContent = (column, content, row) => {
         if(typeof column == "object") {
@@ -232,17 +193,6 @@
         }
     }
 
-    // const setPage = (index) => {
-    //     if(index == "<") {
-    //         page.value = pageArray.value[pageArray.value.findIndex(i => i == "<")+1]-1
-    //         return
-    //     }
-    //     if(index == ">") {
-    //         page.value = pageArray.value[pageArray.value.findIndex(i => i == ">")-1]+1
-    //         return
-    //     }
-    //     page.value = index
-    // }
 </script>
 
 <style lang="scss" scoped>

@@ -132,7 +132,7 @@ class User
 
         $generatedUserName = $this->generateUsername($meta);
         $default = [
-            "role" => ($unverified) ? "unverified" : Options::get("default_user_role"),
+            "role" => ($unverified) ? "unverified" : Options::get("default_user_role") ?? "member",
             "temp_role" => $meta['role'] ?? Options::get("default_user_role"),
             "status" => ($preactivate || $unverified) ? 'active' : 'inactive',
             "username" => $generatedUserName,
