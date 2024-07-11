@@ -39,20 +39,26 @@
     })
 
     const fields = computed(() => [
+        // {
+        //     label: "Profile",
+        //     as: "croppie",
+        //     name: "profile_picture",
+        //     class: "form-control",
+        //     viewport: {
+        //         width: 250,
+        //         height: 250,
+        //         type: "circle"
+        //     },
+        //     boundary: {
+        //         width: 260,
+        //         height: 260
+        //     }
+        // }
         {
             label: "Profile",
-            as: "croppie",
             name: "profile_picture",
-            class: "form-control",
-            viewport: {
-                width: 250,
-                height: 250,
-                type: "circle"
-            },
-            boundary: {
-                width: 260,
-                height: 260
-            }
+            as: "filepond",
+            
         }
     ])
 
