@@ -17,6 +17,7 @@
 
 <script setup>
     import CreateForm from '@/components/form/CreateForm.vue'
+    import Button from '@/components/Button.vue'
     import {computed, ref} from 'vue'
     import { useAlertStore } from '@/store/alert'
     import { useAuthStore } from '@/store/auth';
@@ -58,7 +59,7 @@
             label: "Profile",
             name: "profile_picture",
             as: "filepond",
-            
+            acceptedFileTypes: ['image/*']
         }
     ])
 

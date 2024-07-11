@@ -3,6 +3,7 @@
         <input type="file" :name="`input-${name}`" ref="myFile" :id="id"/>
         <small>{{ attrs.hint ?? "" }}</small>
         <viewer :files="defaultFiles"></viewer>
+        <container></container>
     </div>
 </template>
 
@@ -14,6 +15,7 @@
     import { useField } from 'vee-validate'
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
     import viewer from '@/components/fileViewer/viewer.vue'
+    import {container} from "jenesius-vue-modal";
 
     const id = randomId(8)
     const myFile = ref(null)
@@ -103,14 +105,6 @@
                     ondata: null,
                 }
             },
-            files: [
-                {
-                    source: props.initialValues[props.name],
-                    options: {
-                        type: 'local',
-                    }
-                },
-            ],
             labelIdle: `Drag & drop ${props.label} or <u>Browse</u>`,
             acceptedFileTypes: acceptedFileTypes ?? "application/pdf",
             ...attrs
