@@ -25,7 +25,7 @@ class Store extends DbTable
 
     public $errorCode;
 
-    private $tableCols = ['id', 'type', 'last_altered_by', 'time_altered'];
+    private $tableCols = ['id', 'type', 'meta', 'last_altered_by', 'time_altered'];
 
     public function __construct()
     {

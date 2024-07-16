@@ -41,7 +41,6 @@ class PutRequest implements RequestInterface {
         else {
             $request->setUniqueKeys();
             $id = $request->data['id'];
-            unset($request->data['id']);
             $store->update()
                 ->metaSet(
                     $request->data,

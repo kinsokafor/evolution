@@ -10,7 +10,7 @@
                     :key = "c">
                     <component
                         :is="store.getComponent(as)"
-                        :name="name+'.'+i+'.'+c.name"
+                        :name="name+'['+i+'].'+c.name"
                         :label="label ?? ''"
                         :layout="layout ?? ''"
                         :attrs="getAttributes(attrs, c)"
@@ -62,7 +62,7 @@
         column: {
             type: String
         },
-        initialValues: Object
+        initialValues: [Object, Array]
     })
     const oldFields = ref([])
     const memo = ref(randomId(7))
@@ -81,6 +81,7 @@
     const control = ref(0)
     const initRows = ref(0)
     const rows = ref(1)
+
     watchEffect(() => {
         if(props.initialValues[props.name] != undefined && Object.values(props.initialValues[props.name]).length > 0 && !initiated.value) {
             initiated.value = true

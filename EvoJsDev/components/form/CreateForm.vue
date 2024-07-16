@@ -182,7 +182,11 @@
         if(_.isEqual(i, j)) {
             return
         }
-        resetForm({values: i})
+        isSubmitting.value = true
+        setTimeout(() => {
+            resetForm({values: i})
+            isSubmitting.value = false
+        }, 3000)
         tempInitialValues.value = i
     })
 
