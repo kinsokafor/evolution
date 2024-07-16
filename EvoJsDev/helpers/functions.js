@@ -278,7 +278,7 @@ export const numberWithCommas = (x) => {
     return parts.join(".");
 }
 
-export const storeGetter = (state, data, loader, params = {}, exclude = []) => {
+export const storeGetter = (state, data, loader, params = {}, exclude = [], excludeFilter = []) => {
     let tempParams = {...params};
     exclude.forEach(i => {
         delete tempParams[i]
@@ -290,6 +290,10 @@ export const storeGetter = (state, data, loader, params = {}, exclude = []) => {
         state.lastParams = tempParams;
         loader(tempParams)
     }
+    // excludeFilter.forEach(i => {
+    //     delete params[i]
+    // })
+    // console.log(params);
     const r = data.filter(i => {
         let test = true;
         for (var k in params) {
