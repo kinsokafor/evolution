@@ -1,4 +1,4 @@
-const shell = require('shelljs')
+const { exec } = require('child_process');
 const path = require('path')
 const {mergeConfig} = require('./evo.config');
 const fs = require('fs');
@@ -75,15 +75,12 @@ const test = (str, maxLength) => {
 
 const clone = async(author, pluginName) => {
     // clone the repos
-    shell.cd('./Public/Modules')
-    if (fs.existsSync(pluginName)) {
+    if (fs.existsSync(`./Public/Modules/${pluginName}`)) {
         pass1 = true
     } else {
         try {
-            var c = shell.exec(`git clone https://github.com/${author}/${pluginName} ${pluginName}`)
-            if(c.code == 0) {
-                pass1 = true
-            }
+            var c = exec(`git clone https://github.com/${author}/${pluginName} ${pluginName}`, {cwd: './Public/Modules'})
+            pass1 = true
         }
         catch(error) {
             console.error(error)
@@ -92,15 +89,12 @@ const clone = async(author, pluginName) => {
         }
     }
 
-    shell.cd('../../EvoJsDev/Modules')
-    if (fs.existsSync(pluginName)) {
+    if (fs.existsSync(`./EvoJsDev/Modules/${pluginName}`)) {
         pass2 = true
     } else {
         try {
-            var c = shell.exec(`git clone https://github.com/${author}/${pluginName}.js ${pluginName}`)
-            if(c.code == 0) {
-                pass2 = true
-            }
+            var c = exec(`git clone https://github.com/${author}/${pluginName}.js ${pluginName}`, {cwd: './EvoJsDev/Modules'})
+            pass2 = true
         }
         catch(error) {
             console.error(error)
@@ -108,21 +102,17 @@ const clone = async(author, pluginName) => {
             throw new Error(error);
         }
     }
-    shell.cd('../../')
     return (pass1 && pass2);
 }
 
 const cloneTheme = async(author, themeName) => {
 
-        shell.cd('./Public/Themes')
-        if (fs.existsSync(themeName)) {
+        if (fs.existsSync(`./Public/Themes/${themeName}`)) {
             pass1 = true
         } else {
             try {
-                var c = shell.exec(`git clone https://github.com/${author}/${themeName} ${themeName}`)
-                if(c.code == 0) {
-                    pass1 = true
-                }
+                var c = exec(`git clone https://github.com/${author}/${themeName} ${themeName}`, {cwd: './Public/Themes'})
+                pass1 = true
             }
             catch(error) {
                 console.error(error)
@@ -130,7 +120,6 @@ const cloneTheme = async(author, themeName) => {
                 throw new Error(error);
             }
         }
-        shell.cd('../../')
         return pass1
 
 }
@@ -179,10 +168,10 @@ const install = async() => {
             const dependencies = require(dependenciesFile)
             try {
                 if(dependencies.dev !== undefined) {
-                    shell.exec(`npm install -D ${dependencies.dev}`)
+                    exec(`npm install -D ${dependencies.dev}`)
                 }
                 if(dependencies.prod !== undefined) {
-                    shell.exec(`npm install ${dependencies.prod}`)
+                    exec(`npm install ${dependencies.prod}`)
                 }
             }
             catch(error) {
@@ -196,7 +185,7 @@ const install = async() => {
             const dependencies = require(sDependenciesFile)
             try {
                 if(dependencies.all !== undefined) {
-                    shell.exec(`composer require ${dependencies.all}`)
+                    exec(`composer require ${dependencies.all}`)
                 }
             }
             catch(error) {

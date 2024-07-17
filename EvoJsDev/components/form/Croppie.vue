@@ -13,6 +13,7 @@
         const copy = {...props.attrs}
         delete copy.rules
         delete copy.placeholder
+        delete copy.position
         return copy
     });
 

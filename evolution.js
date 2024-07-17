@@ -1,7 +1,6 @@
 const { exec } = require('child_process');
 const readline = require('readline');
 const fs = require('fs');
-const shell = require('shelljs')
 
 let projectName = "Evolution"
 
@@ -95,7 +94,7 @@ const startApp = async() => {
 
     rl.close();
 
-    shell.exec(`git clone https://github.com/kinsokafor/EvoSamples EvoSamples`)
+    exec(`git clone https://github.com/kinsokafor/EvoSamples EvoSamples`)
 
     console.log("Installation complete");
 
