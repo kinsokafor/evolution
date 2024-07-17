@@ -20,9 +20,9 @@
                 accepts="image/*"/>
         </label>
 		<div class="croppie-pannel" :id="'cropImagePop' + instance" v-else>
-			<div class="croppie-pannel-dialog" :style="`width: ${boundarywidth + 40}px`">
+			<div class="croppie-pannel-dialog" :style="`width: ${boundary.width + 40}px`">
 			    <div class="croppie-pannel-content">
-				<div class="croppie-pannel-body" :style="`min-width: ${boundarywidth + 40}px`">
+				<div class="croppie-pannel-body" :style="`min-width: ${boundary.width + 40}px`">
 		            <div :id="'croppie-preview-' + instance" class="croppie-preview"></div>
 		            <div class="croppie-controls">
 						<div class="btn-group">
