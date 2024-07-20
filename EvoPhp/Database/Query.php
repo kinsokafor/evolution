@@ -624,25 +624,30 @@ class Query extends Database
     public function log_error($error = "") {
         if($error !== "") {
             $this->last_error = $error;
-            $file = 'sql-errors.txt';
-            if(!file_exists($file)) {
-                file_put_contents($file, "SQL Error Log".PHP_EOL);
-            }
             $error = date("d-m-Y h:i:sA")."\t".$error;
-            if($this->statement !== "") {
-                $error .= "\nSTATEMENT: \t\t\t\t\"".$this->statement."\"";
-            }
-            if(Operations::count($this->data)) {
-                ob_start();
-                print_r($this->data);
-                $data = ob_get_clean();
-                $error .= "\nData: \t\t\t\t".$data;
-            }
-            $error .= "\n";
-            $fp = fopen($file, 'a');//opens file in append mode  
-            fwrite($fp, $error.PHP_EOL); 
-            fclose($fp);
         }
+        $file = 'sql-errors.txt';
+        if(!file_exists($file)) {
+            file_put_contents($file, "SQL Error Log".PHP_EOL);
+        }
+        if($this->statement !== "") {
+            $error .= "\nSTATEMENT: \t\t\t\t\"".$this->statement."\"";
+        }
+        if(Operations::count($this->data)) {
+            ob_start();
+            print_r($this->data);
+            $data = ob_get_clean();
+            $error .= "\nData: \t\t\t\t".$data;
+        }
+        $error .= "\n";
+        $fp = fopen($file, 'a');//opens file in append mode  
+        fwrite($fp, $error.PHP_EOL); 
+        fclose($fp);
+        return $this;
+    }
+
+    public function log() {
+        return $this->log_error();
     }
 
     /**

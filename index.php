@@ -13,5 +13,4 @@ if ( !defined('ABSPATH') )
 require_once("EvoPhp/autoload.php");
 
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
-// var_dump((new \Public\Modules\eEdu\Classes\Exams)->getBroadsheet(["exam_id" => 5]));
 ?>

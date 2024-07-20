@@ -40,10 +40,12 @@ class Store extends DbTable
         $res = parent::execute();
         switch ($this->callback) {
             case 'isCount':
+                $this->callback = null;
                 return $res->row()->count;
                 break;
 
             case 'single':
+                $this->callback = null;
                 return $res->row();
                 break;
             

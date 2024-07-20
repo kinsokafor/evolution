@@ -3,7 +3,7 @@
         <Field :name="name" type="radio" v-slot="{ field }">
             <div><label>{{label}}</label></div>
             <label v-for="(option, index) in getSelectOptions" :key="index" v-bind="getAttributes">
-                <input type="radio" v-bind="{...field, ...getAttributes}" :value="option.value" :checked="option.value == initialValues[name]" @input="(val) => setValue(val.target.checked)" />
+                <input type="radio" v-bind="{...field, ...getAttributes}" :value="option.value" :checked="option.value == value" @input="(val) => setValue(val.target.checked)" />
                 {{option.name}}
             </label>
         </Field>
@@ -12,7 +12,7 @@
 
 <script setup>
     import { Field, useField } from 'vee-validate';
-    import { computed } from 'vue'
+    import { computed, watch } from 'vue'
 
     const props = defineProps({
         layout: {
@@ -37,10 +37,17 @@
         column: {
             type: String
         },
-        initialValues: Object
+        initialValues: {
+            type: Object,
+            default: {}
+        }
     })
     
     const {value, setValue} = useField(props.name);
+
+    watch(() => props.initialValues, () => {
+        setValue(props.initialValues[props.name]);
+    })
 
     const getSelectOptions = computed(() => {
         const options = props.attrs.options;

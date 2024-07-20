@@ -1,7 +1,8 @@
 <template>
+    <slot name="newLine"></slot>
     <div class="tools">
         <div class="controls">
-            <div class="mb-2">
+            <div class="mb-2 d-flex buttons-set">
                 <div class="btn-group">
                     <button 
                         class="btn btn-secondary btn-sm"
@@ -12,7 +13,6 @@
                         >{{ index }}</button>
                     <button class="btn btn-outline-secondary btn-sm mr-3" @click="$emit('print')">Print</button>
                 </div>
-                
             </div>
             <div class="mb-2">
                 <select class="limit" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
@@ -29,6 +29,7 @@
         </div>
         <slot></slot>
     </div>
+    
 </template>
 
 <script setup>
@@ -49,5 +50,12 @@
         border: 1px solid #e1dede;
         border-radius: 5px;
         padding: 1px 10px;
+    }
+    .tools {
+        display: flex;
+        justify-content: space-between;
+        .controls div {
+            margin-bottom: 5px;
+        }
     }
 </style>

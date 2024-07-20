@@ -130,6 +130,25 @@ export const useUsersStore = defineStore('useUsersStore', {
                 this.processing = false;
             });
         },
+        async tempDeleteUser(row, index) {
+            this.processing = true;
+            index = this.data.findIndex(i => i.id == row.id)
+            await this.u.update(row.id, {
+                "status" : "deleted",
+                "id": row.id
+            }).then(response => {
+                const index = this.loaded.findIndex(x => x.id == row.id);
+                if(index != -1) {
+                    this.loaded.splice(index, 1)
+                }
+                this.processing = false;
+                delete this.data[index]
+                this.alertStore.add("Done", "success");
+            }).catch(response => {
+                this.alertStore.add(response.message, "danger");
+                this.processing = false;
+            });
+        },
         abort() {
             this.u.abort()
             this.fetching = false;

@@ -290,10 +290,9 @@ export const storeGetter = (state, data, loader, params = {}, exclude = [], excl
         state.lastParams = tempParams;
         loader(tempParams)
     }
-    // excludeFilter.forEach(i => {
-    //     delete params[i]
-    // })
-    // console.log(params);
+    excludeFilter.forEach(i => {
+        delete params[i]
+    })
     const r = data.filter(i => {
         let test = true;
         for (var k in params) {

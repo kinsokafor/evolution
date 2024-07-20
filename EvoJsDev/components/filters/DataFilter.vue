@@ -12,6 +12,9 @@
                 <div>
                     <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
                 </div>
+                
+            </div>
+            <template #newLine>
                 <div class="filters-container">
                     <button 
                         v-for="filter in quickFilters" 
@@ -21,7 +24,7 @@
                         @click.prevent="toggleFilter(filter)"
                     >{{filter.label}}</button>
                 </div>
-            </div>
+            </template>
         </data-filter-tools>
         <div id="dataprint">
             <slot :output-data="computedData" :page="page" :limit="limit"></slot>
@@ -33,7 +36,8 @@
             :data="filteredData"
             v-model="limit"
             @setPage="setPage"
-            @print="print"></data-filter-tools>
+            @print="print">
+        </data-filter-tools>
     </div>
 </template>
 
@@ -220,35 +224,26 @@
         border: 1px solid var(--color2);
     }
 
-    .tools {
+    
+    .filters-container {
+        justify-content: end;
+        gap: 3px;
+        margin-top: 1px;
+        margin-bottom: 21px;
         display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        .controls div {
-            margin-bottom: 5px;
+        flex-wrap: wrap;
+        .filter-btn {
+            border: none;
+            padding: 1.4px 8px 5px;
+            line-height: 1;
+            font-size: 11px;
+            text-transform: lowercase;
+            border-radius: 10px;
+            background-color: var(--highlight3);
+            color: var(--highlight1);
         }
-    }
-    .search {
-        .filters-container {
-            display: grid;
-            grid-template-columns: auto auto auto;
-            justify-content: start;
-            gap: 3px;
-            margin-top: 7px;
-            margin-bottom: 9px;
-            .filter-btn {
-                border: none;
-                padding: 1.4px 8px 5px;
-                line-height: 1;
-                font-size: 11px;
-                text-transform: lowercase;
-                border-radius: 10px;
-                background-color: var(--highlight3);
-                color: var(--highlight1);
-            }
-            .filter-btn.active {
-                background-color: var(--color2);
-            }
+        .filter-btn.active {
+            background-color: var(--color2);
         }
     }
      /* Extra small devices (phones, 600px and down) */
