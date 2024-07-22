@@ -130,6 +130,8 @@ class Query extends Database
 
     private $having = "";
 
+    private $placeholders = [];
+
     private $isInsert = false;
 
     private $leadingSetComma = false;
@@ -298,19 +300,22 @@ class Query extends Database
         $this->havingTypes = "";
         $this->hasWhere = false;
         $this->prependAnd = false;
+        $this->placeholders = [];
         return $this;
     }
 
     public function select($table, $column = "*") {
         $this->resetStatement();
-        $this->statement .= "SELECT $column FROM `$table`";
+        $this->placeholders["column"] = $column;
+        $this->statement .= "SELECT [column] FROM `$table`";
         $this->ready = true;
         return $this;
     }
 
     public function selectDistinct($table, $column = "*") {
         $this->resetStatement();
-        $this->statement .= "SELECT DISTINCT $column FROM `$table`";
+        $this->placeholders["column"] = $column;
+        $this->statement .= "SELECT DISTINCT [column] FROM `$table`";
         $this->ready = true;
         return $this;
     }
@@ -559,6 +564,10 @@ class Query extends Database
 
     private function organize() {
 
+        foreach ($this->placeholders as $placeholder => $value) {
+            $this->statement = str_replace("[$placeholder]", $value, $this->statement);
+        }
+
         $this->statement .= $this->group;
 
         if($this->having !== "") {
@@ -594,6 +603,29 @@ class Query extends Database
 
     }
 
+    public function leftJoin($table, $left, $combinator, $right) {
+        $this->statement .= " LEFT JOIN $table ON $left $combinator $right";
+        return $this;
+    }
+
+    public function rightJoin($table, $left, $combinator, $right) {
+        $this->statement .= " RIGHT JOIN $table ON $left $combinator $right";
+        return $this;
+    }
+
+    public function addSelect($column) {
+        if(isset($this->placeholders["column"])) {
+            $this->placeholders["column"] .= ", $column";
+        }
+        return $this;
+    }
+
+    public function addData($data = [], $types = "") {
+        array_push($this->data, ...$data);
+        $this->dataTypes .= $types;
+        return $this;
+    }
+
     public function openGroup() {
         $this->statement .= "(";
         $this->ready = false;
@@ -625,7 +657,12 @@ class Query extends Database
         if($error !== "") {
             $this->last_error = $error;
             $error = date("d-m-Y h:i:sA")."\t".$error;
+            $this->log($error);
         }
+        return $this;
+    }
+
+    public function log($error = "") {
         $file = 'sql-errors.txt';
         if(!file_exists($file)) {
             file_put_contents($file, "SQL Error Log".PHP_EOL);
@@ -644,10 +681,6 @@ class Query extends Database
         fwrite($fp, $error.PHP_EOL); 
         fclose($fp);
         return $this;
-    }
-
-    public function log() {
-        return $this->log_error();
     }
 
     /**

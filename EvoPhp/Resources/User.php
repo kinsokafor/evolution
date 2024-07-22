@@ -261,7 +261,7 @@ class User
         return Operations::applyFilters("username_filter", $user_name);
     }
 
-    public function get($selector) {
+    public function get($selector, $columns = "*") {
 
         if(gettype($selector) === "integer") {
             $selectColumn = "id";
@@ -279,7 +279,7 @@ class User
             }
         }
 
-        $res = $this->query->select("users")
+        $res = $this->query->select("users", $columns)
                 ->where($selectColumn, $selector, $selectorType)
                 ->execute()->row();
         
@@ -302,9 +302,9 @@ class User
         return $this;
     }
 
-    public function getUser() {
+    public function getUser($columns = "users.id, users.username, users.meta, users.email, users.password") {
         $this->resourceType = "getUserByMetaData";
-        $this->query->select("users");
+        $this->query->select("users", $columns);
         return $this;
     }
 
@@ -320,13 +320,47 @@ class User
         return $this;
     }
 
+    public function leftJoin($table, $left, $combinator, $right) {
+        if($this->isMeta($left)) {
+            $left = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$left'))";
+        }
+        $this->query->leftJoin($table, $left, $combinator, $right);
+        return $this;
+    }
+
+    public function rightJoin($table, $left, $combinator, $right) {
+        if($this->isMeta($left)) {
+            $left = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$left'))";
+        }
+        $this->query->rightJoin($table, $left, $combinator, $right);
+        return $this;
+    }
+
+    public function addSelect($column) {
+        $this->query->addSelect($column);
+        return $this;
+    }
+
+    public function addData($data = [], $types = "") {
+        $this->query->addData($data, $types);
+        return $this;
+    }
+
+    public function log() {
+        $this->query->log();
+        return $this;
+    }
+
     public function isMeta($column) {
-        return !in_array($column, $this->tableCols);
+        return !(
+            in_array($column, $this->tableCols) || 
+            in_array(str_replace("users.", "", $column), $this->tableCols)
+        );
     }
 
     public function where($column, $value, $type = "s", $rel = "LIKE") {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$column'))";
         }
         if(is_array($value)) {
             $this->query->whereIn($column, $this->evaluateData($value[0] ?? "")->valueType, $rel);
@@ -353,7 +387,7 @@ class User
 
     public function whereIn($column, $type, ...$values) {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$column'))";
         }
         $this->query->whereIn($column, $type, ...$values);
         return $this;
@@ -361,7 +395,7 @@ class User
 
     public function whereNotIn($column, $type, ...$values) {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$column'))";
         }
         $this->query->whereNotIn($column, $type, ...$values);
         return $this;
@@ -369,7 +403,7 @@ class User
     
     public function whereBetween($column, $v1, $v2, $type = false) {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$column'))";
         }
         $this->query->whereBetween($column, $v1, $v2, $type);
         return $this;
@@ -377,7 +411,7 @@ class User
 
     public function orderBy($column, $order = 'ASC') {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(users.meta, '$.$column'))";
         }
         $this->query->orderBy($column, $order);
         return $this;

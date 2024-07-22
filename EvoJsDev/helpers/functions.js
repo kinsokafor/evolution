@@ -166,9 +166,9 @@ export const isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
 }
 
-export const shaEncode = (input) => {
+export const shaEncode = (...input) => {
     const sha1 = require('js-sha1')
-    return sha1(input)
+    return sha1(input.join(""))
 } 
 
 export const objectMap = (object, mapFn) => {

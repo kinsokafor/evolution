@@ -76,6 +76,32 @@ class Store extends DbTable
         return Operations::sanitize($meta);
     }
 
+    public function leftJoin($table, $left, $combinator, $right) {
+        if($this->isMeta($left)) {
+            $left = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$left'))";
+        }
+        parent::leftJoin($table, $left, $combinator, $right);
+        return $this;
+    }
+
+    public function rightJoin($table, $left, $combinator, $right) {
+        if($this->isMeta($left)) {
+            $left = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$left'))";
+        }
+        parent::rightJoin($table, $left, $combinator, $right);
+        return $this;
+    }
+
+    public function addSelect($column) {
+        parent::addSelect($column);
+        return $this;
+    }
+
+    public function addData($data = [], $types = "") {
+        parent::addData($data, $types);
+        return $this;
+    }
+
     private function isMeta($column) {
         return !in_array($column, $this->tableCols);
     }
@@ -141,7 +167,7 @@ class Store extends DbTable
 
     public function where($column, $value, $type = false, $rel = "LIKE") {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$column'))";
         }
         return parent::where($column, $value, $type = false, $rel);
     }
@@ -162,28 +188,28 @@ class Store extends DbTable
 
     public function whereIn($column, $type, ...$values) {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$column'))";
         }
         return parent::whereIn($column, $type, ...$values);
     }
 
     public function whereNotIn($column, $type, ...$values) {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$column'))";
         }
         return parent::whereNotIn($column, $type, ...$values);
     }
     
     public function whereBetween($column, $v1, $v2, $type = false) {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$column'))";
         }
         return parent::whereBetween($column, $v1, $v2, $type);
     }
 
     public function orderBy($column, $order = 'ASC') {
         if($this->isMeta($column)) {
-            $column = "JSON_UNQUOTE(JSON_EXTRACT(meta, '$.$column'))";
+            $column = "JSON_UNQUOTE(JSON_EXTRACT(store.meta, '$.$column'))";
         }
         return parent::orderBy($column, $order);
     }
