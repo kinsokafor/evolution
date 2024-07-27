@@ -11,6 +11,7 @@ module.exports = {
           "url": false,
         },
         alias: {
+            '@root': path.resolve(__dirname, './'),
             '@': path.resolve(__dirname, 'EvoJsDev/'),
             '@components': path.resolve(__dirname, 'EvoJsDev/components/'),
             '@form': path.resolve(__dirname, 'EvoJsDev/components/form/'),

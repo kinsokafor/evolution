@@ -18,7 +18,7 @@ export const useFilterStore = defineStore('useFilterStore', {
     },
     actions: {
         add(filterName, value, key = "default") {
-            if(value == "") {
+            if(value == "" || value == false) {
                 delete this.filters[key][filterName];
                 return;
             } 
@@ -44,18 +44,6 @@ export const useFilterStore = defineStore('useFilterStore', {
             }
             this.filters[this.filterKey][name] = value;
         },
-        // getFilter(filter, key = "default") {
-        //     if(Object.hasOwnProperty.call(this.filters, key)) {
-        //         if(Object.hasOwnProperty.call(this.filters[key], filter)) {
-        //             return this.filters[key][filter];
-        //         } else return false;
-        //     } else return false;
-        // },
-        // getFilters(key = "default") {
-        //     if(Object.hasOwnProperty.call(this.filters, key)) {
-        //         return this.filters[key]
-        //     } else return false;
-        // },
         addRequestURL(response) {
             if(!Object.hasOwnProperty.call(this.requestURL, this.filterKey) 
             && response.request.status == 200) {

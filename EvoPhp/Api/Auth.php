@@ -5,6 +5,7 @@ namespace EvoPhp\Api;
 use EvoPhp\Api\Config;
 use EvoPhp\Database\Query;
 use EvoPhp\Resources\User;
+use EvoPhp\Resources\DbTable;
 use EvoPhp\Database\Session;
 use EvoPhp\Api\Operations;
 use Delight\Cookie\Cookie;
@@ -161,15 +162,17 @@ Trait Auth {
     }
 
     protected function getTokenObject($token) {
-        $query = new Query;
-        $rows = $query->select("token")
+        $dbTable = new DbTable;
+        $res = $dbTable->select("token")
+                    ->leftJoin("users", "token.user_id", "=", "users.id")
                     ->where("token", $token)
                     ->where("status", "active")
                     ->where("expiry", time(), "i", ">")
-                    ->execute()->rows();
-        if(Operations::count($rows)) {
-            return $rows[0];
-        } else return false;
+                    ->execute()->row();
+        if($res == null) {
+            return false;
+        }
+        return $dbTable->merge($res);
     }
 
     protected function getAuthorization() {

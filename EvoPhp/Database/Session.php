@@ -64,10 +64,7 @@ class Session
         if(!isset($this->accesstoken)) {
             return false;
         }
-        if ($tokenMeta = $this->getTokenObject($this->accesstoken)) {
-            return $tokenMeta;
-        }
-        return false;
+        return $this->getTokenObject($this->accesstoken);
     }
 
     public function increment($property, $steps = 1) {

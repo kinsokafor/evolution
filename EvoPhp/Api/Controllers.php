@@ -8,6 +8,7 @@ use EvoPhp\Themes\Themes;
 use EvoPhp\Api\Config;
 use Assoto\JS;
 use KubAT\PhpSimple\HtmlDomParser;
+use EvoPhp\Database\Session;
 
 /**
  * summary
@@ -102,6 +103,8 @@ abstract class Controllers
     }
 
     public function __destruct() {
+        $session = Session::getInstance();
+        $this->setData(["resourceOwner" => $session->getResourceOwner()]);
         if($this->accessType == "public" || $this->getAuthorization()) {
             $this->addBundles();
             echo $this->getContent();

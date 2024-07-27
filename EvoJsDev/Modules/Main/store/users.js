@@ -3,9 +3,7 @@ import { useFilterStore } from '@/store/filter';
 import { useAlertStore } from '@/store/alert';
 import { useSessionStorage } from '@vueuse/core'
 import config from '/config.json';
-import {getFullname, storeGetter} from '@/helpers'
-
-import { Users } from '@/helpers';
+import {getFullname, storeGetter, Users} from '@/helpers'
 
 export const useUsersStore = defineStore('useUsersStore', {
     state: () => {
