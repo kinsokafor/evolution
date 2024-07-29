@@ -191,12 +191,13 @@ export const useUsersStore = defineStore('useUsersStore', {
             }
         },
         getUser: (state) => {
+            const data = state.data
             return (id) => {
                 if(state.loaded.findIndex(i => i == id) == -1) {
-                    state.abort()
+                    // state.abort()
                     return state.get({id: id})[0] ?? {}
                 }
-                return state.data.find(i => i.id == id);
+                return data.find(i => i.id == id);
             }
         }
     }
