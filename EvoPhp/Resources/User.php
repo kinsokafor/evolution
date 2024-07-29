@@ -302,7 +302,7 @@ class User
         return $this;
     }
 
-    public function getUser($columns = "users.id, users.username, users.meta, users.email, users.password") {
+    public function getUser($columns = "users.id, users.username, users.meta, users.email, users.password, users.date_created") {
         $this->resourceType = "getUserByMetaData";
         $this->query->select("users", $columns);
         return $this;
