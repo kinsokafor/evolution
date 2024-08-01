@@ -134,6 +134,8 @@ class Query extends Database
 
     private $isInsert = false;
 
+    private $isUpdate = false;
+
     private $leadingSetComma = false;
 
     public function __construct(){}
@@ -191,38 +193,39 @@ class Query extends Database
             } else {
                 $this->result = $this->connection->query($this->statement);
             }
+            $this->log_error($this->connection->error); 
+            $this->num_queries++;
+
+            if ( preg_match( '/^\s*(create|alter|truncate|drop)\s/i', $this->statement ) ) {
+                mysqli_close($this->connection);
+                return $this->result;
+            } elseif ( preg_match( '/^\s*(insert|delete|update|replace)\s/i', $this->statement ) ) {
+                
+                // Take note of the insert_id
+                if ( preg_match( '/^\s*(insert|replace)\s/i', $this->statement ) ) {
+                    $this->insert_id = $this->connection->insert_id;
+                    mysqli_close($this->connection);
+                    return $this->insert_id;
+                }
+                // Return number of rows affected
+                mysqli_close($this->connection);
+                return $this->affected_rows;
+            } else {
+                $num_rows = 0;
+                while ( $row = mysqli_fetch_object( $this->result ) ) {
+                    $this->last_result[ $num_rows ] = $row;
+                    $num_rows++;
+                }
+                // Log number of rows the query returned
+                // and return number of rows selected
+                $this->num_rows = $num_rows;
+                mysqli_close($this->connection);
+                return $this;
+            }
         }
         catch(Exception $e) {
+            $this->log_error($this->statement);
             $this->log_error($e->getMessage());
-        }
-        $this->log_error($this->connection->error); 
-        $this->num_queries++;
-
-        if ( preg_match( '/^\s*(create|alter|truncate|drop)\s/i', $this->statement ) ) {
-            mysqli_close($this->connection);
-            return $this->result;
-        } elseif ( preg_match( '/^\s*(insert|delete|update|replace)\s/i', $this->statement ) ) {
-            
-            // Take note of the insert_id
-            if ( preg_match( '/^\s*(insert|replace)\s/i', $this->statement ) ) {
-                $this->insert_id = $this->connection->insert_id;
-                mysqli_close($this->connection);
-                return $this->insert_id;
-            }
-            // Return number of rows affected
-            mysqli_close($this->connection);
-            return $this->affected_rows;
-        } else {
-            $num_rows = 0;
-            while ( $row = mysqli_fetch_object( $this->result ) ) {
-                $this->last_result[ $num_rows ] = $row;
-                $num_rows++;
-            }
-            // Log number of rows the query returned
-            // and return number of rows selected
-            $this->num_rows = $num_rows;
-            mysqli_close($this->connection);
-            return $this;
         }
     }
 
@@ -293,6 +296,7 @@ class Query extends Database
         $this->limit = false;
         $this->offset = false;
         $this->isInsert = false;
+        $this->isUpdate = false;
         $this->leadingSetComma = false;
         $this->group = "";
         $this->having = "";
@@ -348,6 +352,7 @@ class Query extends Database
         $this->resetStatement();
         $this->statement .= "UPDATE `$table`";
         $this->ready = false;
+        $this->isUpdate = true;
         return $this;
     }
 
