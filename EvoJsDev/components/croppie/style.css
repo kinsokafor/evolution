@@ -26,14 +26,15 @@
 }
 
 .croppie-container figure figcaption {
-    position: absolute;
-    right: 10px;
-    color: #fff;
-    bottom: 0px;
-    padding-left: 9px;
-    padding-bottom: 5px;
-    text-shadow: 0 0 10px #000;
-    display: inline-block;
+	position: absolute;
+	right: 10px;
+	color: #fff;
+	bottom: 16px;
+	padding-left: 9px;
+	padding-bottom: 5px;
+	text-shadow: 0 0 10px #00000061;
+	display: inline-block;
+	opacity: 0.5;
 }
 
 .croppie-container .cabinet figure img {

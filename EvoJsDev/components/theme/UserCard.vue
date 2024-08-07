@@ -6,13 +6,14 @@
             </div>
             <div class="user-info">
                 <h2 class="animate__animated animate__pulse">{{ user.surname }}, {{ user.middle_name }} {{ user.other_names }}</h2>
-                <p>
-                    {{ user.profile }}
-                    <span v-if="user.email != null">{{ user.email }} <br></span>
+                <div>
+                    <div>{{ user?.email }}</div>
                     <slot></slot>
-                    <span><span class="status-indicator" :class="user.status"></span> {{ roleName }}<br></span>
+                    <div>
+                        <span><span class="status-indicator" :class="user.status"></span> {{ roleName }}</span>
+                    </div>
                     <slot name="buttons"></slot>
-                </p>
+                </div>
             </div>
         </div>
     </a>
@@ -38,6 +39,14 @@
         data: {
             type: Object,
             default: {}
+        },
+        baseUrl: {
+            type: String,
+            default: "admin/"
+        },
+        leadingPath: {
+            type: String,
+            default: "/"
         }
     })
 
@@ -67,12 +76,12 @@
     const getProfileLink = computed(() => {
         if(user.value.role == undefined) return "#"
         if("profile" in config.Auth.roles[user.value.role]) {
-            return ("/"+config.Auth.roles[user.value.role].profile+"/"+user.value?.id).replace("//", "/").replace("//", "/");
+            return (`${props.leadingPath}${config.Auth.roles[user.value.role].profile}/${user.value?.id}`).replace("//", "/").replace("//", "/");
         }
         if(currentUser.value != undefined && currentUser.value.id == user.value?.id) {
             return "/#/profile"
         }
-        return ("/admin/#/profile/"+user.value?.id).replace("//", "/").replace("//", "/")
+        return (`${props.leadingPath}${props.baseUrl}#/profile/+${user.value?.id}`).replace("//", "/").replace("//", "/")
     })
 </script>
 
@@ -114,7 +123,7 @@
     .user-img img.Female, .user-img img.female {
         border: 2px solid var(--purple);
     }
-    .user-info p {
+    .user-info > div {
         color: var(--shadow3);
         margin: 0;
         font-size: 15px;
