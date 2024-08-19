@@ -17,6 +17,7 @@
     import { ref, onMounted, watch } from 'vue'
     import { Options, Records } from '@/helpers'
     import {useAlertStore} from '@/store/alert'
+    import * as _ from 'lodash'
 
     const props = defineProps({
         fields: Array,
@@ -35,6 +36,15 @@
     const handleSubmit = (values) => {
         var noChanges = true;
         props.fields.forEach(item => {
+            if(item.as == 'collection') {
+                values[item.name] = values[item.name].filter(i => {
+                    let ret = false
+                    Object.values(i).map(j => {
+                        if(j != undefined) ret = true
+                    })
+                    return ret
+                })
+            }
             processing.value = true;
             if(values[item.name] != undefined && values[item.name] != initialValues.value[item.name]) {
                 noChanges = false;

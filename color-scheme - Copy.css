@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Meera+Inimai&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --shadow1: #222020;
+    --shadow2: #615959;
+    --shadow3: #949494;
+    --highlight1: #fff;
+    --highlight2: #dbdbdb;
+    --highlight3: #bdbdbd;
+    --color1: linear-gradient(180deg,#4e73df 10%,#521066 100%); /* lighter color from the theme */
+    --color2: #2e51b6; /* darker color from the theme */
+    --yellow: #d1d126;
+    --blue: #63b3e9;
+    --green: #64bb64;
+    --red: #db2a2a;
+    --purple: #e547a1;
+    --muted: #d1d1d1;
+    --color3: #4e73df;
+    --font1: "Montserrat", sans-serif;
+    --font2: "Meera Inimai", sans-serif;
+}
+
+body.dark-theme {
+    --shadow1: #fff;
+    --shadow2: #dbdbdb;
+    --shadow3: #bdbdbd;
+    --highlight1: #222020;
+    --highlight2: #292525;
+    --highlight3: #323133;
+}
