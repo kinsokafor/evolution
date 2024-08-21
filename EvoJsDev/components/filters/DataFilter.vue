@@ -240,10 +240,11 @@
             text-transform: lowercase;
             border-radius: 10px;
             background-color: var(--highlight3);
-            color: var(--highlight1);
+            color: var(--shadow3);
         }
         .filter-btn.active {
             background-color: var(--color2);
+            color: var(--highlight1);
         }
     }
      /* Extra small devices (phones, 600px and down) */
