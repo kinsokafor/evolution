@@ -298,8 +298,9 @@ export const storeGetter = (state, data, loader, params = {}, exclude = [], excl
         for (var k in params) {
             if(typeof params[k] == "string") {
                 test = new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+                if(!test) return false;
             }
-            else if (k in i && params[k] != i[k]) test = false
+            else if (k in i && params[k] != i[k]) return false
         }
         return test
     })
