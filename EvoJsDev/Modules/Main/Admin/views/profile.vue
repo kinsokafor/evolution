@@ -3,22 +3,22 @@
         <div class="col-md-4 profile-block">
             <UserData :user-id="id" />
             <hr>
-            <Reatricted access="1,2">
+            <Restricted access="1,2">
                 <template #message><slot></slot></template>
                 <a class="btn btn-primary" :href="`/login-as/${id}`">Login to profile</a>
-            </Reatricted>
+            </Restricted>
             <slot name="left"></slot>
         </div>
         <div class="col-md-8">
             <slot name="beforeMenu"></slot>
-            <Menu :items="items" container-class="col-md-4"/>
+            <Menu :items="items" :enable-search="false" container-class="col-md-4"/>
             <slot></slot>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { onMounted, ref, computed } from 'vue';
+    import { computed } from 'vue';
     import UserData from '@/components/theme/UserData.vue'
     import Menu from '@/components/menu/Menu.vue'
     import { useRoute } from 'vue-router';
@@ -38,6 +38,7 @@
     })
 
     const items = computed(() => [
+    ...props.menu,
         {
             link: `/admin/#/edit-profile/${id.value}`,
             label: 'Edit',
@@ -51,8 +52,7 @@
             iconClass: 'fa-lock',
             access: '1,2',
             isRouter: false
-        },    
-        ...props.menu]
+        }]
     )
 
 </script>

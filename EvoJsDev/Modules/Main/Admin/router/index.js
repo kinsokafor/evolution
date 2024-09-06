@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import dashboard from '../views/dashboard.vue'
 import users from '../views/users.vue'
+import addNewKey from '../views/addNewKey.vue'
 import editProfile from '../views/editProfile.vue'
 import profile from '../views/profile.vue'
 import changeUserPassword from '../views/change-user-password.vue'
@@ -46,6 +47,12 @@ const router = createRouter({
             name: 'Options', 
             component: options,
             meta: {title: "Options | Admin"}
+        },
+        {
+            path: '/apikey/new', 
+            name: 'addNewKey', 
+            component: addNewKey,
+            meta: {title: "Add New Key | Admin"}
         },
         {
             path: '/send-email/:emails?', 

@@ -73,7 +73,8 @@
           "domain": "localhost:<port>",
           "protocol": "http"
         }
-      ]
+      ],
+      "publickey": "<publickey>"
     },
     "site_name": "<projectName>",
     "loginLink": "/accounts",

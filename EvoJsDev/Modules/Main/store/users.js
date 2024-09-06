@@ -62,9 +62,9 @@ export const useUsersStore = defineStore('useUsersStore', {
                         }
                     })
                 }
+                this.processing = false;
                 if (r.data.length >= this.limit) {
                     this.offset = this.limit + this.offset
-                    this.processing = false;
                     this.loadFromServer(params)
                 } else {
                     this.offset = 0

@@ -50,9 +50,11 @@ const writeConfigJSON = () => {
 
     const mySalt = salt();
 
+    const publicKey = salt();
+
     let configStr = JSON.stringify(configJSON, null, 2);
 
-    configStr = configStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName).replaceAll("<salt>",mySalt);
+    configStr = configStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName).replaceAll("<salt>",mySalt).replaceAll("<publickey>",publicKey);
 
     fs.writeFile("./config.json", configStr, 'utf8', (err) => {
         if (err) {

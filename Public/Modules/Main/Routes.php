@@ -362,6 +362,23 @@ $router->post('/api/send-email', function(){
     });
 });
 
+$router->post('/api/newkey', function(){
+    $request = new Requests;
+    $params = (array) json_decode(file_get_contents('php://input'), true);
+    $request->evoAction($params)->auth(1,2)->execute(function() use ($request, $params){
+        $config = new EvoPhp\Api\Config();
+        $exp = new DateTime($params['expiry'], new DateTimeZone($config->timezone));
+        $payload = [
+            'iss' => $config->root,
+            'aud' => $config->root,
+            'iat' => time(),
+            'nbf' => "1357000000",
+            'exp' => $exp->getTimestamp()
+        ];
+        return Firebase\JWT\JWT::encode($payload, $config->Auth['publickey'] ?? 'apikey', 'HS256');
+    });
+});
+
 //Tests user access by password
 $router->post('/api/test-access', function($params){
     $request = new Requests;
