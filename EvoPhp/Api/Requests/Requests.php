@@ -326,7 +326,7 @@ class Requests
 
     protected function verifyClient() {
         if($this->verified) return true;
-        if(isset($this->data['publickey']) && isset($this->data['secretkey'])) {
+        if(isset($this->data['secretkey'])) {
             $config = new Config;
             $res = $this->verifyNonce($this->data['secretkey'], $config->Auth['publickey'] ?? 'apikey');
             if($res) return true;
