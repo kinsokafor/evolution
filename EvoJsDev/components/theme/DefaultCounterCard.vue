@@ -74,6 +74,7 @@
         border-radius: 3px;
         padding: 5px;
         position: relative;
+        height: 76px;
     }
     // default
     .counter-container.default {

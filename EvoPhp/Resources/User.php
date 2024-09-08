@@ -144,7 +144,7 @@ class User
         ];
 
         $meta = array_merge($default, $meta);
-        $meta['phone'] = Operations::internationalizePhoneNumber((string) $meta['phone'] ?? '', $meta['country_code'] ?? '');
+        $meta['phone'] = Operations::internationalizePhoneNumber((string) ($meta['phone'] ?? ''), $meta['country_code'] ?? '');
         $meta['password'] = self::encrypt($meta['password']);
 
         if(Operations::count($unique_keys)) {

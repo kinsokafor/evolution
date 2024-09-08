@@ -104,6 +104,22 @@ Trait Auth {
         }
     }
 
+    public static function corsLogin($meta) {
+        if(isset($meta['secretkey'])) {
+            $config = new Config;
+            $self = new self;
+            $res = $self->verifyNonce($meta['secretkey'], $config->Auth['publickey'] ?? 'apikey');
+            if(!$res) {
+                http_response_code(401);
+                return ['loginStatus' => false, 'msg' => 'Unauthorized access'];
+            }
+        } else {
+            http_response_code(401);
+            return ['loginStatus' => false, 'msg' => 'No access code attached to request body'];
+        }
+        return self::signIn($meta['email'], $meta['password']);
+    }
+
     public function getScope($role) {
         $config = new Config;
         $roles = $config->Auth["roles"];

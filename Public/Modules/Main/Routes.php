@@ -264,6 +264,26 @@ $router->group('/filepond/', function () use ($router) {
     });
 });
 
+$router->get('/login-as/{id}', function($params){
+    $user = new \EvoPhp\Resources\User();
+    $meta = $user->get((int) $params['id']);
+    if($meta == NULL) {
+        header("Location: /logout");
+    }
+    \EvoPhp\Resources\User::pushLogin($meta);
+    $index = Operations::getIndex($meta, false);
+    header("Location: $index");
+});
+
+$router->post('/cross-origin/login', function(){
+    $user = new \EvoPhp\Resources\User();
+    $resp = $user::corsLogin($_POST);
+    if(!$resp['loginStatus']) {
+        header("Location: /logout");
+    }
+    header("Location: ".$resp['index']);
+});
+
 $router->post('/api/login', function(){
     $request = new Requests;
     $params = (array) json_decode(file_get_contents('php://input'), true);
@@ -414,17 +434,6 @@ $router->get('/test-template/{template}', function($params){
     $controller = new MainController;
     $params = array_merge($params, $_GET);
     $controller->testTemplate($params)->auth(1)->template("no_theme")->setData(['pageTitle' => "Template - ".$params['template']]);
-});
-
-$router->get('/login-as/{id}', function($params){
-    $user = new \EvoPhp\Resources\User();
-    $meta = $user->get((int) $params['id']);
-    if($meta == NULL) {
-        header("Location: /logout");
-    }
-    \EvoPhp\Resources\User::pushLogin($meta);
-    $index = Operations::getIndex($meta, false);
-    header("Location: $index");
 });
 
 $router->get('/migrate-users', function(){
