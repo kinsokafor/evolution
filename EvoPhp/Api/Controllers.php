@@ -55,7 +55,7 @@ abstract class Controllers
         	$this->data = array_merge($this->data, $args[0]);
         }
         $this->dataMethod = str_replace("/", "__", $this->bladeTemplate."Data");
-        $this->resourceMethod = $this->bladeTemplate."Resources";
+        $this->resourceMethod = str_replace("/", "__", $this->bladeTemplate."Resources");
         $data = $this->getData($this->data);
         $this->data['nonce'] = $this->getNonce();
         if($data && is_array($data)) {
@@ -81,6 +81,7 @@ abstract class Controllers
 
     private function getContent() {
         $this->addResources();
+        $this->data = array_merge($this->data, get_object_vars($this));
         if($this->template == 'blank') return "";
         $blade = new Blade($this->viewPath, $this->viewPath.'/cache');
         $themes = new Themes($this->template, $this->data);
@@ -105,7 +106,7 @@ abstract class Controllers
     public function __destruct() {
         $session = Session::getInstance();
         $this->setData(["resourceOwner" => $session->getResourceOwner()]);
-        if($this->accessType == "public" || $this->getAuthorization()) {
+        if($this->accessType == "public" || $this->getAuthorization(true)) {
             $this->addBundles();
             echo $this->getContent();
             return;

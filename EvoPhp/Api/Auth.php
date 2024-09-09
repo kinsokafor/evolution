@@ -191,7 +191,7 @@ Trait Auth {
         return $dbTable->merge($res);
     }
 
-    protected function getAuthorization() {
+    protected function getAuthorization($isController = false) {
         if(!\Delight\Cookie\Cookie::exists('nonce')) :
             return false;
         endif;
@@ -212,7 +212,7 @@ Trait Auth {
             return false;
         endif;
 
-        return true;
+        return $isController ? \EvoPhp\Actions\Filter::apply('afterGetAuthFilter', true, $this) : true;
     }
 
     protected function getKey() {
