@@ -174,7 +174,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                     }
                 } else if (!state.fetching || !_.isEqual(params, state.lastParams)) {
                     state.lastParams = params;
-                    state.processing = true;
+                    // state.processing = true;
                     state.loadFromServer(params)
                 }
                 const r = data.filter(i => {
