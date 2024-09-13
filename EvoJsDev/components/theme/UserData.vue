@@ -17,7 +17,7 @@
             <div class="value">{{ user.other_names }}</div>
         </div>
         <div>
-            <div class="label">Registration Number</div>
+            <div class="label">{{uNameLabel}}</div>
             <div class="value">{{ user.username }}</div>
         </div>
         <div>
@@ -28,8 +28,6 @@
             <div class="label">Phone Number</div>
             <div class="value">{{ user.phone }}</div>
         </div>
-        <!-- <QrShow :user-id="data.username"/>
-        <QrAccess /> -->
         <slot></slot>
     </div>
 </template>
@@ -47,6 +45,10 @@
         data: {
             type: Object,
             default: {}
+        },
+        uNameLabel: {
+            type: String,
+            default: "Registration Number"
         }
     })
 
@@ -111,7 +113,7 @@
     .user-img img.Female, .user-img img.female {
         border: 2px solid var(--purple);
     }
-    .user-data > div[data-v-5beb1081] {
+    .user-data > div {
         display: flex;
         padding: 3px 10px;
         margin-bottom: 5px;

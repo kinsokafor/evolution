@@ -9,6 +9,10 @@ export const isEmail = (value) => {
 }
 
 export const isPhone = (value) => {
+    if(value) {
+        if(value.trim() == "") return true;
+    }
+    
     const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}$/;
     if (!regex.test(value)) {
       return 'Invalid phone number';

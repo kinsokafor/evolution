@@ -74,7 +74,8 @@
     })
 
     const getProfileLink = computed(() => {
-        if(user.value.role == undefined) return "#"
+        if(user.value.role == undefined) return "javaScript:void(0)"
+        if(user.value?.id == undefined) return "javaScript:void(0)"
         if("profile" in config.Auth.roles[user.value.role]) {
             return (`${props.leadingPath}${config.Auth.roles[user.value.role].profile}/${user.value?.id}`).replace("//", "/").replace("//", "/");
         }

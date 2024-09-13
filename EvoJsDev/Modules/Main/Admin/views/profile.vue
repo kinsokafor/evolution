@@ -1,7 +1,9 @@
 <template>
     <div class="row">
         <div class="col-md-4 profile-block">
-            <UserData :user-id="id" />
+            <UserData :user-id="id" :u-name-label="uNameLabel">
+                <slot name="userData"></slot>
+            </UserData>
             <hr>
             <Restricted access="1,2">
                 <template #message><slot></slot></template>
@@ -34,20 +36,36 @@
         menu: {
             type: Object,
             default: []
+        },
+        uNameLabel: {
+            type: String,
+            default: "Registration Number"
+        },
+        editLink: {
+            type: String,
+            default: "/admin/#/edit-profile/{id}"
+        },
+        cpLink: {
+            type: String,
+            default: "/admin/#/change-user-password/{id}"
         }
     })
 
+    const eL = computed(() => props.editLink.replace("{id}", id.value))
+
+    const cpL = computed(() => props.cpLink.replace("{id}", id.value))
+
     const items = computed(() => [
-    ...props.menu,
+        ...props.menu,
         {
-            link: `/admin/#/edit-profile/${id.value}`,
+            link: eL.value,
             label: 'Edit',
             iconClass: 'fa-edit',
             access: '1,2,3',
             isRouter: false
         },
         {
-            link: `/admin/#/change-user-password/${id.value}`,
+            link: cpL.value,
             label: 'Change password',
             iconClass: 'fa-lock',
             access: '1,2',
