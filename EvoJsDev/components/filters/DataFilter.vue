@@ -36,7 +36,8 @@
             :data="filteredData"
             v-model="limit"
             @setPage="setPage"
-            @print="print">
+            @print="print"
+            position="footer">
         </data-filter-tools>
     </div>
 </template>

@@ -75,6 +75,8 @@
     .user-img {
         position: relative;
         margin-bottom: 24px;
+        background: var(--highlight1);
+        padding: 11px;
     }
     .user-img img {
         margin: 0 auto !important;

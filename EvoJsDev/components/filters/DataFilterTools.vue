@@ -1,6 +1,6 @@
 <template>
     <slot name="newLine"></slot>
-    <div class="tools">
+    <div class="tools" v-if="data.length > 20">
         <div class="controls">
             <div class="mb-2 d-flex buttons-set">
                 <div class="btn-group">
@@ -11,10 +11,10 @@
                         @click="$emit('setPage', index)"
                         :class="{active: page == index}"
                         >{{ index }}</button>
-                    <button class="btn btn-outline-secondary btn-sm mr-3" @click="$emit('print')">Print</button>
+                    <button class="btn btn-outline-secondary btn-sm mr-3" @click="$emit('print')" v-if="position=='header'">Print</button>
                 </div>
             </div>
-            <div class="mb-2">
+            <div class="mb-2" v-if="position=='header'">
                 <select class="limit" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
                     <option :value="20">20</option>
                     <option :value="50">50</option>
@@ -38,7 +38,11 @@
         pageArray: Array,
         page: Number,
         computedData: Array,
-        data: Array
+        data: Array,
+        position: {
+            type: String,
+            default: "header"
+        }
     });
 
     const emit = defineEmits(["setPage", "update:modelValue", "print"])

@@ -23,6 +23,8 @@ class Requests
 
     public $joinPostAt;
 
+    public $joinStoreAt;
+
     public $joinAt;
 
     public $joinTable;
@@ -140,6 +142,10 @@ class Requests
         if(isset($this->data['joinpostat'])) {
             $this->joinPostAt = $this->data['joinpostat'];
             unset($this->data['joinpostat']);
+        }
+        if(isset($this->data['joinstoreat'])) {
+            $this->joinStoreAt = $this->data['joinstoreat'];
+            unset($this->data['joinstoreat']);
         }
         if(isset($this->data['joinat']) && isset($this->data['jointable'])) {
             $this->joinAt = $this->data['joinat'];
