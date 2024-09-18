@@ -46,7 +46,7 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
                     }
                     this.lastTimeOut = setTimeout(()=> {
                         this.firstLoad = false
-                    }, 300000);
+                    }, 3600000);
                     this.offset = 0
                 }
             }).catch(e => {
