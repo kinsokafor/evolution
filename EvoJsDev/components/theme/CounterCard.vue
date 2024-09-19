@@ -58,6 +58,10 @@
         method: {
             type: String,
             default: "get"
+        },
+        postData: {
+            type: Object,
+            default: {}
         }
     })
 
@@ -85,7 +89,7 @@
     const getCount = async () => {
         switch (props.method.toLowerCase()) {
             case "post":
-                return await req.post(link).then(r => {
+                return await req.post(link, props.postData).then(r => {
                     count.value = r.data;
                 })
             break;

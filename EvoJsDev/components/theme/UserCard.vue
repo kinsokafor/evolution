@@ -27,6 +27,7 @@
     import 'animate.css'
     import config from '/config.json'
     import {useAuthStore} from '@/store/auth'
+    import _ from 'lodash'
 
     const usersStore = useUsersStore();
     const auth = useAuthStore()
@@ -52,6 +53,7 @@
 
     const realUser = computed(() => {
         if(props.userId == undefined) return {}
+        if(!_.isEmpty(props.data)) return {}
         return usersStore.getUser(props.userId)
     })
 
