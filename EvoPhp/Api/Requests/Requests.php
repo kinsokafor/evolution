@@ -63,6 +63,7 @@ class Requests
 
 	public function __construct()
     {
+        $this->data = (array) json_decode(file_get_contents('php://input'));
         $this->setRequestHeaders();
         $this->setResponseHeaders();
     }
