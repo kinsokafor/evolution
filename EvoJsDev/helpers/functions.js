@@ -34,7 +34,7 @@ export const dynamicSort = (property) => {
   };
 };
 
-export const dynamicSortMultiple = () => {
+export const dynamicSortMultiple = function() {
   /*
    * save the arguments object as it will be overwritten
    * note that arguments object is an array-like object
