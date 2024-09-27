@@ -7,7 +7,7 @@
             <div class="user-info">
                 <h2 class="animate__animated animate__pulse">{{ user.surname }}, {{ user.middle_name }} {{ user.other_names }}</h2>
                 <div>
-                    <div>{{ user?.email }}</div>
+                    <div v-if="user?.email != undefined" class="email" :title="user?.email">{{ user?.email }}</div>
                     <slot></slot>
                     <div>
                         <span><span class="status-indicator" :class="user.status"></span> {{ roleName }}</span>
@@ -25,13 +25,16 @@
     import { isEmpty, getProfilePicture } from '@/helpers'
     import "/color-scheme.css";
     import 'animate.css'
-    import config from '/config.json'
+    import {useConfigStore} from '@/store/config'
     import {useAuthStore} from '@/store/auth'
     import _ from 'lodash'
 
     const usersStore = useUsersStore();
     const auth = useAuthStore()
     const currentUser = computed(() => auth.getUser)
+    const configStore = useConfigStore()
+
+    const roles = computed(() => configStore.get("Auth.roles") ?? {})
 
     const props = defineProps({
         userId: {
@@ -48,6 +51,10 @@
         leadingPath: {
             type: String,
             default: "/"
+        },
+        role: {
+            type: String,
+            default: ""
         }
     })
 
@@ -71,15 +78,16 @@
     })
 
     const roleName = computed(() => {
-        if(config.Auth.roles[user.value.role] == undefined) return ""
-        return config.Auth.roles[user.value.role].name
+        if(props.role != "") return props.role
+        if(roles.value[user.value.role] == undefined) return ""
+        return roles.value[user.value.role].name
     })
 
     const getProfileLink = computed(() => {
         if(user.value.role == undefined) return "javaScript:void(0)"
         if(user.value?.id == undefined) return "javaScript:void(0)"
-        if("profile" in config.Auth.roles[user.value.role]) {
-            return (`${props.leadingPath}${config.Auth.roles[user.value.role].profile}/${user.value?.id}`).replace("//", "/").replace("//", "/");
+        if("profile" in (roles.value[user.value.role] ?? {})) {
+            return (`${props.leadingPath}${roles.value[user.value.role].profile}/${user.value?.id}`).replace("//", "/").replace("//", "/");
         }
         if(currentUser.value != undefined && currentUser.value.id == user.value?.id) {
             return "/#/profile"
@@ -115,10 +123,20 @@
     .user-img {
         width: 38%;
     }
+    .user-info {
+        width: 62%;
+    }
     .user-img img {
         margin: 0 !important;
         border-radius: 50%;
         width: 80%;
+    }
+    .user-info .email {
+        white-space: nowrap; 
+        width: 100%;
+        max-width: 178px; 
+        overflow: hidden;
+        text-overflow: ellipsis; 
     }
     .user-img img.Male, .user-img img.male {
         border: 2px solid var(--blue);

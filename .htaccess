@@ -5,12 +5,19 @@
 </IfModule>
 
 <IfModule mod_rewrite.c>
+# Enable the Rewrite Engine
 RewriteEngine On
 
+# Redirect root URL "/" to the "root-folder"
+# RewriteCond %{REQUEST_URI} ^/$
+# RewriteRule ^$ /root-folder/ [L]
+
+# Conditions to check if the requested file, directory, or symlink does not exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
 
+# If conditions are met, route all requests through index.php with query string appended
 RewriteRule ^(.+)$ index.php [QSA,L]
 
 </IfModule>
