@@ -281,7 +281,7 @@ $router->post('/cross-origin/login', function(){
     if(!$resp['loginStatus']) {
         header("Location: /logout");
     }
-    header("Location: ".$resp['index']);
+    header("Location: ".($resp['index'] ?? "/"));
 });
 
 $router->post('/api/login', function(){
