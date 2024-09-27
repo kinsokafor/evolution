@@ -28,7 +28,7 @@
             <div class="label">Phone Number</div>
             <div class="value">{{ user.phone }}</div>
         </div>
-        <slot></slot>
+        <slot :user="user"></slot>
     </div>
 </template>
 
@@ -115,6 +115,8 @@
     .user-img img.Female, .user-img img.female {
         border: 2px solid var(--purple);
     }
+</style>
+<style>
     .user-data > div {
         display: flex;
         padding: 3px 10px;

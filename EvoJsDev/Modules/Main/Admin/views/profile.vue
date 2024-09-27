@@ -1,8 +1,8 @@
 <template>
     <div class="row">
         <div class="col-md-4 profile-block">
-            <UserData :user-id="id" :u-name-label="uNameLabel">
-                <slot name="userData"></slot>
+            <UserData :user-id="id" :u-name-label="uNameLabel" v-slot="{user}">
+                <slot name="userData" :user="user"></slot>
             </UserData>
             <hr>
             <Restricted access="1,2">

@@ -1,7 +1,9 @@
 <template>
     <div class="row">
         <div class="col-md-4 profile-block">
-            <UserData :user-id="auth.getUser.id" :data="auth.getUser" />
+            <UserData :user-id="auth.getUser.id" :data="auth.getUser"  v-slot="{user}">
+                <slot name="userData" :user="user"></slot>
+            </UserData>
         </div>
         <div class="col-md-8">
             <slot name="beforeMenu"></slot>
