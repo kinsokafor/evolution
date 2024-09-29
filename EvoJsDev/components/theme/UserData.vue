@@ -3,7 +3,7 @@
         <img :src="userImg" alt="" :class="user.gender">
         <h3>{{ user.surname }}, {{ user.other_names }} {{ user.middle_name }}</h3>
     </div>
-    <div class="user-data animate__animated animate__fadeInDown">
+    <div class="user-data-card animate__animated animate__fadeInDown">
         <div>
             <div class="label">Surname</div>
             <div class="value">{{ user.surname }}</div>
@@ -117,7 +117,7 @@
     }
 </style>
 <style>
-    .user-data > div {
+    .user-data-card > div {
         display: flex;
         padding: 3px 10px;
         margin-bottom: 5px;
@@ -126,7 +126,7 @@
         border-radius: 5px;
         justify-content: space-between;
     }
-    .user-data > div .label {
+    .user-data-card > div .label {
         width: 200px;
         max-width: 37%;
         font-size: 0.8em;
