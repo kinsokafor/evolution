@@ -326,7 +326,15 @@ export const storeGetter = (
     delete tempParams[i];
   });
   // console.log("tempParams", tempParams, "state.lastParams", state.lastParams)
-  if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
+  if('id' in tempParams) {
+    if(state.loadedIDs == undefined) {
+      state.loadedIDs = []
+    }
+    if(state.loadedIDs.findIndex(i => i == tempParams.id) == -1) {
+      state.loadedIDs.push(tempParams.id)
+      loader(tempParams);
+    }
+  } else if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
     if (state.lastTimeOut != null) {
       clearTimeout(state.lastTimeOut);
     }
