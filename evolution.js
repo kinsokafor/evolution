@@ -45,6 +45,22 @@ const writePackageJSON = () => {
     });
 }
 
+const writeComposerJSON = () => {
+    const composerJSON = require("./sample.composer.json");
+
+    let composerStr = JSON.stringify(composerJSON, null, 2);
+
+    // composerStr = composerStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName);
+
+    fs.writeFile("./composer.json", composerStr, 'utf8', (err) => {
+        if (err) {
+            console.error('Error writing composer.json file:', err);
+        } else {
+            console.log('composer.json file created successfully.');
+        }
+    });
+}
+
 const writeConfigJSON = () => {
     const configJSON = require("./sample.config.json");
 
@@ -89,6 +105,8 @@ const startApp = async() => {
     port = await readLineAsync("What is the local environment port? Enter 3000 or any other port that you wish?");
 
     writePackageJSON();
+
+    writeComposerJSON()
 
     writeConfigJSON()
 

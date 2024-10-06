@@ -8,6 +8,7 @@
 /.vscode
 /composer.lock
 /composer.phar
+/composer.json
 /vendor
 /package-lock.json
 /sql-errors.txt

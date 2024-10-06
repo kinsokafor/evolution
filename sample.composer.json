@@ -24,7 +24,6 @@
         "josantonius/json": "^2.0",
         "elasticemail/elasticemail-php": "^4.0",
         "flow-php/array-dot": "1.x@dev",
-        "dragonmantank/cron-expression": "dev-master",
-        "phpoffice/phpspreadsheet": "dev-master"
+        "dragonmantank/cron-expression": "dev-master"
     }
 }

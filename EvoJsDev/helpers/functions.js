@@ -319,28 +319,42 @@ export const storeGetter = (
   loader,
   params = {},
   exclude = [],
-  excludeFilter = []
+  excludeFilter = [],
+  makeUnique = "id"
 ) => {
   let tempParams = { ...params };
   exclude.forEach((i) => {
     delete tempParams[i];
   });
   // console.log("tempParams", tempParams, "state.lastParams", state.lastParams)
-  if('id' in tempParams) {
+
+  if(makeUnique in tempParams) {
     if(state.loadedIDs == undefined) {
       state.loadedIDs = []
     }
-    if(state.loadedIDs.findIndex(i => i == tempParams.id) == -1) {
-      state.loadedIDs.push(tempParams.id)
+    if(state.loadedIDs.findIndex(i => i == tempParams[makeUnique]) == -1) {
+      state.loadedIDs.push(tempParams[makeUnique])
       loader(tempParams);
     }
-  } else if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
-    if (state.lastTimeOut != null) {
-      clearTimeout(state.lastTimeOut);
+  } else {
+    //define last params array
+    if(state.lastParamsArray == undefined) {
+      state.lastParamsArray = []
     }
-    state.lastParams = tempParams;
-    loader(tempParams);
+
+    let found = _.find(state.lastParamsArray, (x) => {
+      if(_.isEqual(x, tempParams)) return true
+    })
+    if(found == undefined) {
+      if (state.lastTimeOut != null) {
+        clearTimeout(state.lastTimeOut);
+      }
+      state.lastParamsArray.push(tempParams);
+      loader(tempParams);
+    }
   }
+  
+
   excludeFilter.forEach((i) => {
     delete params[i];
   });
