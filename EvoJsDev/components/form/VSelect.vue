@@ -1,11 +1,11 @@
 <template>
   <div class="k-input-group" :class="layout">
-    <Field v-slot="{ field }" :name="name" v-bind="realAttrs" :value="true">
+    <Field v-slot="{ field }" :name="name" v-bind="realAttrs">
       <label :for="name" class="label">{{ label }}</label>
       <v-select
         v-model="model"
-        v-bind="{ ...realAttrs, ...field }"
-        :reduce="(i) => i.value"
+        v-bind="{ ...realAttrs, ...field}"
+        :reduce="(i) => i?.value ?? (i?.name ?? i)"
         label="name"
       ></v-select>
     </Field>
@@ -23,7 +23,7 @@ import _ from "lodash";
 const props = defineProps({
   name: {
     type: String,
-    default: "myUpload",
+    default: "",
   },
   attrs: {
     type: Object,
@@ -39,6 +39,10 @@ const props = defineProps({
   },
   initialValues: Object,
 });
+
+const init = computed(() => {
+  return props.initialValues[props.name] ?? []
+})
 
 const realAttrs = computed(() => {
   const attrs = props.attrs;
@@ -75,7 +79,18 @@ watchEffect(() => {
   if (initiated.value) return;
   if (props.initialValues[props.name] != undefined) {
     model.value = props.initialValues[props.name];
-    initiated.value = true;
+    if(props.attrs?.multiple == undefined) {
+      initiated.value = true;
+    } else {
+      if(!_.isEmpty(model.value)) {
+        initiated.value = true;
+      } else {
+        setTimeout(() => {
+          initiated.value = true
+        }, 2000)
+      }
+    }
+    
   }
 });
 
@@ -90,6 +105,10 @@ watchEffect(() => {
 <style lang="scss">
 :root {
   --vs-controls-size: 0.7;
+  --vs-selected-bg: var(--color3);
+  --vs-selected-color: var(--highlight1);
+  --vs-selected-border-color: var(--color2);
+  --vs-actions-padding: 0 .75rem 0 .75rem;
 }
 .form-control {
   .vs__dropdown-toggle {
@@ -101,13 +120,28 @@ watchEffect(() => {
     margin: 0 !important;
     padding: 0 !important;
   }
+  .vs__deselect {
+    transition: 0.3s linear all;
+  }
   .vs__selected {
-    margin: 0px 2px 0 !important;
+    --vs-controls-color: var(--muted);
+    margin: 0px 2px 2px !important;
+    background-image: var(--color1);
+    font-size: smaller;
+  }
+  .vs__selected:hover {
+    --vs-controls-color: var(--highlight1);
   }
   .vs__clear {
     line-height: normal;
     display: flex;
     opacity: 0.3;
   }
+}
+.v-select.vs--multiple.form-control {
+    height: auto;
+}
+.v-select.form-control {
+  padding: .375rem 0rem .375rem .75rem;
 }
 </style>
