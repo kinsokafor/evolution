@@ -13,4 +13,13 @@ if ( !defined('ABSPATH') )
 require_once("EvoPhp/autoload.php");
 
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+// $data = [
+// 	"school_id" => 1,
+// 	"exam_id" => 12,
+// 	"subjects" => ["Mathematics", "Biology", "BTS", "English"],
+// 	"format" => "seperate",
+// 	"class" => "JSS 2",
+// 	"stream" => "Star"
+// ];
+// \Public\Modules\eEdu\Classes\ExamsSpreadsheet::generate($data);
 ?>
