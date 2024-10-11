@@ -28,8 +28,10 @@ export const dynamicSort = (property) => {
     /* next line works with strings and numbers,
      * and you may want to customize it to your needs
      */
+    const props_a = typeof a[property] == "string" ? a[property].toLowerCase() : a[property];
+    const props_b = typeof b[property] == "string" ? b[property].toLowerCase() : b[property];
     var result =
-      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+      props_a < props_b ? -1 : props_a > props_b ? 1 : 0;
     return result * sortOrder;
   };
 };
@@ -438,3 +440,14 @@ export const todayDate = () => {
     obj: today,
   };
 };
+
+export const downloadURI = (uri) => {
+  var a = document.createElement('a');
+  a.href = uri;
+  a.setAttribute('target', '_blank');
+  a.setAttribute('download', '');
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}

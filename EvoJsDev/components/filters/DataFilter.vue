@@ -12,7 +12,6 @@
                 <div>
                     <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
                 </div>
-                
             </div>
             <template #newLine>
                 <div class="filters-container">
