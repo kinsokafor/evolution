@@ -92,37 +92,46 @@ export class Print {
       let htm = ele.outerHTML;
       return '<body>' + htm + '</body>';
     };
-    
     getFormData(ele) {
       let copy = ele.cloneNode(true);
-      let copiedInputs = copy.querySelectorAll('input,select,textarea');
-      
-      copiedInputs.forEach((item, i) => {
-        let typeInput = item.getAttribute('type');
-        let copiedInput = copiedInputs[i];
-        if (typeInput === undefined) {
-          typeInput = item.tagName === 'SELECT' ? 'select' : item.tagName === 'TEXTAREA' ? 'textarea' : '';
-        }
-        if (typeInput === 'radio' || typeInput === 'checkbox') {
+      let copiedElements = copy.querySelectorAll('input,select,textarea,canvas');
+      let originalElements = document.querySelectorAll(`${this.settings.el} input,${this.settings.el} select,${this.settings.el} textarea,${this.settings.el} canvas`);
+    
+      copiedElements.forEach((copiedElement, i) => {
+        let originalElement = originalElements[i];
+        let tagName = copiedElement.tagName.toLowerCase();
+    
+        if (tagName === 'canvas') {
+          // Handle canvas elements (e.g., multiple QR codes)
+          let img = document.createElement('img');
+          img.src = originalElement.toDataURL(); // Convert canvas to image
+          copiedElement.parentNode.replaceChild(img, copiedElement); // Replace canvas with image
+        } else if (tagName === 'input') {
+          let typeInput = originalElement.getAttribute('type');
           
-          copiedInput.setAttribute('checked', item.checked);
-          
-        } else if (typeInput === 'text' || typeInput === '') {
-          copiedInput.value = item.value;
-          copiedInput.setAttribute('value', item.value);
-        } else if (typeInput === 'select') {
-          copiedInput.querySelectorAll('option').forEach((op, b) => {
-            if (op.selected) {
-              op.setAttribute('selected', true);
-            };
+          if (typeInput === 'radio' || typeInput === 'checkbox') {
+            copiedElement.setAttribute('checked', originalElement.checked);
+          } else if (typeInput === 'text' || typeInput === '') {
+            copiedElement.value = originalElement.value;
+            copiedElement.setAttribute('value', originalElement.value);
+          }
+        } else if (tagName === 'select') {
+          copiedElement.querySelectorAll('option').forEach((option, b) => {
+            if (originalElement.options[b].selected) {
+              option.setAttribute('selected', true);
+            } else {
+              option.removeAttribute('selected');
+            }
           });
-        } else if (typeInput === 'textarea') {
-          copiedInput.value = item.value;
-          copiedInput.setAttribute('value', item.value);
+        } else if (tagName === 'textarea') {
+          copiedElement.value = originalElement.value;
+          copiedElement.setAttribute('value', originalElement.value);
         }
       });
+    
       return copy;
     };
+    
     getPrintWindow() {
       var f = this.Iframe();
       return {

@@ -154,16 +154,12 @@ export const useUsersStore = defineStore('useUsersStore', {
         async restoreUser(row, index) {
             this.processing = true;
             index = this.data.findIndex(i => i.id == row.id)
-            await this.u.update(row.id, {
+            return await this.u.update(row.id, {
                 "status" : "inactive",
                 "id": row.id
             }).then(response => {
-                const index = this.loaded.findIndex(x => x.id == row.id);
-                if(index != -1) {
-                    this.loaded.splice(index, 1)
-                }
                 this.processing = false;
-                delete this.data[index]
+                this.data[index] = response.data
                 this.alertStore.add("Done", "success");
             }).catch(response => {
                 this.alertStore.add(response.message, "danger");

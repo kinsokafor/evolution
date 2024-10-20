@@ -108,7 +108,7 @@
             </component>
         </slot>
         <slot :values="values"></slot>
-        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes">Submit</Button></slot>
+        <slot name="submitButton" :meta="meta"><Button type="submit" v-bind="buttonAttributes">{{ buttonText }}</Button></slot>
     </form>
 </template>
 
@@ -157,6 +157,10 @@
         processing: {
             type: Boolean,
             default: false
+        },
+        buttonText: {
+            type: String,
+            default: "Submit"
         }
     })
 

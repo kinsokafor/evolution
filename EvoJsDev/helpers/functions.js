@@ -451,3 +451,11 @@ export const downloadURI = (uri) => {
   a.click();
   document.body.removeChild(a);
 }
+
+export const chunkArray = (arr, callback, chunkSize = 10) => {
+  if(chunkSize == 0) chunkSize = 10;
+  for (let i = 0; i < arr.length; i += chunkSize) {
+      const chunk = arr.slice(i, i + chunkSize);
+      callback(chunk)
+  }
+}

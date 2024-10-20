@@ -338,8 +338,9 @@ class Requests
             $res = $this->verifyNonce($this->data['secretkey'], $config->Auth['publickey'] ?? 'apikey');
             if($res) return true;
         }
-        if(isset($_SERVER[ 'HTTP_AUTHORIZATION' ])) {
-            $nonce = str_replace('Bearer ', '', $_SERVER[ 'HTTP_AUTHORIZATION' ]);
+        if(isset($_SERVER[ 'HTTP_AUTHORIZATION' ]) || isset($_SERVER[ 'REDIRECT_HTTP_AUTHORIZATION' ])) {
+            $auth = $_SERVER[ 'HTTP_AUTHORIZATION' ] ?? $_SERVER[ 'REDIRECT_HTTP_AUTHORIZATION' ];
+            $nonce = str_replace('Bearer ', '', $auth);
             $res = $this->verifyNonce($nonce);
             if($res) {
                 $this->verified = true;
