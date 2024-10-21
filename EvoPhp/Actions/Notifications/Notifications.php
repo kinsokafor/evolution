@@ -4,8 +4,6 @@ namespace EvoPhp\Actions\Notifications;
 
 use EvoPhp\Api\Operations;
 use EvoPhp\Resources\User;
-use EvoPhp\Actions\Notifications\Mails;
-use EvoPhp\Actions\Notifications\Log;
 use EvoPhp\Themes\Templates;
 use EvoPhp\Api\Config;
 use function strip_tags;
@@ -166,7 +164,7 @@ class Notifications
         if($email != "") {
             $this->mail->mail->addBCC($email, $name);
         }
-        $data = ["id" => $id, "name" => $name, "email" => $email, "phone" => $phone];
+        $data = ["id" => $id, "name" => $name, "email" => $email, "phone" => TextMessage::formatMobileNumber($phone)];
         array_push($this->receivers, $data);
         return $this;
     }
@@ -186,6 +184,12 @@ class Notifications
     public function log() {
         $log = new Log;
         $log->log($this);
+        return $this;
+    }
+
+    public function text($handler = NULL) {
+        $textMessage = new TextMessage($handler);
+        $textMessage->send($this);
         return $this;
     }
 

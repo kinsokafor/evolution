@@ -29,6 +29,14 @@
                         <SetOption :fields="mail_options"></SetOption>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header">
+                        SMS options
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="sms_options"></SetOption>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -118,6 +126,18 @@
             class: "pr-2 pl-2",
             layout: "linear"
         }
+    ])
+    const sms_options = computed(() => [
+        {
+            label: "Activate SMS", 
+            name: "activate_sms",
+            as: "checkbox",
+            class: "pr-2 pl-2 switch",
+            layout: "linear"
+        },
+        {label: "SMS sender's name", name: "sms_sender"},
+        {label: "SMS username", name: "sms_username"},
+        {label: "SMS password", name: "sms_password", as: "password"}
     ])
     const app_identity = computed(() => [
         {

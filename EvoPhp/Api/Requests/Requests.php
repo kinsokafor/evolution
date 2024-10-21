@@ -5,10 +5,7 @@ namespace EvoPhp\Api\Requests;
 use EvoPhp\Api\Operations;
 use function getallheaders;
 use EvoPhp\Api\FileHandling\Files;
-// use EvoPhp\Resources\Post;
-// use EvoPhp\Resources\User;
-// use EvoPhp\Resources\Options;
-// use EvoPhp\Resources\Records;
+
 use EvoPhp\Api\Config;
 
 class Requests
@@ -378,7 +375,7 @@ class Requests
             $res = (new Files)->processFile($file);
             if($res) {
                 $this->data[$key] = $res;
-            } else $this->data[$key] = $this->data[$key] ?? "";
+            }
             unset($this->data['file_attachments']);
         }
     }
