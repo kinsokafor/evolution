@@ -42,4 +42,36 @@ final class NigeriaBulkSMS implements TextMessageInterface
             return $i["phone"] ?? "";
         }, $receivers)));
     }
+
+    public function action($action = "balance", ...$otherParams) {
+        $url = "https://portal.nigeriabulksms.com/api/";
+        $data = [
+            "username" => $this->username,
+            "password" => $this->password,
+            "action" => $action,
+            ...$otherParams
+        ];
+        $data = http_build_query($data);
+        return Operations::callAPI($url."?".$data);
+    } 
+
+    public function balance(...$params) {
+        return $this->action("balance", ...$params);
+    }
+
+    public function profile(...$params) {
+        return $this->action("profile", ...$params);
+    }
+
+    public function history(...$params) {
+        return $this->action("history", ...$params);
+    }
+
+    public function reports(...$params) {
+        return $this->action("reports", ...$params);
+    }
+
+    public function payments(...$params) {
+        return $this->action("payments", ...$params);
+    }
 }

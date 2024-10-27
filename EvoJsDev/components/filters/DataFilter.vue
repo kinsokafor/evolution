@@ -170,17 +170,20 @@
         var end = page.value * limit.value
         var start = (page.value - 1) * limit.value;
         if(search.value != "") {
-            d = d.filter(i => {
-                for(var j in props.searchColumns) {
-                    const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
-                    if(k in i) {
-                        if(i[k].toString().toLowerCase().search(search.value.toLowerCase()) != -1) {
-                            return true
+            const splitSearch = search.value.trim().split(" ")
+            splitSearch.forEach(s => {
+                d = d.filter(i => {
+                    for(var j in props.searchColumns) {
+                        const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
+                        if(k in i) {
+                            if(i[k].toString().toLowerCase().search(s.toLowerCase()) != -1) {
+                                return true
+                            } 
                         }
                     }
-                }
-                return false
-            });
+                    return false
+                });
+            })
         }
         
         if(limit.value == 0) return d;
