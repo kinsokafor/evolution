@@ -37,7 +37,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  initialValues: Object,
+  initialValues: {
+    type: Object,
+    default: {}
+  },
 });
 
 const init = computed(() => {

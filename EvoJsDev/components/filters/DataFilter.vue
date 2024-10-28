@@ -176,7 +176,8 @@
                     for(var j in props.searchColumns) {
                         const k = Array.isArray(props.searchColumns) ? props.searchColumns[j] : j;
                         if(k in i) {
-                            if(i[k].toString().toLowerCase().search(s.toLowerCase()) != -1) {
+                            const str = i[k] ?? ""
+                            if(str.toString().toLowerCase().search(s.toLowerCase()) != -1) {
                                 return true
                             } 
                         }

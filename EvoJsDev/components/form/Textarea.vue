@@ -2,7 +2,7 @@
     <div class="k-input-group" :class="layout">
         <label :for="name" class="label">{{ label }}</label>
         <Field :as="as" :id="name" :name="name" v-bind="attrs" />
-        <small><slot name="hint"></slot></small>
+        <small><slot name="hint">{{ attrs.hint ?? "" }}</slot></small>
     </div>
 </template>
 

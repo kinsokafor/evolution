@@ -415,6 +415,7 @@ class Operations
                 try {
                     $result = file_get_contents($url, false, $context);
                     if(!$result) {
+                        http_response_code(522);
                         throw new \Exception("Connection failure");
                     }
                 } catch(\Exception $e) {
@@ -422,7 +423,11 @@ class Operations
                     echo "file_get_contents Error #:". $e->getMessage();
                 }
                 
-            } else die("Connection Failure");
+            } else {
+                http_response_code(522);
+                die("Connection Failure");
+                return;
+            }
         }
         curl_close($curl);
         return json_decode($result);
