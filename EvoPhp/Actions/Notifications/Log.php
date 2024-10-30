@@ -36,7 +36,8 @@ class Log
             current_send INT UNSIGNED,
             last_sent BIGINT(20) NOT NULL,
             send_interval BIGINT(20) NOT NULL,
-            status VARCHAR(20) NOT NULL
+            status VARCHAR(20) NOT NULL,
+            INDEX idx_user_id (user_id)
             )";
         $self->query->query($statement)->execute();
     }
