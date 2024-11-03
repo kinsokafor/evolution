@@ -688,6 +688,26 @@ class Query extends Database
         return $this;
     }
 
+    public function enforceProgrammingStyle($text) {
+        // Convert curly quotes and apostrophes to straight quotes and apostrophes
+        $search = [
+            "\u{2018}", // Left single quotation mark ‘
+            "\u{2019}", // Right single quotation mark ’
+            "\u{201C}", // Left double quotation mark “
+            "\u{201D}"  // Right double quotation mark ”
+        ];
+        
+        $replace = [
+            "'",  // Straight single quote
+            "'",  // Straight single quote
+            '"',  // Straight double quote
+            '"'   // Straight double quote
+        ];
+        
+        // Replace curly quotes and apostrophes with straight quotes
+        return str_replace($search, $replace, $text);
+    }
+
     /**
      * Real escape, using mysqli_real_escape_string() or mysql_real_escape_string()
      *
@@ -707,7 +727,7 @@ class Query extends Database
             $escaped = addslashes( $string );
         }
 
-        return $escaped;
+        return $this->enforceProgrammingStyle($escaped);
     }
 
     public function checkTableExist($table_name) {
