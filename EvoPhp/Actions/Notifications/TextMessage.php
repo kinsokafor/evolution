@@ -23,6 +23,7 @@ class TextMessage
     }
 
     public static function formatMobileNumber( $number, $args=null ) {
+        if($number == NULL || $number == "") return $number;
         $defaults = array(
             'countryCode' => '234', // (234) 555555555
             'localPrefix' => '0',   // (0) 555555555
