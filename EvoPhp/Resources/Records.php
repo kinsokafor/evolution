@@ -46,7 +46,8 @@ class Records
                 data_type VARCHAR(6) DEFAULT 'string',
                 record_int BIGINT NOT NULL DEFAULT 0,
                 record_double DOUBLE(20,4) NOT NULL DEFAULT 0,
-                record_blob BLOB NOT NULL
+                record_blob BLOB NOT NULL,
+                INDEX idx_record_name (record_name)
                 )";
         $self->query->query($statement)->execute();
     }

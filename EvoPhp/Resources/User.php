@@ -63,7 +63,9 @@ class User
             email VARCHAR(50) NOT NULL,
             password TEXT NOT NULL,
             date_created TEXT NOT NULL,
-            meta JSON NOT NULL
+            meta JSON NOT NULL,
+            INDEX idx_username (username),
+            INDEX idx_email (email)
         )";
         $self->query->query($statement)->execute();
 

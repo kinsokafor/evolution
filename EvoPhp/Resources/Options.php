@@ -46,7 +46,8 @@ class Options
                 data_type VARCHAR(6) DEFAULT 'string',
                 option_int BIGINT NOT NULL DEFAULT 0,
                 option_double DOUBLE(20,4) NOT NULL DEFAULT 0,
-                option_blob BLOB NOT NULL
+                option_blob BLOB NOT NULL,
+                INDEX idx_option_name (option_name)
                 )";
         $self->query->query($statement)->execute();
     }

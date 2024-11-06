@@ -1,13 +1,13 @@
 <template>
     <div class="row">
-        <div class="col-md-4 profile-block">
+        <div class="col-md-4 profile-block mb-4">
             <UserData :user-id="id" :u-name-label="uNameLabel" v-slot="{user}">
                 <slot name="userData" :user="user"></slot>
             </UserData>
             <hr>
             <Restricted access="1,2">
                 <template #message><slot></slot></template>
-                <a class="btn btn-primary" :href="`/login-as/${id}`">Login to profile</a>
+                <a class="link link-primary" :href="`/login-as/${id}`">Login to profile</a>
             </Restricted>
             <slot name="left"></slot>
         </div>
