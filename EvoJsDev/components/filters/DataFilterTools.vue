@@ -29,7 +29,19 @@
         </div>
         <slot></slot>
     </div>
-    
+    <div class="tools" v-else>
+        <div class="controls">
+            <div class="mb-2 d-flex buttons-set">
+                <div class="btn-group">
+                    <button class="btn btn-outline-secondary btn-sm mr-3" @click="$emit('print')" v-if="position=='header'">Print</button>
+                </div>
+            </div>
+            <div class="mb-2" v-if="position=='header'">
+                <em><small> showing {{ computedData.length }} of {{ data.length }} records on page {{ page }}</small></em>
+            </div>
+        </div>
+        <slot></slot>
+    </div>
 </template>
 
 <script setup>

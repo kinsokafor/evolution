@@ -8,7 +8,7 @@
             v-model="limit"
             @setPage="setPage"
             @print="print">
-            <div class="search">
+            <div class="search" v-if="showSearchBox">
                 <div>
                     <input v-model="search" @input="page = 1" class="search-input" :class="appData().inputFieldClass ?? ''"/>
                 </div>
@@ -91,6 +91,8 @@
     const page = ref(1)
 
     const search = ref("")
+
+    const showSearchBox = computed(() => Object.keys(props.searchColumns).length > 0)
 
     const pageSize = computed(() => {
         let l = filteredData.value.length ?? 0

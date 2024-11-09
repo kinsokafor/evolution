@@ -26,7 +26,7 @@
         </div>
         <div>
             <div class="label">Phone Number</div>
-            <div class="value">{{ user.phone }}</div>
+            <div class="value">{{ formatMobileNumber(user.phone) }}</div>
         </div>
         <slot :user="user"></slot>
     </div>
@@ -35,7 +35,7 @@
 <script setup>
     import {ref, computed, watchEffect} from 'vue'
     import { useUsersStore } from '@/Modules/Main/store/users'
-    import {isEmpty, getProfilePicture} from '@/helpers'
+    import {isEmpty, getProfilePicture, formatMobileNumber} from '@/helpers'
 
     const usersStore = useUsersStore()
     const props = defineProps({

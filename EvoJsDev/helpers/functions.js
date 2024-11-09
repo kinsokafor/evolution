@@ -459,3 +459,43 @@ export const chunkArray = (arr, callback, chunkSize = 10) => {
       callback(chunk)
   }
 }
+
+export const formatMobileNumber = (number, args = {}) => {
+    const defaults = {
+        countryCode: '234', // (234) 555555555
+        localPrefix: '0',   // (0) 555555555
+        firstDigit: '7,8,9', // 0 (8) 55555555
+        IDD: '00', // (00) 234 555555555 
+        localLength: 11 // length as dialed locally e.g. 08030000000 = 11 digits
+    };
+    args = { ...defaults, ...args };
+    
+    // Only keep digits: no spaces, dashes, plus signs, etc.
+    number = (number ?? "").replace(/[^0-9]/g, "");
+    const firstDigits = args.firstDigit.split(",").map(digit => digit.trim());
+    
+    let result;
+
+    // Phone number is like 0555555555
+    if (number[0] === args.localPrefix && number.length === parseInt(args.localLength)) {
+        number = number.slice(args.localPrefix.length);
+        result = args.countryCode + number;
+    }
+    // Phone number is like 555555555
+    else if (firstDigits.includes(number[0])) {
+        if (number.length === parseInt(args.localLength) - firstDigits[0].length) {
+            result = args.countryCode + number;
+        }
+    }
+    // Phone number is like 00966555555555
+    else if (number.startsWith(args.IDD) && number.length === parseInt(args.localLength) - args.localPrefix.length + args.IDD.length + args.countryCode.length) {
+        result = number.slice(args.IDD.length);
+    }
+    // Phone number is like 966555555555
+    else if (number.startsWith(args.countryCode) && number.length === parseInt(args.localLength) - args.localPrefix.length + args.countryCode.length) {
+        result = number;
+    }
+    
+    // Return result or original number if no match found
+    return result || number;
+}

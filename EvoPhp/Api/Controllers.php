@@ -81,7 +81,10 @@ abstract class Controllers
 
     private function getContent() {
         $this->addResources();
-        $this->data = array_merge($this->data, get_object_vars($this));
+        $controllerData = get_object_vars($this);
+        $controllerData = array_merge($controllerData, ($controllerData["data"] ?? []));
+        unset($controllerData["data"]);
+        $this->data = array_merge($this->data, $controllerData);
         if($this->template == 'blank') return "";
         $blade = new Blade($this->viewPath, $this->viewPath.'/cache');
         $themes = new Themes($this->template, $this->data);
