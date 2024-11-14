@@ -163,7 +163,7 @@ async function bundle() {
 
   Promise.all([promise]).then(async (values) => {
     await updateConfigJSON("development");
-    process.exit(0);
+    // process.exit(0);
   });
 }
 
