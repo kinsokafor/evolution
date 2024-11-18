@@ -35,7 +35,7 @@ export const useUsersStore = defineStore('useUsersStore', {
                 offset: this.offset,
                 ...params
             }).then(r => {
-                if ("id" in params) {
+                if ("id" in params || "username" in params) {
                     // const meta = JSON.parse(r.data.meta)
                     // delete r.data.meta
                     let i = { ...r.data }

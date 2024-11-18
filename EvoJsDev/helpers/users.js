@@ -60,7 +60,7 @@ export class Users {
             return base + "id/" + parseInt(filter.id)
         }
         if(filter.username !== undefined) {
-            return base + "username/" + parseInt(filter.username)
+            return base + "username/" + String(filter.username)
         }
         const link = new URL(base);
         for (const key in filter) {

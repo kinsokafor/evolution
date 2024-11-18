@@ -66,6 +66,18 @@ module.exports = {
                     outputPath: 'images',
                 }
             },
+            {
+              test: /\.mp3$/,
+              use: [
+                {
+                  loader: 'file-loader',
+                  options: {
+                    publicPath: '/Public/dist/sounds/',
+                    outputPath: 'sounds', 
+                  },
+                },
+              ],
+            },
         ]
     },
 }

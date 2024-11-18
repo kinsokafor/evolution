@@ -4,11 +4,11 @@
         <h3>{{ user.surname }}, {{ user.other_names }} {{ user.middle_name }}</h3>
     </div>
     <div class="user-data-card animate__animated animate__fadeInDown">
-        <div>
-            <div class="label">Surname</div>
-            <div class="value">{{ user.surname }}</div>
+        <div v-for="field in fields" :key="field">
+            <div class="label">{{ Object.values(field)[0] }}</div>
+            <div class="value">{{ user[Object.keys(field)[0]] ?? "" }}</div>
         </div>
-        <div>
+        <!-- <div>
             <div class="label">Middle Name</div>
             <div class="value">{{ user.middle_name }}</div>
         </div>
@@ -27,7 +27,7 @@
         <div>
             <div class="label">Phone Number</div>
             <div class="value">{{ formatMobileNumber(user.phone) }}</div>
-        </div>
+        </div> -->
         <slot :user="user"></slot>
     </div>
 </template>
@@ -40,7 +40,8 @@
     const usersStore = useUsersStore()
     const props = defineProps({
         userId: {
-            type: Number
+            type: [null, Number],
+            default: null
         },
         data: {
             type: Object,
@@ -49,11 +50,34 @@
         uNameLabel: {
             type: String,
             default: "Registration Number"
+        },
+        fields: {
+            type: Array,
+            default: [
+                {
+                    surname: "Surname"
+                },
+                {
+                    middle_name: "Middle Name"
+                },
+                {
+                    other_names: "Other Names"
+                },
+                {
+                    username: "Registration Number"
+                },
+                {
+                    gender: "Gender"
+                },
+                {
+                    phone: "Phone Number"
+                }
+            ]
         }
     })
 
     const realUser = computed(() => {
-        if(props.userId == undefined) return {}
+        if(props.userId == null) return {}
         return usersStore.getUser(props.userId)
     })
 

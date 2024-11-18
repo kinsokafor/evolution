@@ -514,6 +514,40 @@ class Query extends Database
         return $this;
     }
 
+    public function whereNull($column) {
+        if(!$this->hasWhere)
+            $this->statement .= " WHERE";
+
+        if($this->prependAnd)
+            $this->and();
+
+        $this->statement .= " $column IS NULL";
+
+        $this->prependAnd = true;
+
+        $this->hasWhere = true;
+
+        $this->ready = true;
+        return $this;
+    }
+
+    public function whereNotNull($column) {
+        if(!$this->hasWhere)
+            $this->statement .= " WHERE";
+
+        if($this->prependAnd)
+            $this->and();
+
+        $this->statement .= " $column IS NOT NULL";
+
+        $this->prependAnd = true;
+
+        $this->hasWhere = true;
+
+        $this->ready = true;
+        return $this;
+    }
+
     public function whereBetween($column, $v1, $v2, $type = false) {
         if(!$this->hasWhere)
             $this->statement .= " WHERE";
