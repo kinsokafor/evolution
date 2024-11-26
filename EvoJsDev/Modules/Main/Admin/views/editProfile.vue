@@ -2,6 +2,7 @@
     <Restricted access="1,2,3">
         <div class="row">
             <div class="col-md-6">
+                {{ access }}
                 <CreateForm :fields="fields" @submit="onSubmit" :initial-values="user" :columns=2>
                     <template #submitButton>
                         <Button type="submit" class="btn btn-primary" :processing="processing">Update</Button>
@@ -13,12 +14,13 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, computed } from 'vue';
+    import { ref, computed } from 'vue';
     import { useRoute } from 'vue-router';
     import Restricted from '@/components/Restricted.vue'
     import CreateForm from '@/components/form/CreateForm.vue';
     import { isRequired } from '@/helpers'
     import { useAlertStore } from '@/store/alert';
+    import { useAuthStore } from '@/store/auth';
     import Button from '@/components/Button.vue'
     import {Users} from '@/helpers';
     import { useUsersStore } from '@/Modules/Main/store/users'
@@ -30,6 +32,9 @@
     const alertStore = useAlertStore();
     const processing = ref(false);
     const usersStore = useUsersStore();
+    const authStore = useAuthStore()
+
+    const access = computed(() => authStore.hasAccess("1"))
     const user = computed(() => {
         let u = {...usersStore.getUser(route.params.id)}
         delete u?.password
@@ -43,6 +48,12 @@
                     value: role[0],
                     capacity: role[1].capacity,
                 }
+            }).filter(role => {
+                if(role.value == 'software_engineer') return false
+                if(!access.value) {
+                    if(["chief_admin", "admin"].findIndex(i => i == role.value) != -1) return false
+                }
+                return true
             })
     })
 

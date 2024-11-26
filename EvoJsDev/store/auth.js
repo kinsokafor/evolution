@@ -59,7 +59,11 @@ export const useAuthStore = defineStore('useAuthStore', {
                 }
                 return false;
             } else {
-                scope = scope == null ? this.getScope : scope;
+                if(scope == null) {
+                    scope = this.getScope
+                } else if(typeof(scope) == "string") {
+                    scope = this.toArray(scope)
+                }
                 if(scope.length == 0) return true;
                 const intersect = arrayIntersect(scope, this.userScope);
                 return intersect.length > 0;
@@ -85,6 +89,11 @@ export const useAuthStore = defineStore('useAuthStore', {
             }
             state.loginStatus()
             return state.currentUser
+        },
+        hasAccess: (state) => {
+            return (access) => {
+                return state.testAccess(access);
+            }
         }
     }
 })
