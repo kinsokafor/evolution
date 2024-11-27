@@ -2,7 +2,6 @@
     <Restricted access="1,2,3">
         <div class="row">
             <div class="col-md-6">
-                {{ access }}
                 <CreateForm :fields="fields" @submit="onSubmit" :initial-values="user" :columns=2>
                     <template #submitButton>
                         <Button type="submit" class="btn btn-primary" :processing="processing">Update</Button>
@@ -51,7 +50,7 @@
             }).filter(role => {
                 if(role.value == 'software_engineer') return false
                 if(!access.value) {
-                    if(["chief_admin", "admin"].findIndex(i => i == role.value) != -1) return false
+                    if(["super_admin", "admin"].findIndex(i => i == role.value) != -1) return false
                 }
                 return true
             })

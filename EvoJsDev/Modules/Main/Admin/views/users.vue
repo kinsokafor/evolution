@@ -56,6 +56,9 @@ const roles = computed(() => {
       value: role[0],
       capacity: role[1].capacity,
     };
+  }).filter(i => {
+    if(i.value == "software_engineer") return false
+    return true
   });
 });
 
@@ -63,7 +66,10 @@ const filterStore = useFilterStore();
 
 const usersStore = useUsersStore();
 
-const allUsers = computed(() => usersStore.get());
+const allUsers = computed(() => usersStore.get().filter(i => {
+  if(i.role == "software_engineer") return false
+  return true
+}));
 
 const getTemp = (data) => {
   switch (data?.gender) {
