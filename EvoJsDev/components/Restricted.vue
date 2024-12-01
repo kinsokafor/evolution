@@ -1,8 +1,8 @@
 <template>
     <div class="access-restricted-area">
-        <slot v-if="authStore.getAccess" :user="authStore.getUser"></slot>
-        <div v-if="!authStore.getAccess && showBackdrop" class="no-access">
-            <slot name="message">
+        <slot v-if="authStore.hasAccess(access)" :user="authStore.getUser"></slot>
+        <div v-else class="no-access">
+            <slot name="message" v-if="showBackdrop">
                 <div class="security-check">
                     <img :src="root+jpg" alt="" class="animate__animated animate__pulse animate__infinite">
                     <em v-if="authStore.failedTest">Please wait: security check</em>

@@ -232,15 +232,20 @@ Trait Auth {
         return $this->createNonce();
     }
 
-    protected function createNonce($key = false, int $nbf = 1357000000) {
+    protected function createNonce($key = false, int | NULL $exp = NULL, $claims = []) {
         if(!$key)
             $key = $this->getKey();
         $config = new Config;
+        if($exp == NULL) {
+            $config = new Config;
+            $exp = \time() + $config->Auth["tokenLifetime"];
+        }
         $payload = [
+            ...$claims,
             'iss' => $config->root,
             'aud' => $config->root,
-            'iat' => time(),
-            'nbf' => $nbf
+            'iat' => \time(),
+            'exp' => $exp
         ];
         return JWT::encode($payload, $key, 'HS256');
     }
@@ -264,7 +269,7 @@ Trait Auth {
             //     throw new \Exception('Invalid audience');
             // }
 
-            return true;
+            return $decoded;
         }
         catch(\Firebase\JWT\ExpiredException $e) {
             return false;

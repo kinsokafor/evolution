@@ -7,6 +7,7 @@ use EvoPhp\Api\Operations;
 use EvoPhp\Themes\Themes;
 use EvoPhp\Api\Config;
 use Assoto\JS;
+use Assoto\CSS;
 use KubAT\PhpSimple\HtmlDomParser;
 use EvoPhp\Database\Session;
 
@@ -94,13 +95,20 @@ abstract class Controllers
     }
 
     private function addBundles() {
-        $file = "./Public/dist/all-scripts.html";
+        $file = "./Public/dist/$this->bladeTemplate.html";
         if(!@file_exists($file)) return;
         $dom = HtmlDomParser::file_get_html( $file );
+        $styles = $dom->find('link');
+        if(Operations::count($styles)) {
+            foreach ($styles as $key => $style) {
+                // if(!strstr($style->href, "/".$this->bladeTemplate."__")) continue;
+                CSS::stylesheet("/Public/dist".$style->href, '', ["defer" => "defer", "rel" => "preload"]);
+            }
+        }
         $scripts = $dom->find('script');
         if(Operations::count($scripts)) {
             foreach ($scripts as $key => $script) {
-                if(!strstr($script->src, "/".$this->bladeTemplate."__")) continue;
+                // if(!strstr($script->src, "/".$this->bladeTemplate."__")) continue;
                 JS::file("/Public/dist".$script->src, '', ["defer" => "defer", "rel" => "preload"]);
             }
         }
