@@ -98,19 +98,25 @@ abstract class Controllers
         $file = "./Public/dist/$this->bladeTemplate.html";
         if(!@file_exists($file)) return;
         $dom = HtmlDomParser::file_get_html( $file );
-        $styles = $dom->find('link');
-        if(Operations::count($styles)) {
-            foreach ($styles as $key => $style) {
-                // if(!strstr($style->href, "/".$this->bladeTemplate."__")) continue;
-                CSS::stylesheet("/Public/dist".$style->href, '', ["defer" => "defer", "rel" => "preload"]);
+        try {
+            $styles = $dom->find('link');
+            if(Operations::count($styles)) {
+                foreach ($styles as $key => $style) {
+                    // if(!strstr($style->href, "/".$this->bladeTemplate."__")) continue;
+                    CSS::stylesheet("/Public/dist".$style->href, '', ["defer" => "defer", "rel" => "preload"]);
+                }
             }
-        }
-        $scripts = $dom->find('script');
-        if(Operations::count($scripts)) {
-            foreach ($scripts as $key => $script) {
-                // if(!strstr($script->src, "/".$this->bladeTemplate."__")) continue;
-                JS::file("/Public/dist".$script->src, '', ["defer" => "defer", "rel" => "preload"]);
+            $scripts = $dom->find('script');
+            if(Operations::count($scripts)) {
+                foreach ($scripts as $key => $script) {
+                    // if(!strstr($script->src, "/".$this->bladeTemplate."__")) continue;
+                    JS::file("/Public/dist".$script->src, '', ["defer" => "defer", "rel" => "preload"]);
+                }
             }
+        } catch (\Throwable $e) {
+            // Handle exceptions
+            error_log("Caught Exception: " . $e->getMessage());
+            echo "Something went wrong. " . $e->getMessage();
         }
     }
 

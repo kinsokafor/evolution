@@ -44,10 +44,6 @@ module.exports = {
     historyApiFallback: true,
   },
   plugins: [
-    // new HtmlWebpackPlugin({
-    //   filename: 'all-scripts.html',
-    //   templateContent: '',
-    // }),
     ...Object.keys(entries).map((entryName) => {
       return new HtmlWebpackPlugin({
         filename: `${entryName}.html`, // Generate a unique HTML file per entry
