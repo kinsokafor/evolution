@@ -42,6 +42,8 @@ class User
 
     public $result;
 
+    public $validateEmail = true;
+
     private $tableCols = ["id", "username", "email", "password", "date_created", "meta"];
 
     public function __construct()
@@ -163,7 +165,7 @@ class User
             }
         }
 
-        if ($meta['email'] !== "") {
+        if ($meta['email'] !== "" && $this->validateEmail) {
             if($this->get($meta['email'])) {
                 $this->error = "Sorry, email \"".$meta['email']."\" is already in use by another user.";
                 return false;
