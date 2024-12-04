@@ -27,3 +27,4 @@
 /Public/Templates/cache/*
 /package.json
 /EvoSamples/*
+/.env*
