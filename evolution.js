@@ -99,6 +99,28 @@ const writeColorScheme = () => {
       });     
 }
 
+const writeDotEvnFiles = () => {
+    const devData = `__VUE_PROD_DEVTOOLS__=true\n__VUE_OPTIONS_API__=true\nDEBUG=true\nEVO_API_URL=http://localhost:${port}`
+    const liveData = "__VUE_PROD_DEVTOOLS__=true\n__VUE_OPTIONS_API__=true\nDEBUG=false\nEVO_API_URL=https://example.com"
+
+    // Write the content to the destination file
+    fs.writeFile("./.env.development", devData, 'utf8', (err) => {
+        if (err) {
+          console.error('Error writing development environment file:', err);
+          return;
+        }
+        console.log('Development environment file created successfully.');
+    });
+
+    fs.writeFile("./.env.production", liveData, 'utf8', (err) => {
+        if (err) {
+          console.error('Error writing production environment file:', err);
+          return;
+        }
+        console.log('Production environment file created successfully.');
+    });
+}
+
 const startApp = async() => {
     console.log("Welcome to Evolution!")
     projectName = await readLineAsync("What is the name of the project you want to build?");
@@ -111,6 +133,8 @@ const startApp = async() => {
     writeConfigJSON()
 
     writeColorScheme()
+
+    writeDotEvnFiles()
 
     rl.close();
 
