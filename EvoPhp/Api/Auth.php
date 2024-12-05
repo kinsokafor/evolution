@@ -240,10 +240,11 @@ Trait Auth {
             $config = new Config;
             $exp = \time() + $config->Auth["tokenLifetime"];
         }
+        $protocol = Operations::fullProtocol();
         $payload = [
             ...$claims,
-            'iss' => $config->root,
-            'aud' => $config->root,
+            'iss' => $protocol,
+            'aud' => $protocol,
             'iat' => \time(),
             'exp' => $exp
         ];
@@ -260,7 +261,7 @@ Trait Auth {
             $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
 
             // Validate issuer
-            if ($decoded->iss !== $config->root) {
+            if ($decoded->iss !== Operations::fullProtocol()) {
                 return false;
             }
 

@@ -60,7 +60,7 @@ class Files {
             $this->fs->mkdir(Path::canonicalize($path));
             $path = Path::canonicalize($path ."/". $saveAs . "." . $this->mimeToExtension($type));
             file_put_contents($path, $data);
-            return $this->getRoot()."/$path";
+            return Operations::fullProtocol()."/$path";
         } else return false;
     }
 
@@ -94,7 +94,7 @@ class Files {
         $path = Path::canonicalize($path ."/". $saveAs);
 
         if(move_uploaded_file($file['tmp_name'],$path)) {
-            return $this->getRoot()."/$path";
+            return Operations::fullProtocol()."/$path";
         } else {
             http_response_code(400);
             return 'Failed to save file';
@@ -102,12 +102,8 @@ class Files {
     }
 
     public function unlink($file) {
-        $file = str_replace($this->getRoot(), "", $file);
+        $file = str_replace(Operations::fullProtocol(), "", $file);
         unlink(Path::canonicalize(ABSPATH.$file));
-    }
-
-    private function getRoot() {
-        return ($this->config->mode == "development" ? $this->config->devRoot : $this->config->root);
     }
 
     public function mimeToExtension($mime) {

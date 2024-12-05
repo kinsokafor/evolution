@@ -100,8 +100,8 @@ const writeColorScheme = () => {
 }
 
 const writeDotEvnFiles = () => {
-    const devData = `__VUE_PROD_DEVTOOLS__=true\n__VUE_OPTIONS_API__=true\nDEBUG=true\nEVO_API_URL=http://localhost:${port}`
-    const liveData = "__VUE_PROD_DEVTOOLS__=true\n__VUE_OPTIONS_API__=true\nDEBUG=false\nEVO_API_URL=https://example.com"
+    const devData = `VUE_OPTIONS_API=true\nVUE_PROD_DEVTOOLS=true\nVUE_PROD_HYDRATION_MISMATCH_DETAILS=false\nDEBUG=true\nEVO_API_URL=http://localhost:${port}`
+    const liveData = "VUE_OPTIONS_API=true\nVUE_PROD_DEVTOOLS=false\nVUE_PROD_HYDRATION_MISMATCH_DETAILS=false\nDEBUG=false\nEVO_API_URL=https://example.com"
 
     // Write the content to the destination file
     fs.writeFile("./.env.development", devData, 'utf8', (err) => {

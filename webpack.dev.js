@@ -10,8 +10,5 @@ module.exports = merge(common, {
       new Dotenv({
         path: './.env.development'
       }),
-      new webpack.DefinePlugin({
-        'process.env.EVO_API_URL': JSON.stringify(config.devRoot),
-      }),
   ].filter(Boolean),
 });

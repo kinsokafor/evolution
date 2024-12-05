@@ -9,8 +9,5 @@ module.exports = merge(common, {
     new Dotenv({
       path: './.env.production'
     }),
-    new webpack.DefinePlugin({
-      'process.env.EVO_API_URL': JSON.stringify(config.root),
-    }),
   ].filter(Boolean),
 });

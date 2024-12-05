@@ -508,4 +508,14 @@ class Operations
         $meta = $user->get($id);
         return self::encrypt($password) == $meta->password;
     }
+
+    public static function fullProtocol() {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+        // Get the host
+        $host = $_SERVER['HTTP_HOST'];
+
+        // Combine protocol and host
+        return $protocol . $host;
+    }
 }
