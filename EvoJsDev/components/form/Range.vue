@@ -33,10 +33,14 @@
         },
         column: {
             type: String
+        },
+        initialValues: {
+            type: Object,
+            default: {}
         }
     })
 
-    const { value, errorMessage } = useField(props.name, props.required ? isRequired : true)
+    // const { value, errorMessage } = useField(props.name)
 
 </script>
 

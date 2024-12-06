@@ -1,4 +1,3 @@
-// require modules
 const fs = require("fs");
 const archiver = require("archiver");
 const readline = require("readline");
@@ -8,163 +7,131 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-const readLineAsync = (msg) => {
-  return new Promise((resolve) => {
-    rl.question(msg, (userRes) => {
-      resolve(userRes);
-    });
-  });
+const readLineAsync = (msg) =>
+  new Promise((resolve) => rl.question(msg, (userRes) => resolve(userRes.trim())));
+
+const validateYesNoInput = async (msg) => {
+  let input;
+  do {
+    input = (await readLineAsync(msg)).toLowerCase();
+  } while (!["y", "n"].includes(input));
+  return input === "y";
 };
 
-const updateConfigJSON = (mode = "production") => {
-  return new Promise((resolve, reject) => {
-    const configJSON = require("./config.json");
+const updateConfigJSON = async (mode = "production") => {
+  try {
+    const configPath = "./config.json";
+    if (!fs.existsSync(configPath)) {
+      throw new Error("config.json file not found.");
+    }
 
+    const configJSON = JSON.parse(fs.readFileSync(configPath, "utf8"));
     configJSON.mode = mode;
 
-    let configStr = JSON.stringify(configJSON, null, 2);
-
-    fs.writeFile("./config.json", configStr, "utf8", (err) => {
-      if (err) {
-        console.error("Error writing config.json file:", err);
-        reject(err);
-      } else {
-        console.log(`config.json file updated to ${mode} successfully.`);
-        resolve(true);
-      }
-    });
-  });
+    await fs.promises.writeFile(configPath, JSON.stringify(configJSON, null, 2), "utf8");
+    console.log(`config.json file updated to ${mode} successfully.`);
+  } catch (error) {
+    console.error("Error updating config.json file:", error.message);
+    throw error;
+  }
 };
 
-async function bundle() {
-  const promise = new Promise(async (resolve, reject) => {
-    // create a file to stream archive data to.
-    const time = new Date().getTime();
-    const output = fs.createWriteStream(__dirname + `/bundle-${time}.zip`);
-    const archive = archiver("zip", {
-      zlib: { level: 9 }, // Sets the compression level.
+const bundleFiles = async () => {
+  try {
+    const timestamp = Date.now();
+    const outputPath = `./bundle-${timestamp}.zip`;
+    const output = fs.createWriteStream(outputPath);
+    const archive = archiver("zip", { zlib: { level: 9 } });
+    const bundledFiles = [];
+
+    // Setup event listeners for the archive process
+    output.on("close", () => {
+      console.log(`${archive.pointer()} total bytes`);
+      console.log(`Archive finalized: ${outputPath}`);
+      console.log("Bundled files/directories:", bundledFiles.join(", "));
     });
 
-    // // listen for all archive data to be written
-    // // 'close' event is fired only when a file descriptor is involved
-    output.on("close", function () {
-      console.log(archive.pointer() + " total bytes");
-      console.log(
-        "archiver has been finalized and the output file descriptor has closed."
-      );
+    archive.on("warning", (err) => {
+      if (err.code !== "ENOENT") throw err;
+      console.warn("Warning during archiving:", err.message);
     });
 
-    // // This event is fired when the data source is drained no matter what was the data source.
-    // // It is not part of this library but rather from the NodeJS Stream API.
-    // // @see: https://nodejs.org/api/stream.html#stream_event_end
-    output.on("end", function () {
-      console.log("Data has been drained");
-    });
-
-    // good practice to catch warnings (ie stat failures and other non-blocking errors)
-    archive.on("warning", function (err) {
-      if (err.code === "ENOENT") {
-        // log warning
-      } else {
-        // throw error
-        throw err;
-      }
-    });
-
-    // // good practice to catch this error explicitly
-    archive.on("error", function (err) {
+    archive.on("error", (err) => {
+      console.error("Error during archiving:", err.message);
       throw err;
     });
 
-    // pipe archive data to the file
     archive.pipe(output);
 
-    // // append a file from stream
-    // const file1 = __dirname + '/file1.txt';
-    // archive.append(fs.createReadStream(file1), { name: 'file1.txt' });
+    // Add default files
+    const defaultFiles = ["cron.php", "index.php", "Install.php"];
+    defaultFiles.forEach((file) => {
+      if (fs.existsSync(file)) {
+        archive.file(file, { name: file });
+        bundledFiles.push(file);
+      } else {
+        console.warn(`File not found: ${file}`);
+      }
+    });
 
-    // // append a file from string
-    // archive.append('string cheese!', { name: 'file2.txt' });
-
-    // // append a file from buffer
-    // const buffer3 = Buffer.from('buff it!');
-    // archive.append(buffer3, { name: 'file3.txt' });
-
-    // // append a file
-    archive.file("cron.php", { name: "cron.php" });
-    archive.file("index.php", { name: "index.php" });
-    archive.file("Install.php", { name: "Install.php" });
-    const all = await readLineAsync("Do you want to bundle all files? Y/N ");
-
-    if (all.toLowerCase() == "y") {
-      await updateConfigJSON("production").then(async () => {
-        archive.file("config.json", { name: "config.json" });
+    // Ask user about additional files
+    const includeAll = await validateYesNoInput("Do you want to bundle all files? (Y/N): ");
+    if (includeAll) {
+      await updateConfigJSON("production");
+      const extraFiles = ["config.json", ".htaccess", "color-scheme.css"];
+      extraFiles.forEach((file) => {
+        if (fs.existsSync(file)) {
+          archive.file(file, { name: file });
+          bundledFiles.push(file);
+        } else {
+          console.warn(`File not found: ${file}`);
+        }
       });
-      archive.file(".htaccess", { name: ".htaccess" });
-      archive.file("color-scheme.css", { name: "color-scheme.css" });
     } else {
-      const bundleConfig = await readLineAsync(
-        "Do you want to bundle config.json? Y/N "
-      );
-      if (bundleConfig.toLowerCase() == "y") {
-        await updateConfigJSON("production").then(async () => {
-          archive.file("config.json", { name: "config.json" });
-        });
-      }
+      const optionalFiles = [
+        { name: "config.json", prompt: "Do you want to bundle config.json? (Y/N): " },
+        { name: ".htaccess", prompt: "Do you want to bundle .htaccess? (Y/N): " },
+        { name: "color-scheme.css", prompt: "Do you want to bundle color-scheme.css? (Y/N): " },
+      ];
 
-      const bundleHTAccess = await readLineAsync(
-        "Do you want to bundle .htaccess? Y/N "
-      );
-      if (bundleHTAccess.toLowerCase() == "y") {
-        archive.file(".htaccess", { name: ".htaccess" });
-      }
-
-      const bundleColorScheme = await readLineAsync(
-        "Do you want to bundle color-scheme.css? Y/N "
-      );
-      if (bundleColorScheme.toLowerCase() == "y") {
-        archive.file("color-scheme.css", { name: "color-scheme.css" });
+      for (const file of optionalFiles) {
+        if (await validateYesNoInput(file.prompt)) {
+          if (file.name === "config.json") await updateConfigJSON("production");
+          if (fs.existsSync(file.name)) {
+            archive.file(file.name, { name: file.name });
+            bundledFiles.push(file.name);
+          } else {
+            console.warn(`File not found: ${file.name}`);
+          }
+        }
       }
     }
-    // // append files from a sub-directory and naming it `new-subdir` within the archive
-    // archive.directory('subdir/', 'new-subdir');
 
-    // append files from a sub-directory, putting its contents at the root of archive
-    archive.directory("vendor/", "vendor");
-    archive.glob(
-      "**",
-      {
-        cwd: __dirname + "/Public",
-        ignore: [
-          "Themes/*/Views/cache/*",
-          "Modules/*/Views/cache/*",
-          "Templates/cache/*",
-          "*/.git",
-        ],
-      },
-      { prefix: "Public/" }
-    );
-    // append files from a glob pattern
-    archive.glob(
-      "**",
-      {
-        cwd: __dirname + "/EvoPhp",
-        ignore: ["Database/Config.php"],
-      },
-      { prefix: "EvoPhp/" }
-    );
+    // Include directories
+    const directories = [
+      { path: "vendor/", name: "vendor" },
+      { path: "./Public", name: "Public/", ignore: ["Themes/*/Views/cache/*", "*/.git"] },
+      { path: "./EvoPhp", name: "EvoPhp/", ignore: ["Database/Config.php"] },
+    ];
 
-    // finalize the archive (ie we are done appending files but streams have to finish yet)
-    // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
-    await archive.finalize()
+    directories.forEach(({ path, name, ignore }) => {
+      if (fs.existsSync(path)) {
+        archive.glob("**", { cwd: path, ignore: ignore || [] }, { prefix: name });
+        bundledFiles.push(name);
+      } else {
+        console.warn(`Directory not found: ${path}`);
+      }
+    });
 
-    resolve(true);
-  });
+    await archive.finalize();
+    await updateConfigJSON("development"); // Revert changes after bundling
+    console.log("Bundle creation completed successfully.");
+  } catch (error) {
+    console.error("Error during bundling process:", error.message);
+  } finally {
+    rl.close();
+  }
+};
 
-  Promise.all([promise]).then(async (values) => {
-    await updateConfigJSON("development");
-    // process.exit(0);
-  });
-}
-
-bundle();
+// Start the bundling process
+bundleFiles();
