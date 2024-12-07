@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const readline = require('readline');
 const fs = require('fs');
 
-let projectName = "Evolution"
+const projectName = process.argv[2];  // Receives the project name from the argument passed
 
 let port = 3000
 
@@ -123,7 +123,9 @@ const writeDotEvnFiles = () => {
 
 const startApp = async() => {
     console.log("Welcome to Evolution!")
-    projectName = await readLineAsync("What is the name of the project you want to build?");
+    if (!projectName) {
+        projectName = await readLineAsync("What is the name of the project you want to build?");
+    }
     port = await readLineAsync("What is the local environment port? Enter 3000 or any other port that you wish?");
 
     writePackageJSON();
