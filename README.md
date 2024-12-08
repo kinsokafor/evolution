@@ -1,6 +1,3 @@
-Sure! Here's the updated `README.md` based on the current installation method, which includes the usage of `npm` and passing the project name to `node evolution`.
-
----
 
 # Project Installation Guide
 
