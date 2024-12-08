@@ -1,33 +1,121 @@
-# evolution
-<h2>Requirements</h2>
-<ul>
-  <li>Node js installed</li>
-  <li>npm installed</li>
-  <li>PHP installed</li>
-  <li>MySQL installed</li>
-  <li><a href="https://getcomposer.org/download/" target="_blank">Composer</a> installed</li>
-</ul>
+Sure! Here's the updated `README.md` based on the current installation method, which includes the usage of `npm` and passing the project name to `node evolution`.
 
-<h2>Installation</h2>
-<p>Run <code>git clone https://github.com/kinsokafor/evolution.git your-project-name</code> in your desired project location</p>
-<p>Run <code>cd your-project-name</code></p>
-<p>Run <code>node evolution</code></p>
-<p>Run <code>composer install</code></p>
-<p>Run <code>npm install</code></p>
+---
 
-<h2>Set up</h2>
-<p>Run <code>npm run start</code> or <code>npm start</code></p>
-<ul>
-  <li>Get your database credentials handy (host name, user name, password, and database name)</li>
-</ul>
+# Project Installation Guide
 
-<h2>Install Plugin</h2>
-<p>Plugin installation can be done by simply running <code>npm run plugin</code>. You will be prompted to provide the name of the plugin which should be a full github name of the plugin including the author name without "https://github.com/" example "kinsokafor/eEdu" then press enter.</p>
+This guide will help you install and set up the project with ease using the `evophp` package.
 
-<h2>Create New Plugin</h2>
-<p>Go to https://github.com/kinsokafor/EvoPlugin and click on "use this template" then "create new repository". Name your repository (The name of your plugin) for example "ExamplePlugin". You must be consistent with naming your plugin because you will use exactly the same name and it's exact casing for creating the javaScript counterpart. Allow it for some time to clone and create your plugin files.</p>
-<p>Also go to https://github.com/kinsokafor/EvoPlugin.js and repeat the same process. This time the name of your repository must be the same as the name of the plugin which you used to create the first repository then followed by .js for example "ExamplePlugin.js"</p>
-<p>Then just like plugin installation, run <code>npm run --i plugin</code> provide the name of the plugin that your earlier used to create your repository. remember to format it properly including the author name for example "kinsokafor/ExamplePlugin".</p>
-<p>You will be required to provide the entryURI of your plugin which will be the index of your new plugin. Get a unique name such as "example-plugin".</p>
-<p>You will also be required to provide the plugin prefix. The plugin prefix is just 3 alphanumeric characters that are unique to the naming of your plugin so that it won't collide with anyother plugin used in your project. Make it as unique as possible</p>
-<p>Click Enter.</p>
+---
+
+## **Installation**
+
+### **1. Install the Package Globally**
+
+To install the package globally, run the following command:
+
+```bash
+npm install -g evophp
+```
+
+This will install the `evophp` command, which you can use to initialize your project.
+
+---
+
+### **2. Clone the Repository and Install Dependencies**
+
+Once installed, use the `evophp` command to clone the repository and set up the project.
+
+Run the following command, replacing `your-project-name` with the desired name of your project:
+
+```bash
+evophp your-project-name
+```
+
+Example:
+```bash
+evophp jonikins-apartments
+```
+
+This will:
+- Clone the `evolution` repository into a folder named `your-project-name`.
+- Run `node evolution` with the project name passed as an argument.
+- Install any Composer dependencies (if a `composer.json` file exists).
+- Install Node.js dependencies via `npm install`.
+
+---
+
+### **3. Start the Project**
+
+After the installation completes, navigate to your project directory:
+
+```bash
+cd your-project-name
+```
+
+To start the project, you can run:
+
+```bash
+npm run start
+```
+
+This will launch your project and you can begin working on it.
+
+---
+
+## **Plugin Installation**
+
+You can install a plugin by running the following command:
+
+```bash
+npm run plugin
+```
+
+You will be prompted to provide the plugin name. The plugin name should be the full GitHub repository name, including the author. For example, if you want to install the `kinsokafor/eEdu` plugin, you will enter:
+
+```
+kinsokafor/eEdu
+```
+
+---
+
+## **Creating a New Plugin**
+
+If you want to create your own plugin, follow these steps:
+
+1. **Create the Plugin Repository**:
+   - Go to [EvoPlugin GitHub template](https://github.com/kinsokafor/EvoPlugin) and click on "Use this template".
+   - Name your repository (e.g., `ExamplePlugin`).
+
+2. **Create the JavaScript Counterpart**:
+   - Go to [EvoPlugin.js GitHub template](https://github.com/kinsokafor/EvoPlugin.js) and repeat the same process.
+   - Make sure to name the repository the same as your plugin name but add `.js` to the end (e.g., `ExamplePlugin.js`).
+
+3. **Install Your New Plugin**:
+   - Run the following command to install your new plugin:
+     ```bash
+     npm run --i plugin
+     ```
+   - You will be asked to provide:
+     - The plugin name (e.g., `kinsokafor/ExamplePlugin`).
+     - The entry URI (e.g., `example-plugin`).
+     - A unique 3-character plugin prefix (e.g., `ex1`).
+
+---
+
+## **Troubleshooting**
+
+If you encounter any issues during the installation process, check the following:
+- **Ensure Node.js is installed**: Run `node -v` and `npm -v` to verify that Node.js is correctly installed.
+- **Check for permission issues**: If you encounter permission errors, try running the command with `sudo` (on Linux/macOS) or as an administrator (on Windows).
+- **Check the version**: If you're updating an existing package, make sure to increment the version number in the `package.json` before republishing.
+
+---
+
+## **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+Let me know if you'd like to make any further changes or need additional clarification!
