@@ -1,6 +1,4 @@
 {
-    "root": "http://localhost:<port>",
-    "devRoot": "http://localhost:<port>",
     "main_website": "",
     "mode": "development",
     "timezone": "UTC",
