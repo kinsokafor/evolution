@@ -31,7 +31,7 @@ evophp your-project-name
 
 Example:
 ```bash
-evophp jonikins-apartments
+evophp test-project
 ```
 
 This will:
