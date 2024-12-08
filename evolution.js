@@ -2,7 +2,9 @@ const { exec } = require('child_process');
 const readline = require('readline');
 const fs = require('fs');
 
-const projectName = process.argv[2];  // Receives the project name from the argument passed
+let projectName = process.argv[2];  // Receives the project name from the argument passed
+
+let author = "Kowebtech Ict";
 
 let port = 3000
 
@@ -34,7 +36,7 @@ const writePackageJSON = () => {
 
     let packageStr = JSON.stringify(packageJSON, null, 2);
 
-    packageStr = packageStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName);
+    packageStr = packageStr.replaceAll("<port>",port).replaceAll("<projectName>",projectName).replaceAll("<author>",author);
 
     fs.writeFile("./package.json", packageStr, 'utf8', (err) => {
         if (err) {
@@ -126,6 +128,7 @@ const startApp = async() => {
     if (!projectName) {
         projectName = await readLineAsync("What is the name of the project you want to build?");
     }
+    author = await readLineAsync("What is the name of the project developer?");
     port = await readLineAsync("What is the local environment port? Enter 3000 or any other port that you wish?");
 
     writePackageJSON();

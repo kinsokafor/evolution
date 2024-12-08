@@ -1,5 +1,5 @@
 {
-  "name": "evolution",
+  "name": "<projectName>",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,6 @@
     "start": "concurrently \"php -S localhost:<port>\" \"cls\" \"npm run watch\" \"npm run open\"",
     "open": "rundll32 url.dll,FileProtocolHandler http://localhost:<port>",
     "plugin": "node install-plugin.js",
-    "startsql": "\"C:\\xampp\\mysql\\bin\\mysqld\"",
     "bundle": "node bundle.js"
   },
   "repository": {
@@ -18,7 +17,7 @@
     "url": "git+https://github.com/kinsokafor/evolution"
   },
   "keywords": [],
-  "author": "Kowebtech Ict",
+  "author": "<author>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kinsokafor/evolution/issues"
@@ -47,7 +46,9 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.10.0",
     "webpack-merge": "^5.8.0",
-    "mini-css-extract-plugin": "^2.9.2"
+    "mini-css-extract-plugin": "^2.9.2",
+    "rimraf": "^4.0.0",
+    "glob": "^9.0.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
