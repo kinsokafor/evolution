@@ -132,5 +132,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 2. **Plugin Development**: Detailed instructions for creating and managing plugins.
 3. **Troubleshooting Section**: Practical solutions to common issues.
 4. **User-Friendly Layout**: A clean structure with headings and examples for easy navigation.
-
-Let me know if you'd like further adjustments!
