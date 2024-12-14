@@ -58,6 +58,18 @@ export const dynamicSortMultiple = function() {
   };
 };
 
+export const sortArrayByOrder = (objectsArray, orderArray, key) => {
+  // Create a map for quick lookup of order index
+  const orderMap = new Map(orderArray.map((value, index) => [value, index]));
+
+  // Sort the objectsArray based on the index in the orderMap
+  return objectsArray.sort((a, b) => {
+    const indexA = orderMap.get(a[key]) ?? Infinity; // Handle unmatched keys
+    const indexB = orderMap.get(b[key]) ?? Infinity;
+    return indexA - indexB;
+  });
+};
+
 export const arrayIntersect = (A, B) => {
   return A.filter((x) => B.includes(x));
 };
