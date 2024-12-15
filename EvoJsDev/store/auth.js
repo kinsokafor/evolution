@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('useAuthStore', {
             currentUser: {},
             userScope: [],
             access: [],
-            expiry: useLocalStorage(`${config.salt}authexpiry`, 0),
+            expiry: 0,
             failedTest: false,
             fetching: false
         }

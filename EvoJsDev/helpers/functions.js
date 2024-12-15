@@ -367,8 +367,6 @@ export const storeGetter = (
       loader(tempParams);
     }
   }
-  
-
   excludeFilter.forEach((i) => {
     delete params[i];
   });
@@ -386,6 +384,55 @@ export const storeGetter = (
   });
   return r;
 };
+
+/**
+ * Parses the `meta` field of an item and merges it into the item.
+ * @param {Object} item - The item to parse.
+ * @returns {Object} - The item with `meta` parsed and merged.
+ */
+function parseMeta(item) {
+  if (item?.meta !== undefined) {
+      item = { ...item, ...(JSON.parse(item.meta)) };
+      delete item.meta;
+  }
+  return item;
+}
+
+/**
+* Updates a store's data array with a single new item.
+* @param {Array} data - The current data array in the store.
+* @param {Object} newItem - The new item to be merged into the data array.
+* @param {String} matchKey - The key used to match items (default: 'id').
+* @returns {Array} - The updated data array.
+*/
+export function updateStoreDataSingle(data, newItem, matchKey = 'id') {
+  newItem = parseMeta(newItem);
+  const index = data.findIndex((j) => j[matchKey] == newItem[matchKey]);
+  if (index === -1) {
+      // Insert new item at the beginning
+      data.unshift(newItem);
+  } else {
+      if (!_.isEqual(data[index], newItem)) {
+          // Update existing item
+          data.splice(index, 1, newItem);
+      }
+  }
+  return data;
+}
+
+/**
+* Updates a store's data array with multiple new items.
+* @param {Array} data - The current data array in the store.
+* @param {Array} newItems - The new items to be merged into the data array.
+* @param {String} matchKey - The key used to match items (default: 'id').
+* @returns {Array} - The updated data array.
+*/
+export function updateStoreData(data, newItems, matchKey = 'id') {
+  newItems.forEach((i) => {
+      data = updateStoreDataSingle(data, i, matchKey);
+  });
+  return data;
+}
 
 export const titleCase = (s) =>
   s.replace(/^_*(.)|_+(.)/g, (s, c, d) =>
