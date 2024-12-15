@@ -23,7 +23,7 @@ const isObject = (item) => {
  * @param target
  * @param ...sources
  */
-const mergeDeep = (target, ...sources) => {
+const mergeDeep = async (target, ...sources) => {
     if (!sources.length) return target;
     const source = sources.shift();
 
@@ -41,7 +41,7 @@ const mergeDeep = (target, ...sources) => {
     return mergeDeep(target, ...sources);
 }
 
-const mergeConfig = (config) => {
+const mergeConfig = async (config) => {
     let file = editJsonFile("./config.json");
     for(var data in config) {
         const oldValue = file.get(data);
@@ -49,7 +49,8 @@ const mergeConfig = (config) => {
             file.set(data, config[data]);
         } else {
             if(isObject(oldValue)) {
-                file.set(data, mergeDeep(oldValue, config[data]));
+                var deep = await mergeDeep(oldValue, config[data]);
+                file.set(data, deep);
             } else {
                 file.set(data, config[data]);
             }
