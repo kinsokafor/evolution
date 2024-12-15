@@ -88,14 +88,18 @@
           position: relative;
         }
         .drawer .body .content {
-          width: auto;
+          width: 90%;
           height: 90%;
           position: absolute;
           transform: translate(50%, -50%);
           right: 50%;
           top: 50%;
-          overflow: auto;
+          overflow: auto; /* Keeps the scrolling functionality */
+          scrollbar-width: none; /* Firefox */
         }
+      .drawer::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, and Edge */
+      }
         .drawer:not(.show) .handle {
             width: 0;
         }
