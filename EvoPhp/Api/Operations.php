@@ -518,4 +518,36 @@ class Operations
         // Combine protocol and host
         return $protocol . $host;
     }
+
+    /**
+     * Generate an array of objects with first and last dates of previous months, including the current month.
+     *
+     * @param int $monthsBack Number of months to include (default is 12, current month inclusive).
+     * @return array An array of objects with 'first_date' and 'last_date'.
+     */
+    public static function getPreviousMonthsDates($monthsBack = 12) {
+        $currentMonth = new \DateTime(); // Current date
+        $months = []; // Array to hold the date objects
+
+        for ($i = 0; $i < $monthsBack; $i++) {
+            // Clone the current month and subtract $i months (includes current month at i=0)
+            $date = (clone $currentMonth)->modify("-$i months");
+
+            // Get the first and last days of the month
+            $firstDay = $date->format('Y-m-01');
+            $lastDay = $date->format('Y-m-t');
+
+            // Month and Year Name (e.g., June 2024)
+            $monthYear = $date->format('F Y');
+
+            // Add to the months array as an object
+            $months[] = (object) [
+                'first_date' => $firstDay,
+                'last_date'  => $lastDay,
+                'month_year' => $monthYear
+            ];
+        }
+
+        return $months;
+    }
 }
