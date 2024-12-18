@@ -414,6 +414,23 @@ class Query extends Database
         return $this;
     }
 
+    public function appendStatement($statement, $dataTypes = "", ...$data) {
+        $this->statement .= " $statement";
+
+        if(count($data)) {
+            $this->data = array_merge($this->data, $data);
+            $this->dataTypes .= $dataTypes;
+        }
+
+        if(stripos($statement, "where")) {
+            $this->hasWhere = true;
+        }
+
+        $this->ready = true;
+
+        return $this;
+    }
+
     public function where($column, $value, $type = false, $rel = "LIKE") {
 
         if(strpos($value ?? '', ',')) {
