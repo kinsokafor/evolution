@@ -12,7 +12,7 @@ export class Request {
         return await axios.get(endpoint, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             },
@@ -24,7 +24,7 @@ export class Request {
         return await axios.post(endpoint, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -35,7 +35,7 @@ export class Request {
         return await axios.put(endpoint, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -46,7 +46,7 @@ export class Request {
         return await axios.delete(endpoint, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }

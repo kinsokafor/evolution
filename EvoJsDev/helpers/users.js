@@ -11,7 +11,7 @@ export class Users {
         return await axios.get(link, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             },
@@ -24,7 +24,7 @@ export class Users {
         return await axios.put(process.env.EVO_API_URL + '/api/user/id/'+id, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -36,7 +36,7 @@ export class Users {
         return await axios.delete(link, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -48,7 +48,7 @@ export class Users {
         return await axios.post(url, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
