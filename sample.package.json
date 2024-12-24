@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "watch": "webpack --watch --progress --config webpack.dev.js",
-    "start": "concurrently \"php -S localhost:<port>\" \"cls\" \"npm run watch\" \"npm run open\"",
     "open": "rundll32 url.dll,FileProtocolHandler http://localhost:<port>",
-    "plugin": "node install-plugin.js",
+    "php-server": "php -S localhost:<port>",
+    "start": "concurrently \"npm run php-server\" \"npm run watch\" \"npm run open\"",
     "bundle": "node bundle.js"
   },
   "repository": {

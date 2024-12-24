@@ -98,8 +98,7 @@ const handleSubmit = async (values) => {
       index.value = response.data.index;
       processing.value = false;
       if (response.data.loginStatus) {
-        console.log(response.data)
-        // window.location = response.data.index;
+        window.location = response.data.index;
       } else {
         alertStore.add(response.data.msg, "danger");
       }
