@@ -6,7 +6,6 @@ const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const jQueryPath = 'jquery/dist/jquery.js';
-
 const entries = entryPoints();
 
 module.exports = {
@@ -31,24 +30,17 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'Public/dist'),
     filename: '[name]__[contenthash].js',
-    publicPath: '/',
+    publicPath: '/', // Ensure this matches devServer publicPath
     clean: true,
   },
   cache: {
     type: 'filesystem',
-  },
-  devServer: {
-    static: './Public',
-    hot: true,
-    port: 8080,
-    historyApiFallback: true,
   },
   plugins: [
     ...Object.keys(entries).map((entryName) => {
       return new HtmlWebpackPlugin({
         filename: `${entryName}.html`, // Generate a unique HTML file per entry
         templateContent: '',
-        // template: path.resolve(__dirname, `src/templates/${entryName}.html`), // Assumes you have templates per entry
         chunks: [entryName], // Include only the corresponding chunk
       });
     }),
@@ -61,7 +53,7 @@ module.exports = {
       $: jQueryPath,
       'window.jQuery': jQueryPath,
     }),
-  ].filter(Boolean),
+  ],
   optimization: {
     splitChunks: {
       chunks: 'all',
@@ -70,14 +62,14 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/, // Target vendor modules
           name: 'vendors',
           chunks: 'all',
-          priority: -10, // Ensure it has higher priority
-          enforce: true, // Force chunk creation, ignoring order issues
+          priority: -10,
+          enforce: true,
         },
         common: {
           name: 'common',
           minChunks: 2, // Modules shared by at least two entry points
           priority: -20,
-          reuseExistingChunk: true, // Allow reuse of existing chunks
+          reuseExistingChunk: true,
         },
       },
     },
@@ -86,7 +78,7 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'], // Extract CSS
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.vue$/,
@@ -94,14 +86,14 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'], // Extract CSS
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|webp)$/i,
         type: 'asset/resource',
         generator: {
           filename: 'images/[hash][ext][query]',
-          publicPath: '/Public/dist/',
+          publicPath: '/dist/',
         },
       },
       {
@@ -109,7 +101,7 @@ module.exports = {
         type: 'asset/resource',
         generator: {
           filename: 'sounds/[hash][ext][query]',
-          publicPath: '/Public/dist/',
+          publicPath: '/dist/',
         },
       },
     ],

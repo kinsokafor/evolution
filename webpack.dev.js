@@ -1,40 +1,40 @@
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
-const webpack = require("webpack");
-const config = require("./config.json");
 const Dotenv = require("dotenv-webpack");
-const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
+const webpack = require('webpack');
+const path = require('path');
+
 module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
+  devServer: {
+    static: {
+      directory: path.resolve(__dirname, 'Public'), // Serve all static files from Public
+      publicPath: '/', // Serve assets from /dist/
+    },
+    watchFiles: {
+      paths: ['./Public/dist/**/*', './EvoJsDev/**/*'], // Watch assets and source files
+      options: {
+        usePolling: true, // Useful for environments where file changes aren't detected
+      },
+    },
+    proxy: {
+      "/": {
+        target: "http://localhost:3005", // Proxy requests to PHP server
+        changeOrigin: true,
+      },
+    },
+    hot: true, // Enable hot module replacement
+    liveReload: true, // Reload the browser on file changes
+    open: true, // Automatically open the browser
+    port: 8080, // DevServer's port for bundled assets (can be changed)
+    historyApiFallback: true, // Support SPA routing if needed
+  },
   plugins: [
     new Dotenv({
       path: "./.env.development",
     }),
-    new BrowserSyncPlugin(
-      {
-        host: "localhost",
-        port: 3000,
-        proxy: "http://localhost:3005", // Your PHP server
-        files: [
-          "Public/**/*.php", // Watch PHP files for changes
-          "Public/**/*.html", // Watch HTML files
-        ],
-        open: true,
-        notify: false, // Disable browser notifications
-        ghostMode: false,
-        cookies: {
-          stripDomain: false, // Ensures cookies are forwarded correctly
-          secure: false, // Allow cookies over HTTP
-          sameSite: "Lax", // Set SameSite attribute to 'Lax'
-          path: "/", // Make cookies available for all paths
-          // domain: "example.com", // Specify a domain for the cookie
-          httpOnly: true,
-        },
-      },
-      {
-        reload: false, // Prevent double reloading from Webpack and Browsersync
-      }
-    ),
+    new webpack.HotModuleReplacementPlugin(),
   ].filter(Boolean),
 });
+

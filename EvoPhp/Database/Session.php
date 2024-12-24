@@ -52,7 +52,8 @@ class Session
     {
         if ( $this->sessionState == self::SESSION_NOT_STARTED && !$this->destroyed)
         {
-            if(!isset($_SESSION)) {
+            if(\session_id() === "") {
+                ini_set('session.cookie_domain', '.localhost');
                 $this->sessionState = \Delight\Cookie\Session::start();
             } else $this->sessionState = self::SESSION_STARTED;
         }

@@ -164,7 +164,11 @@ Trait Auth {
         ])->execute();
         $nonce = $this->createNonce($token);
         $cookie = new Cookie("nonce");
-        $cookie->setValue($nonce)->setMaxAge($config->Auth["tokenLifetime"])->save();
+        $cookie->setValue($nonce)
+                ->setDomain('.localhost')
+                ->setPath('/')
+                ->setMaxAge($config->Auth["tokenLifetime"])
+                ->save();
         $session->accesstoken = $token;
         $index = Operations::getIndex($meta);
         $action = new Action;
