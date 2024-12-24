@@ -35,7 +35,7 @@
 <script setup>
     import {ref, computed, watchEffect} from 'vue'
     import { useUsersStore } from '@/Modules/Main/store/users'
-    import {isEmpty, getProfilePicture, formatMobileNumber} from '@/helpers'
+    import {isEmpty, getProfilePicture} from '@/helpers'
 
     const usersStore = useUsersStore()
     const props = defineProps({
