@@ -16,7 +16,7 @@ export const useConfigStore = defineStore('useConfigStore', {
             await axios.post(process.env.EVO_API_URL + '/api/config/all', {}, {
                 'Access-Control-Allow-Credentials':true,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', 
+                    // 'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${nonce()}` 
                 }
@@ -28,7 +28,7 @@ export const useConfigStore = defineStore('useConfigStore', {
             await axios.post(process.env.EVO_API_URL + "/api/config/", values, {
                 'Access-Control-Allow-Credentials':true,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', 
+                    // 'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${nonce()}` 
                 }
@@ -42,7 +42,7 @@ export const useConfigStore = defineStore('useConfigStore', {
             await axios.delete(process.env.EVO_API_URL + "/api/config/"+key, {
                 'Access-Control-Allow-Credentials':true,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', 
+                    // 'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${nonce()}` 
                 }

@@ -1,14 +1,13 @@
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
-const webpack = require('webpack');
-const config = require('./config.json');
-const Dotenv = require('dotenv-webpack');
+const webpack = require("webpack");
+const Dotenv = require("dotenv-webpack");
 module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   plugins: [
-      new Dotenv({
-        path: './.env.development'
-      }),
+    new Dotenv({
+      path: "./.env.development",
+    })
   ].filter(Boolean),
 });

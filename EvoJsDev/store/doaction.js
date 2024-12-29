@@ -19,7 +19,9 @@ export const useDoActionStore = defineStore('useDoActionStore', {
             }
             await axios.post(process.env.EVO_API_URL + '/api/doaction', JSON.stringify(data), {
                 'Access-Control-Allow-Credentials':true,
-                headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
+                headers: {
+                    // 'Access-Control-Allow-Origin': '*', 
+                    'Content-Type': 'application/json'}
             }).then(response => {
                 this.template = response.data
             })
