@@ -228,7 +228,7 @@ class User
         }
         unset($meta['uniqueKeys']);
         unset($meta['id']);
-        if(isset($meta['email']) && ($test = $this->get($meta['email']))) {
+        if(isset($meta['email']) && ($test = $this->get($meta['email'])) && $this->validateEmail) {
             if($test->id !== $existing->id) {
                 $this->error = "Sorry, email \"".$meta['email']."\" is already in use by another user.";
                 return false;
