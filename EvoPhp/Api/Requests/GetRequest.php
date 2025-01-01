@@ -155,6 +155,7 @@ class GetRequest implements RequestInterface {
         $selection = $request->isCount ? "COUNT(*) AS count" : "*";
         if(isset($request->data['id'])) $request->data['id'] = (int) $request->data['id'];
         $query->select($request->tableName, $selection)->whereGroup($request->data);
+        if($request->between != null) $query->whereBetween(...$request->between);
         if($request->joinUserAt != null) $query->joinUserAt($request->joinUserAt, ...$request->rightColumns);
         if($request->joinPostAt != null) $query->joinPostAt($request->joinPostAt, ...$request->rightColumns);
         if($request->joinStoreAt != null) $query->joinStoreAt($request->joinStoreAt, ...$request->rightColumns);

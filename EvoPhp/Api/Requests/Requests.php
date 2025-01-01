@@ -30,6 +30,8 @@ class Requests
 
     public $order = false;
 
+    public $between = null;
+
     public string $tableName;
 
     public bool $isCount = false;
@@ -120,6 +122,10 @@ class Requests
         if(isset($this->data['order_by'])) {
             $this->order_by = $this->data['order_by'];
             unset($this->data['order_by']);
+        }
+        if(isset($this->data['between'])) {
+            $this->between = $this->splitBetween($this->data['between']);
+            unset($this->data['between']);
         }
         if(isset($this->data['order'])) {
             $this->order = $this->data['order'];
@@ -288,6 +294,13 @@ class Requests
                 PutRequest::dbTable($this);
                 break;
         }
+    }
+
+    public function splitBetween($value) {
+        $arr = explode(",", $value);
+        $from = !isset($arr[2]) ? 0 : $arr[1] ?? 0;
+        $to = !isset($arr[2]) ? $arr[1] ?? 1 : $arr[2];
+        return Operations::trimArray([$arr[0] ?? "", $from, $to]);
     }
 
     public function setUniqueKeys() {

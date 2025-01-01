@@ -336,30 +336,30 @@ export const storeGetter = (
   excludeFilter = [],
   makeUnique = "id"
 ) => {
-  let tempParams = { ...params };
-  exclude.forEach((i) => {
-    delete tempParams[i];
-  });
-  // console.log("tempParams", tempParams, "state.lastParams", state.lastParams)
+  // Ensure required state properties are initialized
+  state.loadedIDs = state.loadedIDs || [];
+  state.lastParamsArray = state.lastParamsArray || [];
+  state.lastTimeOut = state.lastTimeOut || null;
 
-  if(makeUnique in tempParams) {
-    if(state.loadedIDs == undefined) {
-      state.loadedIDs = []
-    }
-    if(state.loadedIDs.findIndex(i => i == tempParams[makeUnique]) == -1) {
-      state.loadedIDs.push(tempParams[makeUnique])
+  // Create a copy of params and exclude specified keys
+  let tempParams = { ...params };
+  exclude.forEach((key) => {
+    delete tempParams[key];
+  });
+
+  if (makeUnique in tempParams) {
+    // Process unique requests
+    if (!state.loadedIDs.includes(tempParams[makeUnique])) {
+      state.loadedIDs.push(tempParams[makeUnique]);
       loader(tempParams);
     }
   } else {
-    //define last params array
-    if(state.lastParamsArray == undefined) {
-      state.lastParamsArray = []
-    }
+    // Handle general parameter caching
+    const isDuplicate = state.lastParamsArray.some(
+      (storedParams) => JSON.stringify(storedParams) === JSON.stringify(tempParams)
+    );
 
-    let found = _.find(state.lastParamsArray, (x) => {
-      if(_.isEqual(x, tempParams)) return true
-    })
-    if(found == undefined) {
+    if (!isDuplicate) {
       if (state.lastTimeOut != null) {
         clearTimeout(state.lastTimeOut);
       }
@@ -367,22 +367,60 @@ export const storeGetter = (
       loader(tempParams);
     }
   }
-  excludeFilter.forEach((i) => {
-    delete params[i];
+
+  // Exclude additional filters from params
+  excludeFilter.forEach((key) => {
+    delete params[key];
   });
-  const r = data.filter((i) => {
-    let test = true;
-    for (var k in params) {
-      if (typeof params[k] == "string") {
-        test = new RegExp("^" + params[k].replace(/\%/g, ".*") + "$").test(
-          i[k]
-        );
-        if (!test) return false;
-      } else if (k in i && params[k] != i[k]) return false;
-    }
-    return test;
+
+  // Define the filterBetween function
+  const filterBetween = (array, key, min, max) => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    return array.filter(item => {
+      const value = item[key];
+
+      // Check if min and max match the date format
+      if (dateRegex.test(min) && dateRegex.test(max)) {
+        const valueDate = new Date(value);
+        const minDate = new Date(min);
+        const maxDate = new Date(max);
+        return valueDate >= minDate && valueDate <= maxDate;
+      }
+
+      // Default to numeric comparison for non-dates
+      return value >= min && value <= max;
+    });
+  };
+
+  // Filtering data with dynamic params
+  let result = data;
+
+  // Apply "between" filters first if present
+  if ("between" in params && typeof params["between"] === "string") {
+    const paramValue = params["between"];
+    const [filterKey, valueFrom, valueTo] = paramValue.split(",");
+    result = filterBetween(result, filterKey, valueFrom, valueTo);
+    delete params["between"]; // Remove "between" after applying the filter
+  }
+
+  // Apply remaining filters
+  result = result.filter((item) => {
+    return Object.keys(params).every((key) => {
+      const paramValue = params[key];
+
+      if (typeof paramValue === "string") {
+        // Convert SQL-style wildcard to regex
+        const regexPattern = new RegExp(`^${paramValue.replace(/%/g, ".*")}$`);
+        return regexPattern.test(item[key]);
+      }
+
+      // Default equality check
+      return paramValue === item[key];
+    });
   });
-  return r;
+
+  return result;
 };
 
 /**
