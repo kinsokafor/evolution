@@ -32,4 +32,18 @@
 			\EvoPhp\Api\Cron::executeDueJobs(5);
 		}
 	}
+
+	if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+		$allowedOrigins = [
+			\EvoPhp\Api\Operations::fullProtocol()
+		];
+		
+		// Get the Origin header from the client request
+		$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+		\Delight\Http\ResponseHeader::set('Access-Control-Allow-Origin', $origin);
+		\Delight\Http\ResponseHeader::set('Access-Control-Allow-Methods', 'OPTIONS,GET,POST,PUT,DELETE');
+		\Delight\Http\ResponseHeader::set('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+		\Delight\Http\ResponseHeader::set('Access-Control-Allow-Credentials', true);
+	}
 ?>

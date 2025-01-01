@@ -23,7 +23,7 @@ export const useNotificationsStore = defineStore('useNotificationsStore', {
             axios.get(url, {
                 'Access-Control-Allow-Credentials':true,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', 
+                    // 'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${nonce()}` 
                 }

@@ -11,7 +11,7 @@ export class dbTable {
         return await axios.get(link, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             },
@@ -23,7 +23,7 @@ export class dbTable {
         return await axios.put(process.env.EVO_API_URL + `/api/dbtable/${table}/id/${id}`, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -35,7 +35,7 @@ export class dbTable {
         return await axios.delete(link, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -46,7 +46,7 @@ export class dbTable {
         return await axios.post(process.env.EVO_API_URL + `/api/dbtable/${table}/`, data, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }

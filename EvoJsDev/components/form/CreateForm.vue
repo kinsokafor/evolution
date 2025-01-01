@@ -198,108 +198,108 @@
 
     //top fields
     const getRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.position == 'top'))
+        return getFields.value.filter(field => (field.column == 'right' && (field.position == 'top' || field.row == 'top')))
     });
 
     const getLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.position == 'top'))
+        return getFields.value.filter(field => (field.column == 'left' && (field.position == 'top' || field.row == 'top')))
     })
 
     const getCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.position == 'top'))
+        return getFields.value.filter(field => (field.column == 'center' && (field.position == 'top' || field.row == 'top')))
     })
 
     const getTopFields = computed(() => {
-        return getFields.value.filter(field => (field.position == 'top'))
+        return getFields.value.filter(field => ((field.position == 'top' || field.row == 'top')))
     })
 
     //top fields
     const getRightAfterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.position == 'topAfter'))
+        return getFields.value.filter(field => (field.column == 'right' && (field.position == 'topAfter' || field.row == 'topAfter')))
     });
 
     const getLeftAfterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.position == 'topAfter'))
+        return getFields.value.filter(field => (field.column == 'left' && (field.position == 'topAfter' || field.row == 'topAfter')))
     })
 
     const getCenterAfterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.position == 'topAfter'))
+        return getFields.value.filter(field => (field.column == 'center' && (field.position == 'topAfter' || field.row == 'topAfter')))
     })
 
     const getTopAfterFields = computed(() => {
-        return getFields.value.filter(field => (field.position == 'topAfter'))
+        return getFields.value.filter(field => ((field.position == 'topAfter' || field.row == 'topAfter')))
     })
     //top after fields ends
 
     //middle fields
     const getMiddleRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.position == 'middle'))
+        return getFields.value.filter(field => (field.column == 'right' && (field.position == 'middle' || field.row == 'middle')))
     });
 
     const getMiddleLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.position == 'middle'))
+        return getFields.value.filter(field => (field.column == 'left' && (field.position == 'middle' || field.row == 'middle')))
     })
 
     const getMiddleCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.position == 'middle'))
+        return getFields.value.filter(field => (field.column == 'center' && (field.position == 'middle' || field.row == 'middle')))
     })
 
     const getMiddleFields = computed(() => {
-        return getFields.value.filter(field => (field.position == 'middle'))
+        return getFields.value.filter(field => ((field.position == 'middle' || field.row == 'middle')))
     })
     //middle fields ends
 
     //middle fields
     const getMiddleAfterRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.position == 'middleAfter'))
+        return getFields.value.filter(field => (field.column == 'right' && (field.position == 'middleAfter' || field.row == 'middleAfter')))
     });
 
     const getMiddleAfterLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.position == 'middleAfter'))
+        return getFields.value.filter(field => (field.column == 'left' && (field.position == 'middleAfter' || field.row == 'middleAfter')))
     })
 
     const getMiddleAfterCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.position == 'middleAfter'))
+        return getFields.value.filter(field => (field.column == 'center' && (field.position == 'middleAfter' || field.row == 'middleAfter')))
     })
 
     const getMiddleAfterFields = computed(() => {
-        return getFields.value.filter(field => (field.position == 'middleAfter'))
+        return getFields.value.filter(field => ((field.position == 'middleAfter' || field.row == 'middleAfter')))
     })
     //middle fields ends
 
     //bottom fields
     const getBottomRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.position == 'bottom'))
+        return getFields.value.filter(field => (field.column == 'right' && (field.position == 'bottom' || field.row == 'bottom')))
     });
 
     const getBottomLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.position == 'bottom'))
+        return getFields.value.filter(field => (field.column == 'left' && (field.position == 'bottom' || field.row == 'bottom')))
     })
 
     const getBottomCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.position == 'bottom'))
+        return getFields.value.filter(field => (field.column == 'center' && (field.position == 'bottom' || field.row == 'bottom')))
     })
 
     const getBottomFields = computed(() => {
-        return getFields.value.filter(field => (field.position == 'bottom'))
+        return getFields.value.filter(field => ((field.position == 'bottom' || field.row == 'bottom')))
     })
     //bottom fields ends
 
     //bottom fields
     const getBottomAfterRightFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'right' && field.position == 'bottomAfter'))
+        return getFields.value.filter(field => (field.column == 'right' && (field.position == 'bottomAfter' || field.row == 'bottomAfter')))
     });
 
     const getBottomAfterLeftFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'left' && field.position == 'bottomAfter'))
+        return getFields.value.filter(field => (field.column == 'left' && (field.position == 'bottomAfter' || field.row == 'bottomAfter')))
     })
 
     const getBottomAfterCenterFields = computed(() => {
-        return getFields.value.filter(field => (field.column == 'center' && field.position == 'bottomAfter'))
+        return getFields.value.filter(field => (field.column == 'center' && (field.position == 'bottomAfter' || field.row == 'bottomAfter')))
     })
 
     const getBottomAfterFields = computed(() => {
-        return getFields.value.filter(field => (field.position == 'bottomAfter'))
+        return getFields.value.filter(field => ((field.position == 'bottomAfter' || field.row == 'bottomAfter')))
     })
     //bottom fields ends
 

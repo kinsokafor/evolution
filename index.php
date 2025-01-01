@@ -11,6 +11,7 @@ if ( !defined('ABSPATH') )
 	define('ABSPATH', realpath(dirname(__FILE__)) . '/');
 
 require_once("EvoPhp/autoload.php");
-
+ini_set('session.cookie_secure', '0');
+ini_set('session.cookie_httponly', '1');
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 ?>

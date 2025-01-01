@@ -10,7 +10,7 @@ export class Records {
         return await axios.get(process.env.EVO_API_URL + "/api/records/"+record, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             },
@@ -22,7 +22,7 @@ export class Records {
         return await axios.put(process.env.EVO_API_URL + "/api/records/"+record, {value: value}, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }
@@ -33,7 +33,7 @@ export class Records {
         return await axios.delete(process.env.EVO_API_URL + "/api/records/"+record, {
             'Access-Control-Allow-Credentials':true,
             headers: {
-                'Access-Control-Allow-Origin': '*', 
+                // 'Access-Control-Allow-Origin': '*', 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${nonce()}` 
             }

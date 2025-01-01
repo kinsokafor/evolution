@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('useAuthStore', {
             return await axios.post(process.env.EVO_API_URL + '/api/loginStatus', {}, {
                 'Access-Control-Allow-Credentials':true,
                 headers: {
-                    'Access-Control-Allow-Origin': '*', 
+                    // 'Access-Control-Allow-Origin': '*', 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${nonce()}` 
                 }
