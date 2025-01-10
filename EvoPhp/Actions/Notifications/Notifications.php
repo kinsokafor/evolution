@@ -51,7 +51,6 @@ class Notifications
         $this->messageHTML = $message;
         $this->data = $data;
         $this->clean();
-        $this->mail = new Mails;
     }
 
     private function clean() {
@@ -161,9 +160,6 @@ class Notifications
     }
 
     private function add($id, $name, $email = "", $phone = "") {
-        if($email != "") {
-            $this->mail->mail->addBCC($email, $name);
-        }
         $data = ["id" => $id, "name" => $name, "email" => $email, "phone" => TextMessage::formatMobileNumber($phone)];
         array_push($this->receivers, $data);
         return $this;
@@ -174,10 +170,12 @@ class Notifications
         return $this;
     }
 
-    public function mail(string|NULL $mailer = NULL) {
-        $this->mail->mailer = $mailer;
-        $mail = $this->mail->send($this);
-        $this->error = $mail->error;
+    public function mail($handler = NULL) {
+        $mail = new Mails($handler);
+        $mail->send($this);
+        // $this->mail->mailer = $mailer;
+        // $mail = $this->mail->send($this);
+        // $this->error = $mail->error;
         return $this;
     }
 
