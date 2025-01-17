@@ -55,6 +55,7 @@ module.exports = {
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name]__[contenthash].css',
+      ignoreOrder: true,
     }),
     new webpack.ProvidePlugin({
       jQuery: jQueryPath,

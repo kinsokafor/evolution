@@ -33,6 +33,7 @@
     import WYSIWYG from '@/components/form/WYSIWYG.vue';
     import FilePond from './FilePond.vue';
     import VSelect from './VSelect.vue';
+    import DateRange from './DateRange.vue';
 
     // const store = useCreateFormStore();
     const props = defineProps(['fields', 'values', 'initialValues'])
@@ -90,7 +91,11 @@
                 case "vselect":
                         return VSelect;
                     break;
-            
+
+                case "daterange":
+                        return DateRange;
+                    break;
+
                 default:
                         return Input;
                     break;
