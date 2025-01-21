@@ -1,4 +1,5 @@
 <template>
+  <!-- reference https://github.com/joshuaeasy/vue3-daterange-picker#readme -->
   <div class="k-input-group" :class="layout">
     <label :for="name" class="label">{{ label }}</label
     ><br />
@@ -32,8 +33,8 @@
 <script setup>
 import { useField } from "vee-validate";
 import DateRangePicker from "vue3-daterange-picker";
-import { ref, watch, watchEffect } from "vue";
-import { appData } from "@/helpers";
+import { ref, watch, watchEffect, computed } from "vue";
+import { appData, formatDate } from "@/helpers";
 import { ErrorMessage } from "vee-validate";
 
 const dateRange = ref({
@@ -51,7 +52,7 @@ const props = defineProps({
   },
   attrs: {
     type: Object,
-    default: {}, //used to configure filepond
+    default: {},
   },
   column: {
     type: String,
@@ -67,6 +68,11 @@ const props = defineProps({
   initialValues: Object,
 });
 
+const dateFormat = computed(() => {
+  if(props.attrs?.format === undefined) return "YYYY-MM-DD";
+  return props.attrs?.format;
+})
+
 const start = useField(`start_${props.name}`, props.attrs.rules ?? "");
 
 const end = useField(`end_${props.name}`, props.attrs.rules ?? "");
@@ -74,19 +80,33 @@ const end = useField(`end_${props.name}`, props.attrs.rules ?? "");
 const initiated = ref(false);
 
 watch(dateRange, (newVal) => {
-  if (newVal.startDate) start.setValue(newVal.startDate);
-  if (newVal.endDate) end.setValue(newVal.endDate);
+  if (newVal.startDate) {
+    const startVal = formatDate(new Date(newVal.startDate), dateFormat.value)
+    start.setValue(startVal);
+  }
+  if (newVal.endDate) {
+    const endVal = formatDate(new Date(newVal.endDate), dateFormat.value)
+    end.setValue(endVal);
+  }
 });
 
 watch(
   () => start.meta.dirty,
   (newVal) => {
-    if (newVal === false) {
+    if (newVal === false && meta.value !== meta?.initialValue) {
       //reset
-      dateRange.value = {
-        startDate: null,
-        endDate: null,
-      };
+      if (props.initialValues[`start_${props.name}`] != undefined) {
+        dateRange.value = {
+          startDate: props.initialValues[`start_${props.name}`],
+          endDate: props.initialValues[`end_${props.name}`]
+        };
+      } else {
+        dateRange.value = {
+          startDate: null,
+          endDate: null,
+        };
+      }
+      
     }
   }
 );
@@ -94,15 +114,18 @@ watch(
 watchEffect(() => {
   if (initiated.value) return;
   if (props.initialValues[`start_${props.name}`] != undefined) {
-    dateRange.value.startDate = props.initialValues[`start_${props.name}`];
-    start.setValue(dateRange.value.startDate)
+    dateRange.value = {
+      startDate: props.initialValues[`start_${props.name}`],
+      endDate: props.initialValues[`end_${props.name}`]
+    };
     initiated.value = true;
   }
-  if (props.initialValues[`end_${props.name}`] != undefined) {
-    dateRange.value.endDate = props.initialValues[`end_${props.name}`];
-    end.setValue(dateRange.value.endDate)
-    initiated.value = true;
-  }
+  // if (props.initialValues[`end_${props.name}`] != undefined) {
+  //   alert(2)
+  //   dateRange.value.endDate = props.initialValues[`end_${props.name}`];
+  //   end.setValue(dateRange.value.endDate)
+  //   initiated.value = true;
+  // }
 });
 
 start.handleReset = function () {

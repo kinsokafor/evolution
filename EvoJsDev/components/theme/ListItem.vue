@@ -68,7 +68,11 @@
         // }
     }
     .list-item-container .list-right {
-        text-align:right;
+        text-align: right;
+        justify-content: center;
+        align-items: end;
+        display: flex;
+        flex-direction: column;
     }
     .pointer {
         cursor: pointer;

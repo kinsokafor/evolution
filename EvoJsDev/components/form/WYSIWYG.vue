@@ -77,7 +77,7 @@ watchEffect(() => {
 watch(
   () => meta.dirty,
   (newVal) => {
-    if (newVal === false) {
+    if (newVal === false && meta.value !== meta?.initialValue) {
       //reset
       model.value = "";
     }

@@ -2,7 +2,7 @@
     <div class="mb-4">
         <input type="file" :name="`input-${name}`" ref="myFile" :id="id"/>
         <small>{{ attrs.hint ?? "" }}</small>
-        <viewer :files="defaultFiles"></viewer>
+        <viewer :files="defaultFiles" :enable-remove="true" @remove="fileRemoved"></viewer>
         <container></container>
     </div>
 </template>
@@ -119,6 +119,13 @@
                 pond.value.removeFiles()
         }
     })
+
+    const fileRemoved = function(file) {
+        const newValue = value.value
+        const index = newValue.findIndex(i => i === file)
+        newValue.splice(index, 1)
+        setValue(newValue);
+    }
 </script>
 
 <style lang="scss">

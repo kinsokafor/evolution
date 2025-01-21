@@ -17,7 +17,7 @@ $router->post('/install/plugin', function(){
 $router->group('/api/user', function () use ($router) {
     $router->get('/', function () {
         $request = new Requests;
-        $request->user()->auth(3);
+        $request->user()->auth(3,4);
     });
     $router->get('/id/{id}', function ($params) {
         $request = new Requests;
