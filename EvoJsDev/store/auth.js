@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('useAuthStore', {
                 return false;
             }
             if(!this.isloggedIn) {
-                if(!this.fetching) {
+                if(!this.fetching && !this.failedTest) {
                     this.loginStatus();
                 }
                 return false;

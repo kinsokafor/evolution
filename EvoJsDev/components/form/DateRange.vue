@@ -7,7 +7,6 @@
       v-bind="attrs"
       :date-range="dateRange"
       v-model="dateRange"
-      @update="updateValues"
       :singleDatePicker="false"
       :auto-apply="true"
       :control-container-class="appData().inputFieldClass ?? ''"
