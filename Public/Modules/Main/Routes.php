@@ -389,8 +389,8 @@ $router->post('/api/newkey', function(){
         $config = new EvoPhp\Api\Config();
         $exp = new DateTime($params['expiry'], new DateTimeZone($config->timezone));
         $payload = [
-            'iss' => $config->root,
-            'aud' => $config->root,
+            'iss' => Operations::fullProtocol(),
+            'aud' => Operations::fullProtocol(),
             'iat' => time(),
             'nbf' => "1357000000",
             'exp' => $exp->getTimestamp()
