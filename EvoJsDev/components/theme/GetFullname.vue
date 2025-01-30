@@ -1,7 +1,7 @@
 <template>
-    <span>
+    <!-- <span> -->
         {{ getFullname(user) }}
-    </span>
+    <!-- </span> -->
 </template>
 
 <script setup>

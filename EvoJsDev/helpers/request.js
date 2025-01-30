@@ -7,9 +7,10 @@ export class Request {
 
     controller = new AbortController();
 
-    async get(endpoint) {
+    async get(endpoint, filter = {}) {
         const signal = this.controller.signal
-        return await axios.get(endpoint, {
+        const link = this.buildQuery(endpoint, filter);
+        return await axios.get(link, {
             'Access-Control-Allow-Credentials':true,
             headers: {
                 // 'Access-Control-Allow-Origin': '*', 
@@ -51,6 +52,17 @@ export class Request {
                 'Authorization': `Bearer ${nonce()}` 
             }
         })
+    }
+
+    buildQuery(base, filter = {}) {
+        const link = new URL(base);
+        for (const key in filter) {
+            if (Object.hasOwnProperty.call(filter, key)) {
+                const value = filter[key];
+                link.searchParams.append(key, value);
+            }
+        }
+        return link;
     }
 
     abort() {
