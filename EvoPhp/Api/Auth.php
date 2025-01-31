@@ -73,16 +73,19 @@ Trait Auth {
         $meta = $user->get($selector);
         $session = Session::getInstance();
         if(!$meta) :
+            http_response_code(401);
             $session->increment("failedSignInAttempts");
-            return ['loginStatus' => false, 'msg' => 'Incorrect Username'];
+            return 'Incorrect Username or Password';
         endif;
         $password = self::encrypt($password);
         if($meta->password !== $password) :
+            http_response_code(401);
             $session->increment("failedSignInAttempts");
-            return ['loginStatus' => false, 'msg' => 'Incorrect Password'];
+            return 'Incorrect Username or Password';
         endif;
         if($meta->status !== "active") :
-            return ['loginStatus' => false, 'msg' => 'Sign in disallowed for '.$meta->status.' account'];
+            http_response_code(401);
+            return 'Sign in disallowed for '.$meta->status.' account';
         endif;
         $session->failedSignInAttempts = 0;
         $instance = new self;
@@ -111,11 +114,11 @@ Trait Auth {
             $res = $self->verifyNonce($meta['secretkey'], $config->Auth['publickey'] ?? 'apikey');
             if(!$res) {
                 http_response_code(401);
-                return ['loginStatus' => false, 'msg' => 'Unauthorized access'];
+                return 'Unauthorized access';
             }
         } else {
             http_response_code(401);
-            return ['loginStatus' => false, 'msg' => 'No access code attached to request body'];
+            return 'No access code attached to request body';
         }
         return self::signIn($meta['email'], $meta['password']);
     }
