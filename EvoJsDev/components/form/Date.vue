@@ -50,8 +50,15 @@ const initFlatpickr = (defaultDate = "today") => {
       emit("update:modelValue", dateStr);
       e.setValue(dateStr);
       if (props.attrs.mode == "range") {
-        start.setValue(formatDateShort(new Date(selectedDates[0]),props.attrs.dateFormat));
-        end.setValue(formatDateShort(new Date(selectedDates[selectedDates.length - 1]),props.attrs.dateFormat));
+        start.setValue(
+          formatDateShort(new Date(selectedDates[0]), props.attrs.dateFormat)
+        );
+        end.setValue(
+          formatDateShort(
+            new Date(selectedDates[selectedDates.length - 1]),
+            props.attrs.dateFormat
+          )
+        );
       }
     },
   });
@@ -60,9 +67,14 @@ const initFlatpickr = (defaultDate = "today") => {
 // Run Flatpickr on component mount
 onMounted(() => {
   let defaultDate = props.initialValues[props.name] || "today";
-  if(props.attrs.mode == "range") {
-    if(props.initialValues[`start_${props.name}`] !== undefined && props.initialValues[`end_${props.name}`] !== undefined) {
-      defaultDate = `${props.initialValues[`start_${props.name}`]} to ${props.initialValues[`end_${props.name}`]}`
+  if (props.attrs.mode == "range") {
+    if (
+      props.initialValues[`start_${props.name}`] !== undefined &&
+      props.initialValues[`end_${props.name}`] !== undefined
+    ) {
+      defaultDate = `${props.initialValues[`start_${props.name}`]} to ${
+        props.initialValues[`end_${props.name}`]
+      }`;
     }
   }
   initFlatpickr(defaultDate);
