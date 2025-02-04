@@ -34,6 +34,7 @@
     import FilePond from './FilePond.vue';
     import VSelect from './VSelect.vue';
     import DateRange from './DateRange.vue';
+    import Date from './Date.vue';
 
     // const store = useCreateFormStore();
     const props = defineProps(['fields', 'values', 'initialValues'])
@@ -94,6 +95,10 @@
 
                 case "daterange":
                         return DateRange;
+                    break;
+
+                case "date":
+                        return Date;
                     break;
 
                 default:

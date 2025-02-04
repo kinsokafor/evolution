@@ -119,12 +119,6 @@ watchEffect(() => {
     };
     initiated.value = true;
   }
-  // if (props.initialValues[`end_${props.name}`] != undefined) {
-  //   alert(2)
-  //   dateRange.value.endDate = props.initialValues[`end_${props.name}`];
-  //   end.setValue(dateRange.value.endDate)
-  //   initiated.value = true;
-  // }
 });
 
 start.handleReset = function () {

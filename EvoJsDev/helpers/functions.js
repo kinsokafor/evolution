@@ -559,6 +559,24 @@ export function formatDate(date, format) {
   return format.replace(/YYYY|YY|MM|M|DD|D|HH|H|mm|m|ss|s|A|a/g, match => options[match]);
 }
 
+export function formatDateShort(date, format) {
+  const options = {
+    Y: date.getFullYear(), // Full year (2025)
+    y: String(date.getFullYear()).slice(-2), // Short year (25)
+    m: String(date.getMonth() + 1).padStart(2, '0'), // Month (01-12)
+    n: date.getMonth() + 1, // Month (1-12, no leading zero)
+    d: String(date.getDate()).padStart(2, '0'), // Day (01-31)
+    j: date.getDate(), // Day (1-31, no leading zero)
+    H: String(date.getHours()).padStart(2, '0'), // 24-hour (00-23)
+    h: String(date.getHours() % 12 || 12).padStart(2, '0'), // 12-hour (01-12)
+    i: String(date.getMinutes()).padStart(2, '0'), // Minutes (00-59)
+    S: String(date.getSeconds()).padStart(2, '0'), // Seconds (00-59)
+    K: date.getHours() >= 12 ? 'PM' : 'AM' // AM/PM
+  };
+
+  return format.replace(/Y|y|m|n|d|j|H|h|i|S|K/g, match => options[match]);
+}
+
 export const downloadURI = (uri) => {
   var a = document.createElement('a');
   a.href = uri;

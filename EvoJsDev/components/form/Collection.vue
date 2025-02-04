@@ -62,7 +62,7 @@
         column: {
             type: String
         },
-        initialValues: [Object, Array]
+        initialValues: [Object, Array],
     })
     const oldFields = ref([])
     const memo = ref(randomId(7))
