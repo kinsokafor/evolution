@@ -64,9 +64,8 @@ const initFlatpickr = (defaultDate = "today") => {
   });
 };
 
-// Run Flatpickr on component mount
-onMounted(() => {
-  let defaultDate = props.initialValues[props.name] || "today";
+const defaultDate = () => {
+  let defaultDate = props.initialValues[props.name] || null;
   if (props.attrs.mode == "range") {
     if (
       props.initialValues[`start_${props.name}`] !== undefined &&
@@ -75,16 +74,23 @@ onMounted(() => {
       defaultDate = `${props.initialValues[`start_${props.name}`]} to ${
         props.initialValues[`end_${props.name}`]
       }`;
+    } else {
+      defaultDate = null
     }
   }
-  initFlatpickr(defaultDate);
+  return defaultDate
+}
+// Run Flatpickr on component mount
+onMounted(() => {
+  
+  initFlatpickr(defaultDate());
 });
 
 // Watch for changes in options and reinitialize Flatpickr
 watch(
   () => props.attrs,
   () => {
-    initFlatpickr(props.modelValue); // Reinitialize with updated options
+    initFlatpickr(props.modelValue == undefined ? defaultDate() : props.modelValue); // Reinitialize with updated options
   },
   { deep: true }
 );
