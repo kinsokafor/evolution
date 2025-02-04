@@ -33,7 +33,6 @@
     import WYSIWYG from '@/components/form/WYSIWYG.vue';
     import FilePond from './FilePond.vue';
     import VSelect from './VSelect.vue';
-    import DateRange from './DateRange.vue';
     import Date from './Date.vue';
 
     // const store = useCreateFormStore();
@@ -91,10 +90,6 @@
 
                 case "vselect":
                         return VSelect;
-                    break;
-
-                case "daterange":
-                        return DateRange;
                     break;
 
                 case "date":

@@ -96,7 +96,8 @@ const handleSubmit = async (values) => {
         }
       })
       .catch((error) => {
-        alertStore.add(error.message, "danger");
+        processing.value = false;
+        alertStore.add(error.response.data, "danger");
       });
   }
 };
