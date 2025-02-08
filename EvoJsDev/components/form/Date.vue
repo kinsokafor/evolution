@@ -65,7 +65,7 @@ const initFlatpickr = (defaultDate = "today") => {
 };
 
 const defaultDate = () => {
-  let defaultDate = props.initialValues[props.name] || null;
+  let defaultDate = props.initialValues[props.name] || props.modelValue;
   if (props.attrs.mode == "range") {
     if (
       props.initialValues[`start_${props.name}`] !== undefined &&
@@ -75,7 +75,7 @@ const defaultDate = () => {
         props.initialValues[`end_${props.name}`]
       }`;
     } else {
-      defaultDate = null
+      defaultDate = props.modelValue
     }
   }
   return defaultDate
