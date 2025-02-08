@@ -176,7 +176,10 @@ Trait Auth {
             'loginStatus' => true, 
             'token' => $token, 
             'msg' => 'Login Successful', 
-            'index' => $index
+            'index' => $index,
+            "currentUser" => $meta,
+            "userScope" => $scope,
+            "expiry" => $expiry
         ];
     }
 

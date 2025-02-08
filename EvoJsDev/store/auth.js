@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import axios from 'axios';
-import { nonce } from '@/helpers';
+import { nonce, Request } from '@/helpers';
 import { arrayIntersect } from '@/helpers';
 import { useLocalStorage } from '@vueuse/core';
 import config from '/config.json';
@@ -19,14 +19,8 @@ export const useAuthStore = defineStore('useAuthStore', {
     },
     actions: {
         async getLoginStatus() {
-            return await axios.post(process.env.EVO_API_URL + '/api/loginStatus', {}, {
-                'Access-Control-Allow-Credentials':true,
-                headers: {
-                    // 'Access-Control-Allow-Origin': '*', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${nonce()}` 
-                }
-            })
+            const req = new Request()
+            return await req.post(req.root + '/api/loginStatus', {});
         },
         async loginStatus() {
             this.fetching = true;
@@ -71,6 +65,21 @@ export const useAuthStore = defineStore('useAuthStore', {
         },
         toArray(string) {
             return string.trim() == "" ? [] : string.trim().split(",").map((x) => parseInt(x))
+        },
+        async login(data) {
+            const req = new Request()
+            return await req.post(req.root + "/api/login", data).then(response => {
+                this.isloggedIn = response.data.loginStatus;
+                this.expiry = response.data.expiry;
+                if(response.data.loginStatus) {
+                    this.failedTest = false
+                    this.currentUser = response.data.currentUser;
+                    this.userScope = response.data.userScope;
+                } else {
+                    this.failedTest = true
+                }
+                return response
+            })
         }
     },
     getters: {
@@ -91,6 +100,7 @@ export const useAuthStore = defineStore('useAuthStore', {
             return state.currentUser
         },
         hasAccess: (state) => {
+            const c = state.currentUser;
             return (access) => {
                 return state.testAccess(access);
             }
